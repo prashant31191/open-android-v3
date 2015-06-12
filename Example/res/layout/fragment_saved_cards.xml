@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/load"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/savedCardList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@android:color/transparent"
+            android:choiceMode="singleChoice"
+            android:fadingEdge="none"
+            android:paddingBottom="3dp"
+            android:scrollbars="none" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/load"
+        style="@style/FooterStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="8dp"
+        android:text="Load" />
+
+</RelativeLayout>
