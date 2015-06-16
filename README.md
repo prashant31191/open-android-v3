@@ -35,7 +35,8 @@ Citrus PG Prerequisites
     5. SignUp Key
     6. SignUp Secret
 
-    Bill generator hosted on your server -  (You may refer to [Bill generator]                  (http://citruspay.com/DevelopersGuide/index.html#/billgenerator))  
+    Bill generator hosted on your server -
+    You may refer to [Bill generator](http://citruspay.com/DevelopersGuide/index.html#/billgenerator) 
     Redirect URL page hosted on your server. (After the transaction is complete, Citrus posts a response to this URL. 
  
 
