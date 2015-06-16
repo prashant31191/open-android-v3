@@ -26,7 +26,7 @@ Note: Please DO NOT PROCEED if the above mentioned requirements have not been me
 Citrus PG Prerequisites
 
     You need to enroll with Citrus as a merchant.
-    Make sure that you have the following parameters from Citrus.(How to get following parameters)
+    Make sure that you have the following parameters from Citrus.
 
     1. Secret Key
     2. Access Key
@@ -35,8 +35,8 @@ Citrus PG Prerequisites
     5. SignUp Key
     6. SignUp Secret
 
-    Bill generator hosted on your server - refer to bill generator in the left panel to know more. (You may refer to Bill generator.)
-    Redirect URL page hosted on your server. (After the transaction is complete, Citrus posts a response to this URL. See Return URL to know more. You may refer Return URL.)
+    Bill generator hosted on your server -  (You may refer to [Bill generator]                  (http://citruspay.com/DevelopersGuide/index.html#/billgenerator))  
+    Redirect URL page hosted on your server. (After the transaction is complete, Citrus posts a response to this URL. 
  
 
 
