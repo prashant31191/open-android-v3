@@ -13,7 +13,7 @@ open-android-v3 is enhanced version of SDK V2.
 
 
 Index
-1. Prerequisite
+1. [Prerequisite](http://citruspay.com/DevelopersGuide/index.html#/androidsdk)
 2. FLow Chart
 
 
