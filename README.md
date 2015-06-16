@@ -13,7 +13,31 @@ open-android-v3 is enhanced version of SDK V2.
 
 
 Index
-1. [Prerequisite](http://citruspay.com/DevelopersGuide/index.html#/androidsdk)
-2. FLow Chart
+1. Prerequisite
+   You must already have installed and configured:
+
+    Java JDK version 1.6 or greater.
+    Android SDK Platform 22 (Android 5.1.1)
+    A Git client
+    Eclipse IDE with ADT or Android Studio
+    All Citrus PG Prerequisites.
+
+Note: Please DO NOT PROCEED if the above mentioned requirements have not been met.
+Citrus PG Prerequisites
+
+    You need to enroll with Citrus as a merchant.
+    Make sure that you have the following parameters from Citrus.(How to get following parameters)
+
+    1. Secret Key
+    2. Access Key
+    3. SignIn Key
+    4. SignIn Secret
+    5. SignUp Key
+    6. SignUp Secret
+
+    Bill generator hosted on your server - refer to bill generator in the left panel to know more. (You may refer to Bill generator.)
+    Redirect URL page hosted on your server. (After the transaction is complete, Citrus posts a response to this URL. See Return URL to know more. You may refer Return URL.)
+ 
+
 
 
