@@ -272,7 +272,7 @@ public class CitrusActivity extends ActionBarActivity {
 
                     //switch ()
                     mPaymentWebview.loadUrl(redirect.getString("redirectUrl"));
-                    if(mPaymentOption!=null) {
+                    if (mPaymentOption != null) {
                         EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.OPEN, mPaymentOption.getAnalyticsPaymentType()); //analytics event - WebView Event
                     }
                 } else {
@@ -300,7 +300,7 @@ public class CitrusActivity extends ActionBarActivity {
                 if (!android.text.TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
                     setCookie();
                     mPaymentWebview.loadUrl(redirect.getString("redirectUrl"));
-                    if(mPaymentOption!=null) {
+                    if (mPaymentOption != null) {
                         EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.OPEN, mPaymentOption.getAnalyticsPaymentType()); //analytics event
                     }
                 } else {
@@ -377,7 +377,7 @@ public class CitrusActivity extends ActionBarActivity {
 
     private void sendResult(TransactionResponse transactionResponse) {
         // Log the events
-        if(mPaymentOption!=null) {
+        if (mPaymentOption != null) {
             if (isBackKeyPressedByUser) {
                 EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.BACK_KEY, mPaymentOption.getAnalyticsPaymentType()); //analytics event
             } else {
@@ -386,8 +386,6 @@ public class CitrusActivity extends ActionBarActivity {
 
             EventsManager.logPaymentEvents(CitrusActivity.this, mPaymentOption.getAnalyticsPaymentType(), transactionResponse.getAnalyticsTransactionType());//Payment Events
         }
-
-
 
 
         // Send the response to the caller.
@@ -403,6 +401,13 @@ public class CitrusActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+        dismissDialog();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
@@ -415,6 +420,11 @@ public class CitrusActivity extends ActionBarActivity {
         mPaymentParams = null;
         mCitrusConfig = null;
         mCitrusUser = null;
+        mTransactionId = null;
+
+        dismissDialog();
+        mProgressDialog = null;
+        mPaymentOption = null;
     }
 
     /**
