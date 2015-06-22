@@ -55,6 +55,8 @@ public class Card {
         this.expMonth = month;
         this.expYear = year;
         this.crdr = crdr;
+
+        setCreditOrDebit();
     }
 
     public Card(String cardNum, Month month, Year year, String cvv, String name, CType cardType) {
@@ -70,6 +72,8 @@ public class Card {
         this.expMonth = month.toString();
         this.expYear = year.toString();
         this.crdr = cardType.toString();
+
+        setCreditOrDebit();
     }
 
     public Card(String token, String cvv) {
@@ -78,6 +82,15 @@ public class Card {
         this.cardnumber = null;
     }
 
+
+    private void setCreditOrDebit() {
+
+        if (getCardType() != null && "AMEX".equalsIgnoreCase(getCardType().toString())) {
+            crdr = "credit";
+        } else if (getCardType() != null && "MTRO".equalsIgnoreCase(getCardType().toString())) {
+            crdr = "debit";
+        }
+    }
 
     public CardType getCardType() {
         return CardType.typeOf(cardnumber);
