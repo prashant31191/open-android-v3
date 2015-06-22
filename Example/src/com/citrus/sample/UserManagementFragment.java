@@ -109,7 +109,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         String emailId = editEmailId.getText().toString();
         String mobileNo = editMobileNo.getText().toString();
 
-        citrusClient.isCitrusMemeber(emailId, mobileNo, new Callback<Boolean>() {
+        citrusClient.isCitrusMember(emailId, mobileNo, new Callback<Boolean>() {
             @Override
             public void success(Boolean isMember) {
                 if (isMember) {

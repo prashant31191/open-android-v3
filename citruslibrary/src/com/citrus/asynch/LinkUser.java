@@ -1,17 +1,17 @@
 package com.citrus.asynch;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.citrus.citrususer.SignupUser;
 import com.citrus.mobile.Callback;
 
+import org.json.JSONObject;
+
 /**
  * @deprecated in v3
  * <p/>
- * Use {@link com.citrus.sdk.CitrusClient#isCitrusMemeber(String, String, com.citrus.sdk.Callback)} instead.
+ * Use {@link com.citrus.sdk.CitrusClient#isCitrusMember(String, String, com.citrus.sdk.Callback)} instead.
  */
 @Deprecated
 public class LinkUser extends AsyncTask<String, Void, JSONObject>{

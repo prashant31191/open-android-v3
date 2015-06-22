@@ -156,7 +156,7 @@ public class PrepaidWallet extends Activity {
 
             @Override
             public void onClick(View v) {
-                citrusClient.isCitrusMemeber(emailID, mobileNo, new com.citrus.sdk.Callback<Boolean>() {
+                citrusClient.isCitrusMember(emailID, mobileNo, new com.citrus.sdk.Callback<Boolean>() {
                     @Override
                     public void success(Boolean aBoolean) {
                         Logger.d("isUSER LINKED ****" + String.valueOf(aBoolean));

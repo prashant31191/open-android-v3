@@ -206,7 +206,7 @@ public class CitrusClient {
      * @param mobileNo - mobileNo of the user
      * @param callback - callback
      */
-    public synchronized void isCitrusMemeber(final String emailId, final String mobileNo, final Callback<Boolean> callback) {
+    public synchronized void isCitrusMember(final String emailId, final String mobileNo, final Callback<Boolean> callback) {
 
         bindUser(emailId, mobileNo, new Callback<String>() {
             @Override
