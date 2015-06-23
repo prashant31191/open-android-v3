@@ -16,10 +16,10 @@
 package com.citrus.retrofit;
 
 import com.citrus.sdk.classes.AccessToken;
+import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CitrusPrepaidBill;
 import com.citrus.sdk.classes.StructResponsePOJO;
-import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
@@ -139,4 +139,15 @@ public interface API {
     @GET("/utility/{path}/merchantName")
     void getMerchantName(@Path("path") String path, Callback<String> callback);
 
+    // Cashout APIs.
+    @FormUrlEncoded
+    @POST("/service/v2/prepayment/cashout")
+    void cashout(@Header("Authorization") String header, @Field("amount") String amount, @Field("currency") String currency, @Field("owner") String owner, @Field("account") String accountNo, @Field("ifsc") String ifscCode, Callback<PaymentResponse> callback);
+
+    @GET("/service/v2/profile/me/prepaid")
+    void getCashoutInfo(@Header("Authorization") String header, Callback<JsonElement> callback);
+
+    @PUT("/service/v2/profile/me/prepaid")
+    /** {"cashoutAccount":{"owner":"Yadnesh Wankhede","branch":"HSBC0000123","number":"123456789987654"},"type":"prepaid","currency":"INR"} */
+    void saveCashoutInfo(@Header("Authorization") String header, @Body TypedString body, Callback<CitrusResponse> callback);
 }

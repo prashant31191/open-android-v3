@@ -17,7 +17,7 @@ public class PaymentResponse extends CitrusResponse implements Parcelable {
     protected Amount transactionAmount = null;
     @SerializedName("balance")
     protected Amount balanceAmount = null;
-    @SerializedName("customer")
+    @SerializedName("cutsomer")
     protected String customer = null;
     @SerializedName("merchant")
     protected String merchantName = null;

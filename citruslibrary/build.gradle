@@ -39,4 +39,9 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+
+    // To enable larger heap size
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }

@@ -38,6 +38,7 @@ import com.citrus.retrofit.RetroFitClient;
 import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
+import com.citrus.sdk.classes.CashoutInfo;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.payment.DebitCardOption;
@@ -898,6 +899,108 @@ public class CitrusClient {
         });
     }
 
+    // Cashout Related APIs
+    public synchronized void cashout(@NonNull final CashoutInfo cashoutInfo, final Callback<PaymentResponse> callback) {
+
+        if (cashoutInfo != null && cashoutInfo.validate()) {
+            // Check whether the balance in the wallet is greater than the transaction amount.
+            getBalance(new Callback<Amount>() {
+                @Override
+                public void success(Amount balanceAmount) {
+                    // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
+                    if (balanceAmount.getValueAsDouble() >= cashoutInfo.getAmount().getValueAsDouble()) {
+                        oauthToken.getSignInToken(new Callback<AccessToken>() {
+                            @Override
+                            public void success(AccessToken accessToken) {
+                                // Since we have prepaid Token, withdraw the money.
+                                retrofitClient.cashout(accessToken.getHeaderAccessToken(), cashoutInfo.getAmount().getValue(), cashoutInfo.getAmount().getCurrency(), cashoutInfo.getAccountHolderName(), cashoutInfo.getAccountNo(), cashoutInfo.getIfscCode(), new retrofit.Callback<PaymentResponse>() {
+                                    @Override
+                                    public void success(PaymentResponse paymentResponse, Response response) {
+                                        sendResponse(callback, paymentResponse);
+                                    }
+
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        sendError(callback, error);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void error(CitrusError error) {
+                                sendError(callback, error);
+                            }
+                        });
+                    } else {
+                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
+                    }
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    sendError(callback, error);
+                }
+            });
+        } else {
+            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_CASHOUT_INFO, Status.FAILED));
+        }
+    }
+
+    public synchronized void getCashoutInfo(final Callback<CashoutInfo> callback) {
+        oauthToken.getSignInToken(new Callback<AccessToken>() {
+            @Override
+            public void success(AccessToken accessToken) {
+                retrofitClient.getCashoutInfo(accessToken.getHeaderAccessToken(), new retrofit.Callback<JsonElement>() {
+                    @Override
+                    public void success(JsonElement jsonElement, Response response) {
+                        CashoutInfo cashoutInfo = CashoutInfo.fromJSON(jsonElement.toString());
+
+                        sendResponse(callback, cashoutInfo);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        sendError(callback, error);
+                    }
+                });
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                sendError(callback, error);
+            }
+        });
+
+    }
+
+    public synchronized void saveCashoutInfo(final CashoutInfo cashoutInfo, final Callback<CitrusResponse> callback) {
+        oauthToken.getSignInToken(new Callback<AccessToken>() {
+            @Override
+            public void success(AccessToken accessToken) {
+                if (cashoutInfo != null) {
+                    retrofitClient.saveCashoutInfo(accessToken.getHeaderAccessToken(), new TypedString(CashoutInfo.toJSON(cashoutInfo)), new retrofit.Callback<CitrusResponse>() {
+                        @Override
+                        public void success(CitrusResponse citrusResponse, Response response) {
+                            sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_SAVED_CASHOUT_OPTIONS, Status.SUCCESSFUL));
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            sendError(callback, error);
+                        }
+                    });
+                } else {
+                    sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_CASHOUT_INFO, Status.FAILED));
+                }
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                sendError(callback, error);
+            }
+        });
+
+    }
 
     public synchronized String getUserEmailId() {
         return oauthToken.getEmailId();
