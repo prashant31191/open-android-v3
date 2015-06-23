@@ -26,9 +26,12 @@ import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
+import com.citrus.sdk.classes.CashoutInfo;
 import com.citrus.sdk.classes.CitrusConfig;
 import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
+import com.citrus.sdk.response.CitrusResponse;
+import com.citrus.sdk.response.PaymentResponse;
 
 
 public class UIActivity extends ActionBarActivity implements UserManagementFragment.UserManagementInteractionListener, WalletFragmentListener {
@@ -46,7 +49,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
         fragmentManager = getSupportFragmentManager();
 
         citrusClient = CitrusClient.getInstance(mContext);
-        citrusClient.enableLog(false);
+        citrusClient.enableLog(true);
 
         citrusClient.init(Constants.SIGNUP_ID, Constants.SIGNUP_SECRET, Constants.SIGNIN_ID, Constants.SIGNIN_SECRET, Constants.VANITY, Constants.environment);
 
@@ -126,6 +129,33 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
+    }
+
+    @Override
+    public void onCashoutSelected(CashoutInfo cashoutInfo) {
+        citrusClient.saveCashoutInfo(cashoutInfo, new Callback<CitrusResponse>() {
+            @Override
+            public void success(CitrusResponse citrusResponse) {
+                Utils.showToast(getApplicationContext(), citrusResponse.getMessage());
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Utils.showToast(getApplicationContext(), error.getMessage());
+            }
+        });
+
+        citrusClient.cashout(cashoutInfo, new Callback<PaymentResponse>() {
+            @Override
+            public void success(PaymentResponse paymentResponse) {
+                Utils.showToast(getApplicationContext(), paymentResponse.toString());
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Utils.showToast(getApplicationContext(), error.getMessage());
+            }
+        });
     }
 
     public void onWalletPaymentClicked(View view) {

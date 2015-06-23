@@ -28,10 +28,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.classes.Amount;
+import com.citrus.sdk.classes.CashoutInfo;
 import com.citrus.sdk.response.CitrusError;
 
 import static com.citrus.sample.Utils.PaymentType.CITRUS_CASH;
@@ -57,7 +60,8 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnLoadMoney = null;
     private Button btnPayUsingCash = null;
     private Button btnPGPayment = null;
-
+    private Button btnGetWithdrawInfo = null;
+    private Button btnWithdraw = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -96,11 +100,16 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnLoadMoney = (Button) rootView.findViewById(R.id.btn_load_money);
         btnPayUsingCash = (Button) rootView.findViewById(R.id.btn_pay_using_cash);
         btnPGPayment = (Button) rootView.findViewById(R.id.btn_pg_payment);
+        btnWithdraw = (Button) rootView.findViewById(R.id.btn_cashout);
+        btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
+
 
         btnGetBalance.setOnClickListener(this);
         btnLoadMoney.setOnClickListener(this);
         btnPayUsingCash.setOnClickListener(this);
         btnPGPayment.setOnClickListener(this);
+        btnGetWithdrawInfo.setOnClickListener(this);
+        btnWithdraw.setOnClickListener(this);
 
         return rootView;
     }
@@ -138,8 +147,13 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             case R.id.btn_pg_payment:
                 pgPayment();
                 break;
+            case R.id.btn_cashout:
+                cashout();
+                break;
+            case R.id.btn_get_cashout_info:
+                getCashoutInfo();
+                break;
         }
-
     }
 
     private void getBalance() {
@@ -169,6 +183,24 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         showPrompt(PG_PAYMENT);
     }
 
+    private void cashout() {
+        showCashoutPrompt();
+    }
+
+    private void getCashoutInfo() {
+        mCitrusClient.getCashoutInfo(new Callback<CashoutInfo>() {
+            @Override
+            public void success(CashoutInfo cashoutInfo) {
+                Utils.showToast(getActivity(), cashoutInfo.toString());
+            }
+
+            @Override
+            public void error(CitrusError error) {
+                Utils.showToast(getActivity(), error.getMessage());
+            }
+        });
+    }
+
     private void showPrompt(final Utils.PaymentType paymentType) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         String message = null;
@@ -188,6 +220,14 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 positiveButtonText = "Make Payment";
                 break;
         }
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        final EditText amount = new EditText(getActivity());
+        final EditText accountNo = new EditText(getActivity());
+        final EditText accountHolderName = new EditText(getActivity());
+        final EditText ifscCode = new EditText(getActivity());
+
 
         alert.setTitle("Transaction Amount?");
         alert.setMessage(message);
@@ -220,6 +260,81 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         alert.show();
     }
 
+    private void showCashoutPrompt() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        String message = "Please enter account details.";
+        String positiveButtonText = "Withdraw";
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        final TextView labelAmount = new TextView(getActivity());
+        final EditText editAmount = new EditText(getActivity());
+        final TextView labelAccountNo = new TextView(getActivity());
+        final EditText editAccountNo = new EditText(getActivity());
+        final TextView labelAccountHolderName = new TextView(getActivity());
+        final EditText editAccountHolderName = new EditText(getActivity());
+        final TextView labelIfscCode = new TextView(getActivity());
+        final EditText editIfscCode = new EditText(getActivity());
+
+        labelAmount.setText("Withdrawal Amount");
+        labelAccountNo.setText("Account Number");
+        labelAccountHolderName.setText("Account Holder Name");
+        labelIfscCode.setText("IFSC Code");
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        labelAmount.setLayoutParams(layoutParams);
+        labelAccountNo.setLayoutParams(layoutParams);
+        labelAccountHolderName.setLayoutParams(layoutParams);
+        labelIfscCode.setLayoutParams(layoutParams);
+        editAmount.setLayoutParams(layoutParams);
+        editAccountNo.setLayoutParams(layoutParams);
+        editAccountHolderName.setLayoutParams(layoutParams);
+        editIfscCode.setLayoutParams(layoutParams);
+
+        linearLayout.addView(labelAmount);
+        linearLayout.addView(editAmount);
+        linearLayout.addView(labelAccountNo);
+        linearLayout.addView(editAccountNo);
+        linearLayout.addView(labelAccountHolderName);
+        linearLayout.addView(editAccountHolderName);
+        linearLayout.addView(labelIfscCode);
+        linearLayout.addView(editIfscCode);
+
+        editAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        alert.setTitle("Withdraw Money To Your Account");
+        alert.setMessage(message);
+
+        alert.setView(linearLayout);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String amount = editAmount.getText().toString();
+                String accontNo = editAccountNo.getText().toString();
+                String accountHolderName = editAccountHolderName.getText().toString();
+                String ifsc = editIfscCode.getText().toString();
+
+                CashoutInfo cashoutInfo = new CashoutInfo(new Amount(amount), accontNo, accountHolderName, ifsc);
+                mListener.onCashoutSelected(cashoutInfo);
+
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editAmount.getWindowToken(), 0);
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        editAmount.requestFocus();
+        alert.show();
+    }
 }
 
 
