@@ -912,7 +912,7 @@ public class CitrusClient {
                         oauthToken.getSignInToken(new Callback<AccessToken>() {
                             @Override
                             public void success(AccessToken accessToken) {
-                                // Since we have prepaid Token, withdraw the money.
+                                // Since we have access Token, withdraw the money.
                                 retrofitClient.cashout(accessToken.getHeaderAccessToken(), cashoutInfo.getAmount().getValue(), cashoutInfo.getAmount().getCurrency(), cashoutInfo.getAccountHolderName(), cashoutInfo.getAccountNo(), cashoutInfo.getIfscCode(), new retrofit.Callback<PaymentResponse>() {
                                     @Override
                                     public void success(PaymentResponse paymentResponse, Response response) {

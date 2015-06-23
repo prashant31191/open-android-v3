@@ -147,6 +147,7 @@ public interface API {
     @GET("/service/v2/profile/me/prepaid")
     void getCashoutInfo(@Header("Authorization") String header, Callback<JsonElement> callback);
 
+    @Headers("Content-Type: application/json")
     @PUT("/service/v2/profile/me/prepaid")
     /** {"cashoutAccount":{"owner":"Yadnesh Wankhede","branch":"HSBC0000123","number":"123456789987654"},"type":"prepaid","currency":"INR"} */
     void saveCashoutInfo(@Header("Authorization") String header, @Body TypedString body, Callback<CitrusResponse> callback);
