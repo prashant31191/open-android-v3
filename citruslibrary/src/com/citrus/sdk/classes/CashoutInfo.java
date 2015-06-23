@@ -73,8 +73,8 @@ public class CashoutInfo implements Parcelable {
             try {
                 JSONObject cashoutObject = new JSONObject(json);
                 JSONObject cashoutAccount = cashoutObject.getJSONObject("cashoutAccount");
-                String accountNo = cashoutAccount.getString("owner");
-                String accountHolderName = cashoutAccount.getString("number");
+                String accountNo = cashoutAccount.getString("number");
+                String accountHolderName = cashoutAccount.getString("owner");
                 String branch = cashoutAccount.getString("branch");
 
                 cashoutInfo = new CashoutInfo(accountNo, accountHolderName, branch);
