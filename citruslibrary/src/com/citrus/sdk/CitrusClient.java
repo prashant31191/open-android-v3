@@ -930,11 +930,26 @@ public class CitrusClient {
 
                 TransactionResponse transactionResponse = intent.getParcelableExtra(Constants.INTENT_EXTRA_TRANSACTION_RESPONSE);
                 if (transactionResponse != null) {
+                    TransactionResponse.TransactionStatus transactionStatus = transactionResponse.getTransactionStatus();
+                    Status status = null;
 
-                    if (transactionResponse.getTransactionStatus() == TransactionResponse.TransactionStatus.SUCCESSFUL) {
+                    switch (transactionStatus) {
+
+                        case SUCCESSFUL:
+                            status = Status.SUCCESSFUL;
+                            break;
+                        case FAILED:
+                            status = Status.FAILED;
+                            break;
+                        case CANCELLED:
+                            status = Status.CANCELLED;
+                            break;
+                    }
+
+                    if (transactionStatus == TransactionResponse.TransactionStatus.SUCCESSFUL) {
                         sendResponse(callback, transactionResponse);
                     } else {
-                        sendError(callback, new CitrusError(transactionResponse.getMessage(), Status.FAILED));
+                        sendError(callback, new CitrusError(transactionResponse.getMessage(), status));
                     }
                 }
             }
