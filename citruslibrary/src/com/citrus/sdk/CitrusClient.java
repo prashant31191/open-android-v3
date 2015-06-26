@@ -39,6 +39,7 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CashoutInfo;
+import com.citrus.sdk.classes.PGHealthResponse;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.payment.DebitCardOption;
@@ -999,6 +1000,43 @@ public class CitrusClient {
                 sendError(callback, error);
             }
         });
+
+    }
+
+    // PG Health.
+
+    /**
+     * It returns {@link com.citrus.sdk.classes.PGHealthResponse.PGHealth} which denotes the health of the PG.
+     * If the health is bad merchants can warn user to use another payment method.
+     *
+     * @param paymentOption
+     * @param callback
+     */
+    public synchronized void getPGHealth(PaymentOption paymentOption, final Callback<PGHealthResponse> callback) {
+
+        // Currently PG health supports netbanking only. So in case of any other payment Options it will return GOOD by default.
+        if (!(paymentOption instanceof NetbankingOption)) {
+            sendResponse(callback, new PGHealthResponse(PGHealthResponse.PGHealth.GOOD, "All Good"));
+        } else {
+            RetroFitClient.setEndPoint(environment.getBaseCitrusUrl());
+
+            // If the paymentOption is netbanking call the api.
+            retrofitClient.getPGHealth(vanity, ((NetbankingOption) paymentOption).getBankCID(), new retrofit.Callback<PGHealthResponse>() {
+                @Override
+                public void success(PGHealthResponse pgHealthResponse, Response response) {
+                    sendResponse(callback, pgHealthResponse);
+
+                    RetroFitClient.resetEndPoint();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    sendError(callback, error);
+
+                    RetroFitClient.resetEndPoint();
+                }
+            });
+        }
 
     }
 

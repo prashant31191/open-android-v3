@@ -19,6 +19,7 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CitrusPrepaidBill;
+import com.citrus.sdk.classes.PGHealthResponse;
 import com.citrus.sdk.classes.StructResponsePOJO;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.response.CitrusResponse;
@@ -151,4 +152,9 @@ public interface API {
     @PUT("/service/v2/profile/me/prepaid")
     /** {"cashoutAccount":{"owner":"Yadnesh Wankhede","branch":"HSBC0000123","number":"123456789987654"},"type":"prepaid","currency":"INR"} */
     void saveCashoutInfo(@Header("Authorization") String header, @Body TypedString body, Callback<CitrusResponse> callback);
+
+    // PG Health API
+    @FormUrlEncoded
+    @POST("/utility/{path}/pgHealth")
+    void getPGHealth(@Path("path") String path, @Field("bankCode") String bankCode, Callback<PGHealthResponse> callback);
 }
