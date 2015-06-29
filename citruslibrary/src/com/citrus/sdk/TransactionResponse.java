@@ -19,7 +19,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-
 import com.citrus.analytics.TransactionType;
 import com.citrus.sdk.classes.Amount;
 import com.orhanobut.logger.Logger;
@@ -144,7 +143,14 @@ public final class TransactionResponse implements Parcelable {
                 String currency = jsonObject.optString("currency");
                 String amount = jsonObject.optString("amount");
                 String responseCode = jsonObject.optString("pgRespCode");
-                String message = jsonObject.optString("TxMsg");
+                String message = null;
+                // If the transaction is cancelled by the user, change the message.
+                if (transactionStatus == TransactionStatus.CANCELLED) {
+                    message = "Transaction Cancelled.";
+                } else {
+                    message = jsonObject.optString("TxMsg");
+                }
+
                 String isCOD = jsonObject.optString("isCOD");
                 String signature = jsonObject.optString("signature");
                 String issuerCode = jsonObject.optString("issuerCode");
@@ -234,10 +240,9 @@ public final class TransactionResponse implements Parcelable {
     }
 
     public TransactionType getAnalyticsTransactionType() {
-        if(transactionStatus ==TransactionStatus.SUCCESSFUL) {
+        if (transactionStatus == TransactionStatus.SUCCESSFUL) {
             return TransactionType.SUCCESS;
-        }
-        else if(transactionStatus == TransactionStatus.CANCELLED) {
+        } else if (transactionStatus == TransactionStatus.CANCELLED) {
             return TransactionType.CANCELLED;
         } else {
             return TransactionType.FAIL;
@@ -319,14 +324,16 @@ public final class TransactionResponse implements Parcelable {
     }
 
     public static enum TransactionStatus {
-        SUCCESSFUL, FAILED, CANCELLED;
+        SUCCESSFUL, FAILED, CANCELLED, UNKNOWN;
 
         public static TransactionStatus getTransactionStatus(String transactionStatus) {
-            TransactionStatus status = null;
+            TransactionStatus status = UNKNOWN;
             if (TextUtils.equals(transactionStatus, "SUCCESS")) {
                 status = SUCCESSFUL;
             } else if (TextUtils.equals(transactionStatus, "FAIL")) {
                 status = FAILED;
+            } else if (TextUtils.equals(transactionStatus, "CANCELED")) {
+                status = CANCELLED;
             }
 
             return status;

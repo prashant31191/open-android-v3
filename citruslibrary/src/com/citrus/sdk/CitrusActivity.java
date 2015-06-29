@@ -81,6 +81,7 @@ public class CitrusActivity extends ActionBarActivity {
     private CitrusUser mCitrusUser = null;
     private String sessionCookie;
     private CookieManager cookieManager;
+    private String mpiServletUrl = null;
 
     private boolean isBackKeyPressedByUser = false;
 
@@ -268,10 +269,12 @@ public class CitrusActivity extends ActionBarActivity {
             try {
 
                 JSONObject redirect = new JSONObject(response);
-                if (!android.text.TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
+                mpiServletUrl = redirect.optString("redirectUrl");
 
-                    //switch ()
-                    mPaymentWebview.loadUrl(redirect.getString("redirectUrl"));
+                if (!android.text.TextUtils.isEmpty(mpiServletUrl)) {
+
+
+                    mPaymentWebview.loadUrl(mpiServletUrl);
                     if (mPaymentOption != null) {
                         EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.OPEN, mPaymentOption.getAnalyticsPaymentType()); //analytics event - WebView Event
                     }
@@ -343,8 +346,10 @@ public class CitrusActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
                 isBackKeyPressedByUser = true;
-                TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.CANCELLED, "Cancelled By User", mTransactionId);
-                sendResult(transactionResponse);
+//                TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.CANCELLED, "Cancelled By User", mTransactionId);
+//                sendResult(transactionResponse);
+
+                mPaymentWebview.loadUrl(mpiServletUrl);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -445,7 +450,11 @@ public class CitrusActivity extends ActionBarActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             // Display the message.
-            showDialog("Processing your payment. Please do not refresh the page.", true);
+            if (isBackKeyPressedByUser) {
+                showDialog("Cancelling the transaction. Please wait..", true);
+            } else {
+                showDialog("Processing your payment. Please do not refresh the page.", true);
+            }
         }
 
         @Override
