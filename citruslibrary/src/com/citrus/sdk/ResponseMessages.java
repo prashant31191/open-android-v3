@@ -46,6 +46,7 @@ public interface ResponseMessages {
 
     String SUCCESS_MESSAGE_SAVED_PAYMENT_OPTIONS = "Payment Option Saved Successfully.";
     String SUCCESS_MESSAGE_SAVED_CASHOUT_OPTIONS = "Cashout Information Saved Successfully.";
+    String SUCCESS_MESSAGE_DELETE_PAYMENT_OPTIONS = "Payment Option Deleted Successfully.";
 
     String ERROR_NETWORK_CONNECTION = "Please check your internet connection.";
 

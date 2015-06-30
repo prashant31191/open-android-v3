@@ -189,6 +189,20 @@ public abstract class CardOption extends PaymentOption {
         return number.trim().replaceAll("\\s+|-", "");
     }
 
+    public String getLast4Digits() {
+        String last4Digits = null;
+
+        if (!TextUtils.isEmpty(cardNumber)) {
+            int length = cardNumber.length();
+
+            if (length - 4 > 0) {
+                last4Digits = cardNumber.substring(length - 4, length);
+            }
+        }
+
+        return last4Digits;
+    }
+
     @Override
     public Drawable getOptionIcon(Context context) {
         // Return the icon depending upon the scheme of the card.
