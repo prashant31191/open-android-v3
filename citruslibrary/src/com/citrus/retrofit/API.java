@@ -29,6 +29,7 @@ import com.google.gson.JsonElement;
 import retrofit.Callback;
 import retrofit.ResponseCallback;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -157,4 +158,12 @@ public interface API {
     @FormUrlEncoded
     @POST("/utility/{path}/pgHealth")
     void getPGHealth(@Path("path") String path, @Field("bankCode") String bankCode, Callback<PGHealthResponse> callback);
+
+
+    // The response is 204 No Content.
+    @DELETE("/service/v2/profile/me/payment/{last4Digits}:{scheme}")
+    void deleteBank(@Header("Authorization") String header, @Path("last4Digits") String last4Digits, @Path("scheme") String scheme, Callback<CitrusResponse> callback);
+
+    @DELETE("/service/v2/profile/me/payment/{bankToken}")
+    void deleteBank(@Header("Authorization") String header, @Path("bankToken") String bankToken, Callback<CitrusResponse> callback);
 }
