@@ -324,7 +324,7 @@ public final class TransactionResponse implements Parcelable {
     }
 
     public static enum TransactionStatus {
-        SUCCESSFUL, FAILED, CANCELLED, UNKNOWN;
+        SUCCESSFUL, FAILED, CANCELLED, PG_REJECTED, UNKNOWN;
 
         public static TransactionStatus getTransactionStatus(String transactionStatus) {
             TransactionStatus status = UNKNOWN;
@@ -334,6 +334,8 @@ public final class TransactionResponse implements Parcelable {
                 status = FAILED;
             } else if (TextUtils.equals(transactionStatus, "CANCELED")) {
                 status = CANCELLED;
+            } else if (TextUtils.equals(transactionStatus, "PG_REJECTED")) {
+                status = PG_REJECTED;
             }
 
             return status;
@@ -449,6 +451,7 @@ public final class TransactionResponse implements Parcelable {
             dest.writeString(this.transactionGateway);
             dest.writeString(this.transactionDateTime);
         }
+
     }
 
     //http://192.168.27.1:8080/redirectURLLoadCash.jsp#SUCCESSFUL:1472849:1513.00:INR:1427444325000:100.00:INR
