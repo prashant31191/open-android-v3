@@ -43,15 +43,12 @@ public final class CreditCardOption extends CardOption implements android.os.Par
     }
 
     /**
-     * @param cardHolderName - Name of the card holder.
-     * @param cardNumber     - Card number.
-     * @param cardCVV        - CVV of the card. We do not store CVV at our end.
-     * @param cardExpiry     - Expiry date in MM/YY format.
+     * @param cardNumber
+     * @param cardScheme
      */
-    CreditCardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiry) {
-        super(cardHolderName, cardNumber, cardCVV, cardExpiry);
+    public CreditCardOption(String cardNumber, CardScheme cardScheme) {
+        super(cardNumber, cardScheme);
     }
-
 
     /**
      * This constructor will be used internally, mostly to display the saved card details.

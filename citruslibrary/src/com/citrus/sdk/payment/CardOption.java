@@ -38,42 +38,6 @@ public abstract class CardOption extends PaymentOption {
     protected CardScheme cardScheme = null;
     protected String nickName = null;
 
-    CardOption(String token, String cardCVV) {
-        this.token = token;
-        this.cardCVV = cardCVV;
-    }
-
-    CardOption() {
-    }
-
-    /**
-     * @param cardHolderName - Name of the card holder.
-     * @param cardNumber     - Card number.
-     * @param cardCVV        - CVV of the card. We do not store CVV at our end.
-     * @param cardExpiry     - Expiry date in MM/YY format.
-     */
-    CardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiry) {
-
-        if (!android.text.TextUtils.isEmpty(cardHolderName)) {
-            this.cardHolderName = cardHolderName;
-        } else {
-            this.cardHolderName = "Card Holder Name";
-        }
-
-        this.cardNumber = normalizeCardNumber(cardNumber);
-        this.cardCVV = cardCVV;
-        this.cardExpiry = cardExpiry;
-        this.cardScheme = CardScheme.getCardSchemeUsingNumber(cardNumber);
-
-        if (!TextUtils.isEmpty(cardExpiry)) {
-            String[] strArr = cardExpiry.split("/");
-            if (strArr != null && strArr.length == 2) {
-                cardExpiryMonth = strArr[0];
-                cardExpiryYear = strArr[1];
-            }
-        }
-    }
-
     /**
      * @param cardHolderName  - Name of the card holder.
      * @param cardNumber      - Card number.
@@ -102,6 +66,19 @@ public abstract class CardOption extends PaymentOption {
         if (!TextUtils.isEmpty(this.cardExpiryMonth) && !TextUtils.isEmpty(this.cardExpiryYear)) {
             this.cardExpiry = cardExpiryMonth + "/" + cardExpiryYear;
         }
+    }
+
+    CardOption(String token, String cardCVV) {
+        this.token = token;
+        this.cardCVV = cardCVV;
+    }
+
+    CardOption(String cardNumber, CardScheme cardScheme) {
+        this.cardNumber = cardNumber;
+        this.cardScheme = cardScheme;
+    }
+
+    CardOption() {
     }
 
     /**

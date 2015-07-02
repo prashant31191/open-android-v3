@@ -58,15 +58,13 @@ public final class DebitCardOption extends CardOption implements Parcelable {
         super(cardHolderName, cardNumber, cardCVV, cardExpiryMonth, cardExpiryYear);
     }
 
-
     /**
-     * @param cardHolderName - Name of the card holder.
-     * @param cardNumber     - Card number.
-     * @param cardCVV        - CVV of the card. We do not store CVV at our end.
-     * @param cardExpiry     - Expiry date in MM/YY format.
+     *
+     * @param cardNumber
+     * @param cardScheme
      */
-    DebitCardOption(String cardHolderName, String cardNumber, String cardCVV, String cardExpiry) {
-        super(cardHolderName, cardNumber, cardCVV, cardExpiry);
+    public DebitCardOption(String cardNumber, CardScheme cardScheme) {
+        super(cardNumber, cardScheme);
     }
 
     /**
