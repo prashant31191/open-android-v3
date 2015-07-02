@@ -103,8 +103,15 @@ public class PaymentBill implements Parcelable {
         return customParametersMap;
     }
 
-    public static PaymentBill fromJSONObject(JSONObject billObject) {
+    public static PaymentBill fromJSON(String json) {
         PaymentBill paymentBill = null;
+
+        JSONObject billObject = null;
+        try {
+            billObject = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         if (billObject != null) {
             Amount amount = null;

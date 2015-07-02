@@ -21,7 +21,6 @@ import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CitrusPrepaidBill;
 import com.citrus.sdk.classes.PGHealthResponse;
 import com.citrus.sdk.classes.StructResponsePOJO;
-import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
 import com.google.gson.JsonElement;
@@ -116,7 +115,7 @@ public interface API {
 
     //bill generator response
     @GET("/{path}")
-    void getBill(@Path("path") String path, @Query("amount") String amount, Callback<PaymentBill> callback);
+    void getBill(@Path("path") String path, @Query("amount") String amount, Callback<JsonElement> callback);
 
     // Save payment option
     @Headers("Content-Type: application/json")

@@ -183,25 +183,16 @@ public class CitrusActivity extends ActionBarActivity {
             billUrl = billUrl + "?amount=" + mPaymentType.getAmount().getValue();
         }
 
-      /*  new GetBill(billUrl, new Callback() {
-            @Override
-            public void onTaskexecuted(String bill, String error) {
-                dismissDialog();
-
-                if (!android.text.TextUtils.isEmpty(error)) {
-
-                    TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, error, mTransactionId);
-                    sendResult(transactionResponse);
-                } else {
-                    proceedToPayment(bill);
-                }
-            }
-        }).execute();*/
-
         CitrusClient.getInstance(CitrusActivity.this).getBill(mPaymentType.getUrl(), mPaymentType.getAmount(), new com.citrus.sdk.Callback<PaymentBill>() {
             @Override
             public void success(PaymentBill paymentBill) {
-                proceedToPayment(paymentBill.getBillJSON().toString());
+                JSONObject billJson = PaymentBill.toJSONObject(paymentBill);
+                if (billJson != null) {
+                    proceedToPayment(billJson.toString());
+                } else {
+                    TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, ResponseMessages.ERROR_MESSAGE_INVALID_BILL, mTransactionId);
+                    sendResult(transactionResponse);
+                }
             }
 
             @Override

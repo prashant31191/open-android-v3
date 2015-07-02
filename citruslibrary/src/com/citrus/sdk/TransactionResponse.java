@@ -33,16 +33,6 @@ import java.util.Map;
  */
 public final class TransactionResponse implements Parcelable {
 
-    public static final Creator<TransactionResponse> CREATOR = new Creator<TransactionResponse>() {
-        public TransactionResponse createFromParcel(Parcel source) {
-            return new TransactionResponse(source);
-        }
-
-        public TransactionResponse[] newArray(int size) {
-            return new TransactionResponse[size];
-        }
-    };
-
     private Amount balanceAmount = null;
     private Amount transactionAmount = null;
     private String message = null;
@@ -56,6 +46,7 @@ public final class TransactionResponse implements Parcelable {
     private String impsMmid = null;
     private String authIdCode = null;
     private String signature = null;
+    private String maskedCardNumber = null;
     private boolean COD = false; // Cash On Delivery
     private Map<String, String> customParamsMap = null;
     private String jsonResponse = null;
@@ -93,7 +84,7 @@ public final class TransactionResponse implements Parcelable {
      * @param COD                - cash on delivery.
      * @param customParamsMap    - custom parameters sent with request.
      */
-    private TransactionResponse(Amount transactionAmount, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, Map<String, String> customParamsMap) {
+    private TransactionResponse(Amount transactionAmount, String message, String responseCode, TransactionStatus transactionStatus, TransactionDetails transactionDetails, CitrusUser citrusUser, PaymentMode paymentMode, String issuerCode, String impsMobileNumber, String impsMmid, String authIdCode, String signature, boolean COD, String maskedCardNumber, Map<String, String> customParamsMap) {
         this.transactionAmount = transactionAmount;
         this.message = message;
         this.responseCode = responseCode;
@@ -107,28 +98,8 @@ public final class TransactionResponse implements Parcelable {
         this.authIdCode = authIdCode;
         this.signature = signature;
         this.COD = COD;
+        this.maskedCardNumber = maskedCardNumber;
         this.customParamsMap = customParamsMap;
-    }
-
-    private TransactionResponse(Parcel in) {
-        this.transactionAmount = in.readParcelable(Amount.class.getClassLoader());
-        this.balanceAmount = in.readParcelable(Amount.class.getClassLoader());
-        this.message = in.readString();
-        this.responseCode = in.readString();
-        int tmpTransactionStatus = in.readInt();
-        this.transactionStatus = tmpTransactionStatus == -1 ? null : TransactionStatus.values()[tmpTransactionStatus];
-        this.transactionDetails = in.readParcelable(TransactionDetails.class.getClassLoader());
-        this.citrusUser = in.readParcelable(CitrusUser.class.getClassLoader());
-        int tmpPaymentMode = in.readInt();
-        this.paymentMode = tmpPaymentMode == -1 ? null : PaymentMode.values()[tmpPaymentMode];
-        this.issuerCode = in.readString();
-        this.impsMobileNumber = in.readString();
-        this.impsMmid = in.readString();
-        this.authIdCode = in.readString();
-        this.signature = in.readString();
-        this.COD = in.readByte() != 0;
-//        this.customParamsMap = in.readParcelable(HashMap<String, String>.class.getClassLoader());
-        this.jsonResponse = in.readString();
     }
 
     public static TransactionResponse fromJSON(String response) {
@@ -157,6 +128,7 @@ public final class TransactionResponse implements Parcelable {
                 String impsMmid = jsonObject.optString("impsMmid");
                 String impsMobileNumber = jsonObject.optString("impsMobileNumber");
                 String authIdCode = jsonObject.optString("authIdCode");
+                String maskedcardNumber = jsonObject.optString("maskedcardNumber");
                 // TODO Need to parse custom parameters
                 Map<String, String> customParamsMap = null;
 
@@ -166,7 +138,7 @@ public final class TransactionResponse implements Parcelable {
 
                 Amount transactionAmount = new Amount(amount, currency);
 
-                transactionResponse = new TransactionResponse(transactionAmount, message, responseCode, transactionStatus, transactionDetails, citrusUser, paymentMode, issuerCode, impsMobileNumber, impsMmid, authIdCode, signature, cod, customParamsMap);
+                transactionResponse = new TransactionResponse(transactionAmount, message, responseCode, transactionStatus, transactionDetails, citrusUser, paymentMode, issuerCode, impsMobileNumber, impsMmid, authIdCode, signature, cod, maskedcardNumber, customParamsMap);
                 transactionResponse.setJsonResponse(jsonObject.toString());
 
             }
@@ -279,31 +251,6 @@ public final class TransactionResponse implements Parcelable {
                 ", COD=" + COD +
                 ", customParamsMap=" + customParamsMap +
                 '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.transactionAmount, flags);
-        dest.writeParcelable(this.balanceAmount, flags);
-        dest.writeString(this.message);
-        dest.writeString(this.responseCode);
-        dest.writeInt(this.transactionStatus == null ? -1 : this.transactionStatus.ordinal());
-        dest.writeParcelable(this.transactionDetails, flags);
-        dest.writeParcelable(this.citrusUser, 0);
-        dest.writeInt(this.paymentMode == null ? -1 : this.paymentMode.ordinal());
-        dest.writeString(this.issuerCode);
-        dest.writeString(this.impsMobileNumber);
-        dest.writeString(this.impsMmid);
-        dest.writeString(this.authIdCode);
-        dest.writeString(this.signature);
-        dest.writeByte(COD ? (byte) 1 : (byte) 0);
-//        dest.writeParcelable(this.customParamsMap, flags);
-        dest.writeString(this.jsonResponse);
     }
 
     public static enum PaymentMode {
@@ -502,4 +449,62 @@ public final class TransactionResponse implements Parcelable {
 
         return transactionResponse;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.balanceAmount, 0);
+        dest.writeParcelable(this.transactionAmount, 0);
+        dest.writeString(this.message);
+        dest.writeString(this.responseCode);
+        dest.writeInt(this.transactionStatus == null ? -1 : this.transactionStatus.ordinal());
+        dest.writeParcelable(this.transactionDetails, 0);
+        dest.writeParcelable(this.citrusUser, 0);
+        dest.writeInt(this.paymentMode == null ? -1 : this.paymentMode.ordinal());
+        dest.writeString(this.issuerCode);
+        dest.writeString(this.impsMobileNumber);
+        dest.writeString(this.impsMmid);
+        dest.writeString(this.authIdCode);
+        dest.writeString(this.signature);
+        dest.writeString(this.maskedCardNumber);
+        dest.writeByte(COD ? (byte) 1 : (byte) 0);
+//        dest.writeParcelable(this.customParamsMap, flags);
+        dest.writeString(this.jsonResponse);
+    }
+
+    protected TransactionResponse(Parcel in) {
+        this.balanceAmount = in.readParcelable(Amount.class.getClassLoader());
+        this.transactionAmount = in.readParcelable(Amount.class.getClassLoader());
+        this.message = in.readString();
+        this.responseCode = in.readString();
+        int tmpTransactionStatus = in.readInt();
+        this.transactionStatus = tmpTransactionStatus == -1 ? null : TransactionStatus.values()[tmpTransactionStatus];
+        this.transactionDetails = in.readParcelable(TransactionDetails.class.getClassLoader());
+        this.citrusUser = in.readParcelable(CitrusUser.class.getClassLoader());
+        int tmpPaymentMode = in.readInt();
+        this.paymentMode = tmpPaymentMode == -1 ? null : PaymentMode.values()[tmpPaymentMode];
+        this.issuerCode = in.readString();
+        this.impsMobileNumber = in.readString();
+        this.impsMmid = in.readString();
+        this.authIdCode = in.readString();
+        this.signature = in.readString();
+        this.maskedCardNumber = in.readString();
+        this.COD = in.readByte() != 0;
+//        this.customParamsMap = in.readParcelable(Map<String, String>.class.getClassLoader());
+        this.jsonResponse = in.readString();
+    }
+
+    public static final Creator<TransactionResponse> CREATOR = new Creator<TransactionResponse>() {
+        public TransactionResponse createFromParcel(Parcel source) {
+            return new TransactionResponse(source);
+        }
+
+        public TransactionResponse[] newArray(int size) {
+            return new TransactionResponse[size];
+        }
+    };
 }
