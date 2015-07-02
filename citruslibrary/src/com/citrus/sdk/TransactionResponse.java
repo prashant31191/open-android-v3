@@ -26,7 +26,9 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by salil on 16/2/15.
@@ -102,7 +104,7 @@ public final class TransactionResponse implements Parcelable {
         this.customParamsMap = customParamsMap;
     }
 
-    public static TransactionResponse fromJSON(String response) {
+    public static TransactionResponse fromJSON(String response, Map<String, String> customParamsOriginalMap) {
         TransactionResponse transactionResponse = null;
 
         try {
@@ -132,6 +134,17 @@ public final class TransactionResponse implements Parcelable {
                 // TODO Need to parse custom parameters
                 Map<String, String> customParamsMap = null;
 
+                if (customParamsOriginalMap != null) {
+                    Set<String> keys = customParamsOriginalMap.keySet();
+                    for (String key : keys) {
+                        if (customParamsMap == null) {
+                            customParamsMap = new HashMap<>();
+                        }
+
+                        customParamsMap.put(key, jsonObject.optString(key));
+                    }
+                }
+
                 TransactionDetails transactionDetails = TransactionDetails.fromJSONObject(jsonObject);
                 CitrusUser citrusUser = CitrusUser.fromJSONObject(jsonObject);
                 boolean cod = "true".equalsIgnoreCase(isCOD) ? true : false;
@@ -149,6 +162,10 @@ public final class TransactionResponse implements Parcelable {
         }
 
         return transactionResponse;
+    }
+
+    public static TransactionResponse fromJSON(String response) {
+        return fromJSON(response, null);
     }
 
     public TransactionStatus getTransactionStatus() {
@@ -472,7 +489,7 @@ public final class TransactionResponse implements Parcelable {
         dest.writeString(this.signature);
         dest.writeString(this.maskedCardNumber);
         dest.writeByte(COD ? (byte) 1 : (byte) 0);
-//        dest.writeParcelable(this.customParamsMap, flags);
+        dest.writeMap(this.customParamsMap);
         dest.writeString(this.jsonResponse);
     }
 
@@ -494,7 +511,7 @@ public final class TransactionResponse implements Parcelable {
         this.signature = in.readString();
         this.maskedCardNumber = in.readString();
         this.COD = in.readByte() != 0;
-//        this.customParamsMap = in.readParcelable(Map<String, String>.class.getClassLoader());
+        in.readMap(this.customParamsMap, String.class.getClassLoader());
         this.jsonResponse = in.readString();
     }
 

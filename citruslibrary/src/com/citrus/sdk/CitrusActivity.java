@@ -62,6 +62,8 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class CitrusActivity extends ActionBarActivity {
 
     private WebView mPaymentWebview = null;
@@ -82,6 +84,7 @@ public class CitrusActivity extends ActionBarActivity {
     private String sessionCookie;
     private CookieManager cookieManager;
     private String mpiServletUrl = null;
+    private Map<String, String> customParametersOriginalMap = null;
 
     private boolean isBackKeyPressedByUser = false;
 
@@ -186,6 +189,7 @@ public class CitrusActivity extends ActionBarActivity {
         CitrusClient.getInstance(CitrusActivity.this).getBill(mPaymentType.getUrl(), mPaymentType.getAmount(), new com.citrus.sdk.Callback<PaymentBill>() {
             @Override
             public void success(PaymentBill paymentBill) {
+                customParametersOriginalMap = paymentBill.getCustomParametersMap();
                 JSONObject billJson = PaymentBill.toJSONObject(paymentBill);
                 if (billJson != null) {
                     proceedToPayment(billJson.toString());
@@ -480,7 +484,7 @@ public class CitrusActivity extends ActionBarActivity {
             if (mPaymentType instanceof PaymentType.CitrusCash) {
                 removeCookies();
             }
-            TransactionResponse transactionResponse = TransactionResponse.fromJSON(response);
+            TransactionResponse transactionResponse = TransactionResponse.fromJSON(response, customParametersOriginalMap);
             sendResult(transactionResponse);
         }
 
