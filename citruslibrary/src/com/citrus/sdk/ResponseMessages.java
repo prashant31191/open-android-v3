@@ -50,6 +50,7 @@ public interface ResponseMessages {
 
     String ERROR_NETWORK_CONNECTION = "Please check your internet connection.";
 
+    String ERROR_MESSAGE_INVALID_BILL = "Invalid bill received from server.";
     String ERROR_MESSAGE_BIND_USER = "Failed to bind User!!!";
     String ERROR_MESSAGE_INSUFFICIENT_BALANCE = "The balance in your Citrus Cash account is insufficient. Please load money.";
     String ERROR_MESSAGE_INVALID_CASHOUT_INFO = "Please make sure amount, accoutNo, accountHolderName and ifscCode are not null or empty.";

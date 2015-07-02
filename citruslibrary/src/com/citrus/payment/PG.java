@@ -100,6 +100,7 @@ public class PG {
         }
         this.bill = bill;
         this.userDetails = userDetails;
+        this.customParameters = bill.getCustomParameters();
     }
 
     public PG(PaymentOption paymentOption, LoadMoney load, UserDetails userDetails) {
@@ -128,6 +129,7 @@ public class PG {
         }
         this.loadmoney = load;
         this.userDetails = userDetails;
+        this.customParameters = bill.getCustomParameters();
     }
 
 
@@ -141,6 +143,7 @@ public class PG {
         } else {
             paymenttype = "card";
         }
+        this.customParameters = bill.getCustomParameters();
     }
 
     public PG(Bank bank, Bill bill, UserDetails userDetails) {
@@ -151,6 +154,8 @@ public class PG {
             paymenttype = this.bank.getPaymentType().toString();
         else
             paymenttype = "netbank";
+
+        this.customParameters = bill.getCustomParameters();
     }
 
     public PG(Prepaid prepaid, Bill bill, UserDetails userDetails) {
@@ -158,6 +163,8 @@ public class PG {
         this.userDetails = userDetails;
         this.prepaid = prepaid;
         paymenttype = "prepaid";
+
+        this.customParameters = bill.getCustomParameters();
     }
 
     public PG(Card card, LoadMoney load, UserDetails userDetails) {
@@ -212,9 +219,6 @@ public class PG {
 
             }
         };
-
-       /* new GetPrepaidbill()
-                .execute(new String[]{loadmoney.getAmount(), loadmoney.getReturl()});*/
 
         getPrepaidBill(loadmoney.getAmount(), loadmoney.getReturl());
     }

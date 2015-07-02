@@ -728,11 +728,16 @@ public class CitrusClient {
     public synchronized void getBill(String billUrl, Amount amount, final Callback<PaymentBill> callback) {
         // Get the bill from the merchant server.
 
-        new GetJSONBill(billUrl, amount, new retrofit.Callback<PaymentBill>() {
+        new GetJSONBill(billUrl, amount, new retrofit.Callback<JsonElement>() {
             @Override
-            public void success(PaymentBill paymentBill, Response response) {
-                Logger.d("GETBILL RESPONSE **" + paymentBill.toString());
-                callback.success(paymentBill);
+            public void success(JsonElement jsonElement, Response response) {
+                Logger.d("GETBILL RESPONSE **" + jsonElement.toString());
+                PaymentBill paymentBill = PaymentBill.fromJSON(jsonElement.toString());
+                if (paymentBill != null) {
+                    callback.success(paymentBill);
+                } else {
+                    sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_BILL, Status.FAILED));
+                }
             }
 
             @Override
