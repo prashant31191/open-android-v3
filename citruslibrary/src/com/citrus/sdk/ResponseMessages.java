@@ -23,6 +23,10 @@ public interface ResponseMessages {
     String SUCCESS_MESSAGE_SET_PASSWORD = "User is signed up successfully.";
     String SUCCESS_MESSAGE_SIGNIN = "User Signed In Successfully.";
 
+    String SUCCESS_COOKIE_SIGNIN = "User Cookie Sign In Suceesfully.";
+
+
+
     String SUCCESS_MESSAGE_USER_BIND = "User Bind Successfully.";
 
     String SUCCESS_MESSAGE_LOAD_MONEY = "Citrus Cash Wallet loaded successfully";
@@ -54,5 +58,7 @@ public interface ResponseMessages {
     String ERROR_MESSAGE_BIND_USER = "Failed to bind User!!!";
     String ERROR_MESSAGE_INSUFFICIENT_BALANCE = "The balance in your Citrus Cash account is insufficient. Please load money.";
     String ERROR_MESSAGE_INVALID_CASHOUT_INFO = "Please make sure amount, accoutNo, accountHolderName and ifscCode are not null or empty.";
+
+    String ERROR_MESSAGE_INVALID_PASSWORD = "Invalid Credentials!!! Please check your passsword.";
 
 }

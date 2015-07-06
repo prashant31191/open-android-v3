@@ -56,6 +56,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.orhanobut.logger.Logger;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -378,6 +379,45 @@ public class CitrusClient {
             }
         });
     }
+
+    public synchronized void getCookie(String email, String password, final Callback<CitrusResponse> response) {
+        RetroFitClient.setInterCeptor();
+        EventBus.getDefault().register(CitrusClient.this);
+        retrofitClient.getCookie(email, password, "true", new retrofit.Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                // NOOP
+                // This method will never be called.
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if(error.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) { //Invalid Password for COOKIE
+                    CitrusError citrusError = new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_PASSWORD, Status.FAILED);
+                    response.error(citrusError);
+                }
+                else {
+                    if (prepaidCookie != null) {
+                        cookieManager = CookieManager.getInstance();
+                        PersistentConfig config = new PersistentConfig(mContext);
+                        if (config.getCookieString() != null) {
+                            cookieManager.getInstance().removeSessionCookie();
+                        }
+                        CookieSyncManager.createInstance(mContext);
+                        config.setCookie(prepaidCookie);
+                    } else {
+                        Logger.d("PREPAID LOGIN UNSUCCESSFUL");
+                    }
+                    EventBus.getDefault().unregister(CitrusClient.this);
+
+                    // Since we have a got the cookie, we are giving the callback.
+                    sendResponse(response, new CitrusResponse(ResponseMessages.SUCCESS_COOKIE_SIGNIN, Status.SUCCESSFUL));
+
+                }
+            }
+        });
+    }
+
 
     /**
      * Signout the existing logged in user.
