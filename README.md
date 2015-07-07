@@ -1,6 +1,8 @@
 # open-android-v3
 Enhanced Payment SDK 
 
+Last updated : 07/07/2015
+
 What's new?
 open-android-v3 is enhanced version of SDK V2. 
 
