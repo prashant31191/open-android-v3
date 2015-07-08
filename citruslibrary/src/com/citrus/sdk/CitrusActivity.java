@@ -59,6 +59,7 @@ import com.citrus.payment.PG;
 import com.citrus.payment.UserDetails;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusConfig;
+import com.citrus.sdk.classes.Utils;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
@@ -367,13 +368,13 @@ public class CitrusActivity extends ActionBarActivity {
                 dialog.dismiss();
                 isBackKeyPressedByUser = true;
 
-                // If the paymenttype is CitrusCash, then cancel the transaction
-                // Else finish the activity.
-                if (!(mPaymentType instanceof PaymentType.CitrusCash)) {
-                    mPaymentWebview.loadUrl(mpiServletUrl);
-                } else {
+                // If the PaymentType is CitrusCash or network is not available, finish the activity and mark the status as cancelled.
+                // else load the url again so that Citrus can cancel the transaction and return the control to app normal way.
+                if (mPaymentType instanceof PaymentType.CitrusCash || !Utils.isNetworkConnected(mContext)) {
                     TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.CANCELLED, "Cancelled By User", mTransactionId);
                     sendResult(transactionResponse);
+                } else {
+                    mPaymentWebview.loadUrl(mpiServletUrl);
                 }
             }
         });
