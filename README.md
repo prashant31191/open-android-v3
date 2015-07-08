@@ -1,7 +1,7 @@
 # open-android-v3
 Enhanced Payment SDK 
 
-Last updated : 07/07/2015
+Last updated : 08/07/2015
 
 What's new?
 open-android-v3 is enhanced version of SDK V2. 
@@ -13,6 +13,7 @@ open-android-v3 is enhanced version of SDK V2.
    5.	Support for Citrus Cash.
    6.	Added support to gradle/Android Studio
    7. Less Integration Time Required.
+   8. Zero click payment using Citrus Cash.
 
 <b> Prerequisite </>
    You must already have installed and configured:
