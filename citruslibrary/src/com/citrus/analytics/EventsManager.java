@@ -26,13 +26,15 @@ public class EventsManager {
 
 
     private final static String INIT_EVENTS = "SDK_VERSION";
+
     /**
      * This function will be called to log WebView related events
+     *
      * @param context
      * @param webViewEvents
      * @param paymentType
      */
-    public static void logWebViewEvents(Context context, WebViewEvents webViewEvents,PaymentType paymentType) {
+    public static void logWebViewEvents(Context context, WebViewEvents webViewEvents, PaymentType paymentType) {
         ConnectionType connectionType = ConnectionManager.getNetworkClass(context);
         Tracker t = (CitrusLibraryApp.getTracker(
                 CitrusLibraryApp.TrackerName.APP_TRACKER, context));
@@ -44,6 +46,7 @@ public class EventsManager {
 
     /**
      * This function will be called to log payment related events
+     *
      * @param context
      * @param paymentType
      * @param transactionType
@@ -57,8 +60,16 @@ public class EventsManager {
         //ConnectionType*PaymentType*BuildVersion*TransactionType
     }
 
+    public static void logPaymentEvents(Context context, PaymentType paymentType, String failureReason) {
+        ConnectionType connectionType = ConnectionManager.getNetworkClass(context);
+        Tracker t = CitrusLibraryApp.getTracker(CitrusLibraryApp.TrackerName.APP_TRACKER, context);
+        t.send(new HitBuilders.EventBuilder().setCategory(Config.getVanity())
+                .setAction(PAYMENT_EVENTS).setLabel(getPaymentEventLabel(connectionType, paymentType, failureReason))
+                .setValue(getPaymentEventValue(connectionType, paymentType, TransactionType.FAIL)).build());
+        //ConnectionType*PaymentType*BuildVersion*TransactionType
+    }
 
-    public static void logInitSDKEvents(final Context context){
+    public static void logInitSDKEvents(final Context context) {
 
         RetroFitClient.setEndPoint(Config.getBaseURL());
         RetroFitClient.getCitrusRetroFitClient().getMerchantName(Config.getVanity(), new Callback<String>() {
@@ -85,12 +96,12 @@ public class EventsManager {
         });
 
 
-
     }
 
 
     /**
      * This function will return value for webview events
+     *
      * @param webViewEvents
      * @param connectionType
      * @param paymentType
@@ -98,8 +109,8 @@ public class EventsManager {
      */
     private static long getWebViewEventValue(WebViewEvents webViewEvents, ConnectionType connectionType, PaymentType paymentType) {
         //long value = webViewEvents.getValue()*connectionType.getValue()*paymentType.getValue()*APILevel.getValue(Build.VERSION.SDK_INT);
-      //  return 5L;
-        switch(webViewEvents) {
+        //  return 5L;
+        switch (webViewEvents) {
             case OPEN:
                 return 1L;
             case BACK_KEY:
@@ -114,6 +125,7 @@ public class EventsManager {
 
     /**
      * This function will return value for Payment events
+     *
      * @param connectionType
      * @param paymentType
      * @param transactionType
@@ -121,7 +133,7 @@ public class EventsManager {
      */
     private static long getPaymentEventValue(ConnectionType connectionType, PaymentType paymentType, TransactionType transactionType) {
         //long value = connectionType.getValue()*paymentType.getValue()*APILevel.getValue(Build.VERSION.SDK_INT)*transactionType.getValue();
-        switch(transactionType) {
+        switch (transactionType) {
             case SUCCESS:
                 return 4L;
             case FAIL:
@@ -133,6 +145,7 @@ public class EventsManager {
 
     /**
      * This function will return Label for WebViewEvents
+     *
      * @param webViewEvents
      * @param connectionType
      * @param paymentType
@@ -140,16 +153,15 @@ public class EventsManager {
      */
     public static String getWebViewEventLabel(WebViewEvents webViewEvents, ConnectionType connectionType, PaymentType paymentType) {
         String eventLabel = null;
-        if(paymentType == PaymentType.NET_BANKING) {
-            if(paymentType.getName()!=null) {
-                eventLabel = webViewEvents.toString()+"_" +connectionType.toString()+"_"+paymentType.toString()+"_"+ paymentType.getName()+"_" +String.valueOf(Build.VERSION.SDK_INT)+ "_"+String.valueOf(Constants.SDK_VERSION);
-            }
-            else {
-                eventLabel = webViewEvents.toString()+"_" +connectionType.toString()+"_"+paymentType.toString()+"_"+String.valueOf(Build.VERSION.SDK_INT)+ "_"+String.valueOf(Constants.SDK_VERSION);
+        if (paymentType == PaymentType.NET_BANKING) {
+            if (paymentType.getName() != null) {
+                eventLabel = webViewEvents.toString() + "_" + connectionType.toString() + "_" + paymentType.toString() + "_" + paymentType.getName() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + String.valueOf(Constants.SDK_VERSION);
+            } else {
+                eventLabel = webViewEvents.toString() + "_" + connectionType.toString() + "_" + paymentType.toString() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + String.valueOf(Constants.SDK_VERSION);
             }
 
-        }else {
-            eventLabel = webViewEvents.toString()+"_" +connectionType.toString()+"_"+paymentType.toString()+"_"+String.valueOf(Build.VERSION.SDK_INT)+ "_"+String.valueOf(Constants.SDK_VERSION);
+        } else {
+            eventLabel = webViewEvents.toString() + "_" + connectionType.toString() + "_" + paymentType.toString() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + String.valueOf(Constants.SDK_VERSION);
         }
 
         return eventLabel;
@@ -157,6 +169,7 @@ public class EventsManager {
 
     /**
      * This function will return Label for PaymentEvents
+     *
      * @param connectionType
      * @param paymentType
      * @param transactionType
@@ -164,19 +177,41 @@ public class EventsManager {
      */
     public static String getPaymentEventLabel(ConnectionType connectionType, PaymentType paymentType, TransactionType transactionType) {
         String eventLabel = null;
-        if(paymentType == PaymentType.NET_BANKING) {
-            if(paymentType.getName()!=null) {
-                eventLabel = connectionType.toString() + "_" + paymentType.toString() + "_" + paymentType.getName()+"_"+ String.valueOf(Build.VERSION.SDK_INT) + "_" + transactionType.toString() + "_" + String.valueOf(Constants.SDK_VERSION);
-            }else {
+        if (paymentType == PaymentType.NET_BANKING) {
+            if (paymentType.getName() != null) {
+                eventLabel = connectionType.toString() + "_" + paymentType.toString() + "_" + paymentType.getName() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + transactionType.toString() + "_" + String.valueOf(Constants.SDK_VERSION);
+            } else {
                 eventLabel = connectionType.toString() + "_" + paymentType.toString() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + transactionType.toString() + "_" + String.valueOf(Constants.SDK_VERSION);
             }
 
-        }else {
+        } else {
             eventLabel = connectionType.toString() + "_" + paymentType.toString() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + transactionType.toString() + "_" + String.valueOf(Constants.SDK_VERSION);
         }
         return eventLabel;
     }
 
+    /**
+     * This function will return Label for PaymentEvents
+     *
+     * @param connectionType
+     * @param paymentType
+     * @param failureReason
+     * @return consolidated String to log into events
+     */
+    public static String getPaymentEventLabel(ConnectionType connectionType, PaymentType paymentType, String failureReason) {
+        String eventLabel = null;
+        if (paymentType == PaymentType.NET_BANKING) {
+            if (paymentType.getName() != null) {
+                eventLabel = connectionType.toString() + "_" + paymentType.toString() + "_" + paymentType.getName() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + TransactionType.FAIL.toString() + "_" + failureReason + "_" + String.valueOf(Constants.SDK_VERSION);
+            } else {
+                eventLabel = connectionType.toString() + "_" + paymentType.toString() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + TransactionType.FAIL.toString() + "_" + failureReason + "_" + String.valueOf(Constants.SDK_VERSION);
+            }
+
+        } else {
+            eventLabel = connectionType.toString() + "_" + paymentType.toString() + "_" + String.valueOf(Build.VERSION.SDK_INT) + "_" + TransactionType.FAIL.toString() + "_" + failureReason + "_" + String.valueOf(Constants.SDK_VERSION);
+        }
+        return eventLabel;
+    }
 
 
 }

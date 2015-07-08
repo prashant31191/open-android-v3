@@ -30,8 +30,13 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
@@ -39,6 +44,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 
 import com.citrus.analytics.EventsManager;
 import com.citrus.analytics.WebViewEvents;
@@ -57,6 +63,7 @@ import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
+import com.citrus.sdk.response.CitrusResponse;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
@@ -85,17 +92,30 @@ public class CitrusActivity extends ActionBarActivity {
     private CookieManager cookieManager;
     private String mpiServletUrl = null;
     private Map<String, String> customParametersOriginalMap = null;
+    private CitrusClient mCitrusClient = null;
+    private String mActivityTitle = null;
 
     private boolean isBackKeyPressedByUser = false;
+    private boolean passwordPromptShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        mPaymentType = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_PAYMENT_TYPE);
+
+        if (!(mPaymentType instanceof PaymentType.CitrusCash)) {
+            setTheme(R.style.Base_Theme_AppCompat_Light_DarkActionBar);
+        }
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_citrus);
 
         mPaymentParams = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_PAYMENT_PARAMS);
-        mPaymentType = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_PAYMENT_TYPE);
         mCitrusConfig = CitrusConfig.getInstance();
+        mActivityTitle = mCitrusConfig.getCitrusActivityTitle();
+
+        mCitrusClient = CitrusClient.getInstance(mContext);
 
         // Set payment Params
         if (mPaymentParams != null) {
@@ -133,6 +153,12 @@ public class CitrusActivity extends ActionBarActivity {
         mPaymentWebview.setWebChromeClient(new WebChromeClient());
 
         mPaymentWebview.setWebViewClient(new CitrusWebClient());
+
+        // Make the webview visible only in case of PGPayment or LoadMoney.
+        if (mPaymentType instanceof PaymentType.CitrusCash) {
+            mPaymentWebview.setVisibility(View.GONE);
+        }
+
         if (mPaymentType instanceof PaymentType.PGPayment || mPaymentType instanceof PaymentType.CitrusCash) {
             if (mPaymentType.getPaymentBill() != null) {
                 // TODO Need to refactor the code.
@@ -156,15 +182,19 @@ public class CitrusActivity extends ActionBarActivity {
             });
         }
 
-        setTitle("Processing...");
-        setActionBarBackground(mColorPrimary, mColorPrimaryDark);
+        if (TextUtils.isEmpty(mActivityTitle)) {
+            mActivityTitle = "Processing...";
+        }
+
+        setTitle(Html.fromHtml("<font color=\"" + mTextColorPrimary + "\">" + mActivityTitle + "</font>"));
+        setActionBarBackground();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setActionBarBackground(String colorPrimary, String colorPrimaryDark) {
+    private void setActionBarBackground() {
         // Set primary color
         if (mColorPrimary != null && mActionBar != null) {
-            mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(colorPrimary)));
+            mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(mColorPrimary)));
         }
 
         // Set action bar color. Available only on android version Lollipop or higher.
@@ -186,7 +216,7 @@ public class CitrusActivity extends ActionBarActivity {
             billUrl = billUrl + "?amount=" + mPaymentType.getAmount().getValue();
         }
 
-        CitrusClient.getInstance(CitrusActivity.this).getBill(mPaymentType.getUrl(), mPaymentType.getAmount(), new com.citrus.sdk.Callback<PaymentBill>() {
+        mCitrusClient.getBill(billUrl, mPaymentType.getAmount(), new com.citrus.sdk.Callback<PaymentBill>() {
             @Override
             public void success(PaymentBill paymentBill) {
                 customParametersOriginalMap = paymentBill.getCustomParametersMap();
@@ -208,7 +238,6 @@ public class CitrusActivity extends ActionBarActivity {
     }
 
     private void proceedToPayment(String billJSON) {
-
 
         if (mPaymentType instanceof PaymentType.CitrusCash) { //pay using citrus cash
 
@@ -236,9 +265,7 @@ public class CitrusActivity extends ActionBarActivity {
                     prepaidPayment(success, error);
                 }
             });
-
         } else {
-
 
             showDialog("Redirecting to Citrus. Please wait...", false);
             UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mCitrusUser));
@@ -285,7 +312,6 @@ public class CitrusActivity extends ActionBarActivity {
             transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, error, mTransactionId);
             sendResult(transactionResponse);
         }
-
     }
 
     private void prepaidPayment(String response, String error) {
@@ -297,6 +323,7 @@ public class CitrusActivity extends ActionBarActivity {
                 JSONObject redirect = new JSONObject(response);
                 if (!android.text.TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
                     setCookie();
+
                     mPaymentWebview.loadUrl(redirect.getString("redirectUrl"));
                     if (mPaymentOption != null) {
                         EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.OPEN, mPaymentOption.getAnalyticsPaymentType()); //analytics event
@@ -315,7 +342,6 @@ public class CitrusActivity extends ActionBarActivity {
         }
     }
 
-
     private void showDialog(String message, boolean cancelable) {
         if (mProgressDialog != null) {
             mProgressDialog.setCanceledOnTouchOutside(false);
@@ -331,7 +357,6 @@ public class CitrusActivity extends ActionBarActivity {
         }
     }
 
-
     @Override
     public void onBackPressed() {
 
@@ -341,10 +366,15 @@ public class CitrusActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
                 isBackKeyPressedByUser = true;
-//                TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.CANCELLED, "Cancelled By User", mTransactionId);
-//                sendResult(transactionResponse);
 
-                mPaymentWebview.loadUrl(mpiServletUrl);
+                // If the paymenttype is CitrusCash, then cancel the transaction
+                // Else finish the activity.
+                if (!(mPaymentType instanceof PaymentType.CitrusCash)) {
+                    mPaymentWebview.loadUrl(mpiServletUrl);
+                } else {
+                    TransactionResponse transactionResponse = new TransactionResponse(TransactionResponse.TransactionStatus.CANCELLED, "Cancelled By User", mTransactionId);
+                    sendResult(transactionResponse);
+                }
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -361,19 +391,16 @@ public class CitrusActivity extends ActionBarActivity {
         dialog.show();
     }
 
-
     private void setCookie() {
         cookieManager = CookieManager.getInstance();
         sessionCookie = new PersistentConfig(CitrusActivity.this).getCookieString();
         cookieManager.setCookie(Config.getBaseURL(), sessionCookie);
     }
 
-
     private static void removeCookies() {
         String setCookie = CookieManager.getInstance().getCookie(Config.getBaseURL());
         CookieManager.getInstance().setCookie(Config.getBaseURL(), Constants.CITRUS_PREPAID_COOKIE);
     }
-
 
     private void sendResult(TransactionResponse transactionResponse) {
         // Log the events
@@ -384,9 +411,12 @@ public class CitrusActivity extends ActionBarActivity {
                 EventsManager.logWebViewEvents(CitrusActivity.this, WebViewEvents.CLOSE, mPaymentOption.getAnalyticsPaymentType());//WebView close event
             }
 
-            EventsManager.logPaymentEvents(CitrusActivity.this, mPaymentOption.getAnalyticsPaymentType(), transactionResponse.getAnalyticsTransactionType());//Payment Events
+            if (transactionResponse.getTransactionStatus() == TransactionResponse.TransactionStatus.FAILED) {
+                EventsManager.logPaymentEvents(CitrusActivity.this, mPaymentOption.getAnalyticsPaymentType(), transactionResponse.getMessage());//Payment Events
+            } else {
+                EventsManager.logPaymentEvents(CitrusActivity.this, mPaymentOption.getAnalyticsPaymentType(), transactionResponse.getAnalyticsTransactionType());//Payment Events
+            }
         }
-
 
         // Send the response to the caller.
         Intent intent = new Intent();
@@ -425,6 +455,7 @@ public class CitrusActivity extends ActionBarActivity {
         dismissDialog();
         mProgressDialog = null;
         mPaymentOption = null;
+        mActivityTitle = null;
     }
 
     /**
@@ -434,6 +465,14 @@ public class CitrusActivity extends ActionBarActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+            if (url.contains("/prepaid/pg/verify/")) {
+
+                showPrompt();
+                passwordPromptShown = true;
+
+                return false;
+            }
 
             // Let this webview handle all the urls loaded inside. Return false to denote that.
             view.loadUrl(url);
@@ -501,5 +540,81 @@ public class CitrusActivity extends ActionBarActivity {
             TransactionResponse transactionResponse = TransactionResponse.parseLoadMoneyResponse(response);
             sendResult(transactionResponse);
         }
+    }
+
+    private void showPrompt() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        String message = null;
+        String title = null;
+
+        if (passwordPromptShown) {
+            message = "Incorrect Password.";
+            title = "Please Enter Password Again.";
+        } else {
+            message = "Please Enter Your Password For Citrus Account.";
+            title = "Enter Password";
+        }
+
+        String positiveButtonText = "Pay";
+
+        alert.setTitle(title);
+        alert.setMessage(message);
+        // Set an EditText view to get user input
+        final EditText input = new EditText(mContext);
+        alert.setView(input);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String password = input.getText().toString();
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+                if (!TextUtils.isEmpty(password)) {
+                    mPaymentWebview.loadUrl("javascript:(function() { " +
+                            "document.getElementById('password').value='" + password + "';" +
+                            "document.getElementById(\"verify\").submit();" +
+                            "}) ()");
+                    input.clearFocus();
+                    // Hide the keyboard.
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+
+                    String emailId = mCitrusClient.getUserEmailId();
+
+                    getCookie(emailId, password);
+
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                onBackPressed();
+            }
+        });
+
+        input.requestFocus();
+        alert.show();
+    }
+
+    /**
+     * Get the cookie and set the cookie so that password will not be asked next time using Pay Using Citrus Cash
+     *
+     * @return
+     */
+    private void getCookie(String emailId, String password) {
+
+        mCitrusClient.getCookie(emailId, password, new com.citrus.sdk.Callback<CitrusResponse>() {
+            @Override
+            public void success(CitrusResponse citrusResponse) {
+
+            }
+
+            @Override
+            public void error(CitrusError error) {
+
+            }
+        });
     }
 }

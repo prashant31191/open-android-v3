@@ -129,7 +129,6 @@ public class PG {
         }
         this.loadmoney = load;
         this.userDetails = userDetails;
-        this.customParameters = bill.getCustomParameters();
     }
 
 
