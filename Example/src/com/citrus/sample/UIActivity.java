@@ -110,7 +110,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
                 citrusClient.payUsingCitrusCash(new PaymentType.CitrusCash(amount, Constants.BILL_URL), new Callback<TransactionResponse>() {
                     @Override
                     public void success(TransactionResponse transactionResponse) {
-                        Utils.showToast(getApplicationContext(), transactionResponse.toString());
+                        Utils.showToast(getApplicationContext(), transactionResponse.getMessage());
                     }
 
                     @Override

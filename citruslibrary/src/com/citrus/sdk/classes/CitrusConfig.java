@@ -15,10 +15,6 @@
 
 package com.citrus.sdk.classes;
 
-import android.graphics.Color;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.citrus.sdk.Constants;
 
 /**
@@ -49,6 +45,8 @@ public class CitrusConfig {
      * Accent color for the app, will be used to display common actions.
      */
     private String accentColor = Constants.accentColor;
+
+    private String citrusActivityTitle = null;
 
     private CitrusConfig() {
     }
@@ -104,5 +102,13 @@ public class CitrusConfig {
 
     public String getAccentColor() {
         return accentColor;
+    }
+
+    public String getCitrusActivityTitle() {
+        return citrusActivityTitle;
+    }
+
+    public void setCitrusActivityTitle(String citrusActivityTitle) {
+        this.citrusActivityTitle = citrusActivityTitle;
     }
 }

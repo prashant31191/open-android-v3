@@ -380,7 +380,7 @@ public class CitrusClient {
         });
     }
 
-    public synchronized void getCookie(String email, String password, final Callback<CitrusResponse> response) {
+    public synchronized void getCookie(String email, String password, final Callback<CitrusResponse> callback) {
         RetroFitClient.setInterCeptor();
         EventBus.getDefault().register(CitrusClient.this);
         retrofitClient.getCookie(email, password, "true", new retrofit.Callback<String>() {
@@ -392,11 +392,12 @@ public class CitrusClient {
 
             @Override
             public void failure(RetrofitError error) {
-                if(error.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) { //Invalid Password for COOKIE
+                EventBus.getDefault().unregister(CitrusClient.this);
+
+                if (error.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) { //Invalid Password for COOKIE
                     CitrusError citrusError = new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_PASSWORD, Status.FAILED);
-                    response.error(citrusError);
-                }
-                else {
+                    callback.error(citrusError);
+                } else {
                     if (prepaidCookie != null) {
                         cookieManager = CookieManager.getInstance();
                         PersistentConfig config = new PersistentConfig(mContext);
@@ -408,11 +409,9 @@ public class CitrusClient {
                     } else {
                         Logger.d("PREPAID LOGIN UNSUCCESSFUL");
                     }
-                    EventBus.getDefault().unregister(CitrusClient.this);
 
                     // Since we have a got the cookie, we are giving the callback.
-                    sendResponse(response, new CitrusResponse(ResponseMessages.SUCCESS_COOKIE_SIGNIN, Status.SUCCESSFUL));
-
+                    sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_COOKIE_SIGNIN, Status.SUCCESSFUL));
                 }
             }
         });
