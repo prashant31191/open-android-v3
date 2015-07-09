@@ -170,7 +170,7 @@ public class PaymentBill implements Parcelable {
 
                 try {
                     billObject = new JSONObject();
-                    billObject.put("amount", amount.toJSONObject(amount));
+                    billObject.put("amount", Amount.toJSONObject(amount));
                     billObject.put("merchantTxnId", merchantTransactionId);
                     billObject.put("merchantAccessKey", merchantAccessKey);
                     billObject.put("requestSignature", requestSignature);

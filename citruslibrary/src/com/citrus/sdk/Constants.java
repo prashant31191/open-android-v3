@@ -39,9 +39,9 @@ public interface Constants {
     String HEADER_PREPAID_COOKIE = "prepaiduser-payauth";
     String CITRUS_PREPAID_COOKIE = "prepaiduser-payauth=''";
 
-    public static final String SIGNIN_TOKEN = "signin_token";
-    public static final String SIGNUP_TOKEN = "signup_token";
-    public static final String PREPAID_TOKEN = "prepaid_token";
+    String SIGNIN_TOKEN = "signin_token";
+    String SIGNUP_TOKEN = "signup_token";
+    String PREPAID_TOKEN = "prepaid_token";
 
     String LOGOUT_SUCCESS_MESSAGE = "User Logged Out Successfully.";
 

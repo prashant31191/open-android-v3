@@ -270,7 +270,7 @@ public abstract class CardOption extends PaymentOption {
     /**
      * Denotes the type of the card. i.e. Credit or Debit.
      */
-    public static enum CardType {
+    public enum CardType {
         DEBIT {
             public String getCardType() {
                 return "debit";
@@ -289,7 +289,7 @@ public abstract class CardOption extends PaymentOption {
         public abstract String getCardType();
     }
 
-    public static enum CardScheme {
+    public enum CardScheme {
         VISA, MASTER_CARD, MAESTRO, DINERS, JCB, AMEX, DISCOVER;
 
         public static CardScheme getCardScheme(String cardScheme) {

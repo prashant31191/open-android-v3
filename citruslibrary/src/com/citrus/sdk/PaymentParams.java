@@ -374,7 +374,7 @@ public final class PaymentParams implements Parcelable {
         dest.writeParcelable(this.paymentOption, 0);
     }
 
-    public static enum Environment {
+    public enum Environment {
         PRODUCTION, SANDBOX
     }
 }

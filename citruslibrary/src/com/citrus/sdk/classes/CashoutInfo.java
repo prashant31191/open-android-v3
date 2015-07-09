@@ -59,11 +59,8 @@ public class CashoutInfo implements Parcelable {
     }
 
     public boolean validate() {
-        if (amount != null && !TextUtils.isEmpty(accountNo) && !TextUtils.isEmpty(accountHolderName) && !TextUtils.isEmpty(ifscCode)) {
-            return true;
-        }
+        return amount != null && !TextUtils.isEmpty(accountNo) && !TextUtils.isEmpty(accountHolderName) && !TextUtils.isEmpty(ifscCode);
 
-        return false;
     }
 
     public static CashoutInfo fromJSON(String json) {

@@ -270,7 +270,7 @@ public final class TransactionResponse implements Parcelable {
                 '}';
     }
 
-    public static enum PaymentMode {
+    public enum PaymentMode {
         NET_BANKING, CREDIT_CARD, DEBIT_CARD;
 
         public static PaymentMode getPaymentMode(String paymentMode) {
@@ -287,7 +287,7 @@ public final class TransactionResponse implements Parcelable {
         }
     }
 
-    public static enum TransactionStatus {
+    public enum TransactionStatus {
         SUCCESSFUL, FAILED, CANCELLED, PG_REJECTED, UNKNOWN;
 
         public static TransactionStatus getTransactionStatus(String transactionStatus) {
