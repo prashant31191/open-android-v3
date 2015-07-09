@@ -511,7 +511,7 @@ public final class TransactionResponse implements Parcelable {
         this.signature = in.readString();
         this.maskedCardNumber = in.readString();
         this.COD = in.readByte() != 0;
-        in.readMap(this.customParamsMap, String.class.getClassLoader());
+        this.customParamsMap = in.readHashMap(String.class.getClassLoader());
         this.jsonResponse = in.readString();
     }
 
