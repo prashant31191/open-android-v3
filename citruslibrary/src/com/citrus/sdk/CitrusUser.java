@@ -25,7 +25,7 @@ import org.json.JSONObject;
  */
 public final class CitrusUser implements Parcelable {
 
-    public static CitrusUser DEFAULT_USER = new CitrusUser();
+    public static final CitrusUser DEFAULT_USER = new CitrusUser();
 
     public static final Creator<CitrusUser> CREATOR = new Creator<CitrusUser>() {
         public CitrusUser createFromParcel(Parcel source) {

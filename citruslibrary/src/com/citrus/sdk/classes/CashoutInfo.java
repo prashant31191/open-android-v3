@@ -15,19 +15,22 @@ import org.json.JSONObject;
  */
 public class CashoutInfo implements Parcelable {
 
-    Amount amount = null;
+    private Amount amount = null;
     @SerializedName("account")
+    private
     String accountNo = null;
     @SerializedName("owner")
+    private
     String accountHolderName = null;
     @SerializedName("ifsc")
+    private
     String ifscCode = null;
 
     /**
-     * @param amount
-     * @param accountNo
-     * @param accountHolderName
-     * @param ifscCode
+     * @param amount            Amount to be withdrawn.
+     * @param accountNo         Account Number
+     * @param accountHolderName Account Holder Name
+     * @param ifscCode          IFSC Code
      */
     public CashoutInfo(@NonNull Amount amount, @NonNull String accountNo, @NonNull String accountHolderName, @NonNull String ifscCode) {
         this.amount = amount;
@@ -36,6 +39,13 @@ public class CashoutInfo implements Parcelable {
         this.ifscCode = ifscCode;
     }
 
+    /**
+     * This constructor is used internally for parsing purpose.
+     *
+     * @param accountNo
+     * @param accountHolderName
+     * @param ifscCode
+     */
     private CashoutInfo(String accountNo, String accountHolderName, String ifscCode) {
         this.accountNo = accountNo;
         this.accountHolderName = accountHolderName;
@@ -125,7 +135,7 @@ public class CashoutInfo implements Parcelable {
         dest.writeString(this.ifscCode);
     }
 
-    protected CashoutInfo(Parcel in) {
+    private CashoutInfo(Parcel in) {
         this.amount = in.readParcelable(Amount.class.getClassLoader());
         this.accountNo = in.readString();
         this.accountHolderName = in.readString();

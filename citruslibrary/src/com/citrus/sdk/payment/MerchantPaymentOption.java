@@ -36,9 +36,9 @@ public class MerchantPaymentOption {
     private Set<CardOption.CardScheme> debitCardSchemeSet = null;
     private ArrayList<NetbankingOption> netbankingOptionList = null;
 
-    public MerchantPaymentOption(Set<CardScheme> creditCardSchemeSet,
-                                 Set<CardScheme> debitCardSchemeSet,
-                                 ArrayList<NetbankingOption> netbankingOptionList) {
+    private MerchantPaymentOption(Set<CardScheme> creditCardSchemeSet,
+                                  Set<CardScheme> debitCardSchemeSet,
+                                  ArrayList<NetbankingOption> netbankingOptionList) {
         this.creditCardSchemeSet = creditCardSchemeSet;
         this.debitCardSchemeSet = debitCardSchemeSet;
         this.netbankingOptionList = netbankingOptionList;
@@ -57,7 +57,7 @@ public class MerchantPaymentOption {
     }
 
     public static MerchantPaymentOption getMerchantPaymentOptions(JsonObject merchantPaymentOptionsObj) {
-        MerchantPaymentOption merchantPaymentOption = null;
+        MerchantPaymentOption merchantPaymentOption;
         Set<CardScheme> debitCardSchemeSet = null;
         Set<CardScheme> creditCardSchemeSet = null;
         ArrayList<NetbankingOption> netbankingOptionList = null;

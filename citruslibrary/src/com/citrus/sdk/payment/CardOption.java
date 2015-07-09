@@ -113,7 +113,7 @@ public abstract class CardOption extends PaymentOption {
     /**
      * Get the type of the card, i.e. DEBIT or CREDIT.
      *
-     * @return
+     * @return type of the card in string, i.e. debit or credit.
      */
     public abstract String getCardType();
 
@@ -231,7 +231,7 @@ public abstract class CardOption extends PaymentOption {
      * <p/>
      * Only AMEX has 4 digit CVV, else all cards have 3 digit CVV.
      *
-     * @return
+     * @return return 3 or 4 depending upon the card scheme.
      */
     public int getCVVLength() {
         int cvvLength = 3;
@@ -264,7 +264,7 @@ public abstract class CardOption extends PaymentOption {
             e.printStackTrace();
         }
 
-        return object != null ? object.toString() : null;
+        return object.toString();
     }
 
     /**
@@ -284,7 +284,7 @@ public abstract class CardOption extends PaymentOption {
         /**
          * Get the type of the card in string, i.e. debit or credit.
          *
-         * @return
+         * @return type of the card in string, i.e. debit or credit.
          */
         public abstract String getCardType();
     }

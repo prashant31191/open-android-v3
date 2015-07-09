@@ -116,7 +116,7 @@ public final class TransactionResponse implements Parcelable {
                 String currency = jsonObject.optString("currency");
                 String amount = jsonObject.optString("amount");
                 String responseCode = jsonObject.optString("pgRespCode");
-                String message = null;
+                String message;
                 // If the transaction is cancelled by the user, change the message.
                 if (transactionStatus == TransactionStatus.CANCELLED) {
                     message = "Transaction Cancelled.";
@@ -147,7 +147,7 @@ public final class TransactionResponse implements Parcelable {
 
                 TransactionDetails transactionDetails = TransactionDetails.fromJSONObject(jsonObject);
                 CitrusUser citrusUser = CitrusUser.fromJSONObject(jsonObject);
-                boolean cod = "true".equalsIgnoreCase(isCOD) ? true : false;
+                boolean cod = "true".equalsIgnoreCase(isCOD);
 
                 Amount transactionAmount = new Amount(amount, currency);
 
@@ -244,7 +244,7 @@ public final class TransactionResponse implements Parcelable {
     }
 
 
-    void setJsonResponse(String jsonResponse) {
+    private void setJsonResponse(String jsonResponse) {
         this.jsonResponse = jsonResponse;
     }
 
@@ -422,19 +422,19 @@ public final class TransactionResponse implements Parcelable {
     public static TransactionResponse parseLoadMoneyResponse(String response) {
         Logger.d("parseLoadMoneyResponse :: " + response);
 
-        TransactionResponse transactionResponse = null;
+        TransactionResponse transactionResponse;
         if (response.contains("#")) {
             String token[] = response.split("#");
             if (token != null && token.length == 2) {
                 String decodeResp[] = token[1].split(":");
 
-                String transactionId = null;
-                String balanceValue = null;
-                String balanceCurrency = null;
+                String transactionId;
+                String balanceValue;
+                String balanceCurrency;
 
-                String dateTime = null;
-                String transactionValue = null;
-                String transactionCurrency = null;
+                String dateTime;
+                String transactionValue;
+                String transactionCurrency;
 
                 if (decodeResp.length > 1) {
                     transactionId = decodeResp[1];
@@ -493,7 +493,7 @@ public final class TransactionResponse implements Parcelable {
         dest.writeString(this.jsonResponse);
     }
 
-    protected TransactionResponse(Parcel in) {
+    private TransactionResponse(Parcel in) {
         this.balanceAmount = in.readParcelable(Amount.class.getClassLoader());
         this.transactionAmount = in.readParcelable(Amount.class.getClassLoader());
         this.message = in.readString();

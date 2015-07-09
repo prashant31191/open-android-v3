@@ -9,16 +9,18 @@ import com.citrus.mobile.Config;
 import com.citrus.mobile.OauthToken;
 import com.citrus.mobile.RESTclient;
 import com.citrus.mobile.User;
+import com.citrus.sdk.classes.CashoutInfo;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * @deprecated in v3
  * <p/>
- * Use {@link com.citrus.sdk.CitrusClient#w} for all the APIs.
+ * Use {@link com.citrus.sdk.CitrusClient#cashout(CashoutInfo, com.citrus.sdk.Callback)} for all the APIs.
  */
 @Deprecated
-public class CashOutAsynch extends AsyncTask<Void, Void, JSONObject>{
+public class CashOutAsynch extends AsyncTask<Void, Void, JSONObject> {
     private double mAmount;
     private Activity mContext;
     private String owner, mAccountNumber, mIfscCode;

@@ -95,7 +95,7 @@ public class CitrusClient {
     private Environment environment = Environment.SANDBOX;
     private Amount balanceAmount;
     private static CitrusClient instance;
-    private Context mContext;
+    private final Context mContext;
     private SharedPreferences mSharedPreferences;
     private MerchantPaymentOption merchantPaymentOption = null;
 
@@ -309,14 +309,14 @@ public class CitrusClient {
     }
 
     /**
-     * @param emailIdOrMobileNo
+     * @param emailId
      * @param password
      * @param callback
      */
-    public synchronized void signIn(final String emailIdOrMobileNo, final String password, final Callback<CitrusResponse> callback) {
+    public synchronized void signIn(final String emailId, final String password, final Callback<CitrusResponse> callback) {
 
         //grant Type username token saved
-        retrofitClient.getSignInToken(signinId, signinSecret, emailIdOrMobileNo, OAuth2GrantType.username.toString(), new retrofit.Callback<AccessToken>() {
+        retrofitClient.getSignInToken(signinId, signinSecret, emailId, OAuth2GrantType.username.toString(), new retrofit.Callback<AccessToken>() {
 
             @Override
             public void success(AccessToken accessToken, Response response) {
@@ -324,17 +324,17 @@ public class CitrusClient {
                     OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
                     token.createToken(accessToken.getJSON());///grant Type username token saved
 
-                    retrofitClient.getSignInWithPasswordResponse(signinId, signinSecret, emailIdOrMobileNo, password, OAuth2GrantType.password.toString(), new retrofit.Callback<AccessToken>() {
+                    retrofitClient.getSignInWithPasswordResponse(signinId, signinSecret, emailId, password, OAuth2GrantType.password.toString(), new retrofit.Callback<AccessToken>() {
                         @Override
                         public void success(AccessToken accessToken, Response response) {
                             Logger.d("SIGN IN RESPONSE " + accessToken.getJSON().toString());
                             if (accessToken.getHeaderAccessToken() != null) {
                                 OauthToken token = new OauthToken(mContext, PREPAID_TOKEN);
                                 token.createToken(accessToken.getJSON());///grant Type password token saved
-                                token.saveUserDetails(emailIdOrMobileNo, null);//save email ID of the signed in user
+                                token.saveUserDetails(emailId, null);//save email ID of the signed in user
                                 RetroFitClient.setInterCeptor();
                                 EventBus.getDefault().register(CitrusClient.this);
-                                retrofitClient.getCookie(emailIdOrMobileNo, password, "true", new retrofit.Callback<String>() {
+                                retrofitClient.getCookie(emailId, password, "true", new retrofit.Callback<String>() {
                                     @Override
                                     public void success(String s, Response response) {
                                         // NOOP
@@ -847,8 +847,6 @@ public class CitrusClient {
 
     /**
      * Returns the access token of the currently logged in user.
-     *
-     * @return
      */
     public void getPrepaidToken(final Callback<AccessToken> callback) {
 
@@ -878,7 +876,7 @@ public class CitrusClient {
                 @Override
                 public void success(JsonElement element, Response response) {
 
-                    MerchantPaymentOption merchantPaymentOption = null;
+                    MerchantPaymentOption merchantPaymentOption;
 
                     if (element.isJsonObject()) {
                         JsonObject paymentOptionObj = element.getAsJsonObject();
@@ -917,7 +915,7 @@ public class CitrusClient {
                 @Override
                 public void success(JsonElement element, Response response) {
 
-                    MerchantPaymentOption merchantPaymentOption = null;
+                    MerchantPaymentOption merchantPaymentOption;
 
                     if (element.isJsonObject()) {
                         JsonObject paymentOptionObj = element.getAsJsonObject();
@@ -1221,13 +1219,13 @@ public class CitrusClient {
     private void sendError(Callback callback, RetrofitError error) {
         if (callback != null) {
             String message = null;
-            CitrusError citrusError = null;
+            CitrusError citrusError;
 
             // Check whether the error is network error.
             if (error.getKind() == RetrofitError.Kind.NETWORK) {
                 citrusError = new CitrusError(ResponseMessages.ERROR_NETWORK_CONNECTION, Status.FAILED);
             } else {
-                if (error != null && error.getResponse() != null && error.getResponse().getBody() != null) {
+                if (error.getResponse() != null && error.getResponse().getBody() != null) {
                     message = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
                 }
 

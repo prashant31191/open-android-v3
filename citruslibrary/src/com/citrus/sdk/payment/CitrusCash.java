@@ -15,6 +15,7 @@ package com.citrus.sdk.payment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 /**
  * Created by salil on 4/3/15.
@@ -40,7 +41,11 @@ public final class CitrusCash extends PaymentOption {
 
     @Override
     public Drawable getOptionIcon(Context context) {
-        return context.getResources().getDrawable(context.getResources().getIdentifier("citrus_cash", "drawable", context.getPackageName()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return context.getResources().getDrawable(context.getResources().getIdentifier("citrus_cash", "drawable", context.getPackageName()), null);
+        } else {
+            return context.getResources().getDrawable(context.getResources().getIdentifier("citrus_cash", "drawable", context.getPackageName()));
+        }
     }
 
     public String getAmount() {

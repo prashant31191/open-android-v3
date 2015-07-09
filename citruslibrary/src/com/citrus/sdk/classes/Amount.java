@@ -11,11 +11,11 @@ import org.json.JSONObject;
  * Created by salil on 24/4/15.
  */
 public class Amount implements Parcelable {
-    private String value;
-    private String currency;
+    private final String value;
+    private final String currency;
 
     /**
-     * @param value
+     * @param value Amount value
      */
     public Amount(String value) {
         this.value = value;
@@ -37,7 +37,7 @@ public class Amount implements Parcelable {
 
     /**
      * @return the amount value in integer.
-     * @throws Exception if unable to convert the amount value to integer.
+     * @throws NumberFormatException if unable to convert the amount value to integer.
      */
     public double getValueAsDouble() throws NumberFormatException {
         double value = 0;
