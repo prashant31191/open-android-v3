@@ -19,6 +19,8 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.citrus.sdk.classes.PGHealth;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,6 +83,11 @@ public final class NetbankingOption extends PaymentOption implements Parcelable 
 
     public String getBankCID() {
         return bankCID;
+    }
+
+    @Override
+    public void setPgHealth(PGHealth pgHealth) {
+        super.setPgHealth(pgHealth);
     }
 
     @Override

@@ -613,7 +613,13 @@ public class CitrusClient {
                                                     walletList.add(option);
                                                 } else if (option instanceof NetbankingOption && netbankingOptionList != null &&
                                                         netbankingOptionList.contains(option)) {
-                                                    walletList.add(option);
+                                                    NetbankingOption netbankingOption = (NetbankingOption) option;
+
+                                                    if (pgHealthMap != null) {
+                                                        netbankingOption.setPgHealth(pgHealthMap.get(netbankingOption.getBankCID()));
+                                                    }
+
+                                                    walletList.add(netbankingOption);
                                                 }
                                             } else {
                                                 // If the merchant payment options are not found, save all the options.
