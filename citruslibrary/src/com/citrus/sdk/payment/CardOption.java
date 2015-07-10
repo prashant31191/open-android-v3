@@ -350,5 +350,15 @@ public abstract class CardOption extends PaymentOption {
             }
             return cardScheme;
         }
+
+        public static int getCVVLength(String cardNumber) {
+            CardScheme scheme = getCardSchemeUsingNumber(cardNumber);
+
+            if (scheme == AMEX) {
+                return 4;
+            } else {
+                return 3;
+            }
+        }
     }
 }
