@@ -158,6 +158,10 @@ public interface API {
     @POST("/utility/{path}/pgHealth")
     void getPGHealth(@Path("path") String path, @Field("bankCode") String bankCode, Callback<PGHealthResponse> callback);
 
+    // PG Health API
+    @FormUrlEncoded
+    @POST("/utility/{path}/pgHealth")
+    void getPGHealthForAllBanks(@Path("path") String path, @Field("bankCode") String bankCode, Callback<JsonElement> callback);
 
     // The response is 204 No Content.
     @DELETE("/service/v2/profile/me/payment/{last4Digits}:{scheme}")

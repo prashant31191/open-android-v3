@@ -39,6 +39,7 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CashoutInfo;
+import com.citrus.sdk.classes.PGHealth;
 import com.citrus.sdk.classes.PGHealthResponse;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CreditCardOption;
@@ -62,7 +63,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.greenrobot.event.EventBus;
@@ -104,6 +108,7 @@ public class CitrusClient {
     private OauthToken oauthToken = null;
     private CookieManager cookieManager;
     private BroadcastReceiver paymentEventReceiver = null;
+    private Map<String, PGHealth> pgHealthMap = null;
 
     private CitrusClient(Context context) {
         mContext = context;
@@ -156,6 +161,39 @@ public class CitrusClient {
         }
         Logger.d("VANITY*** " + vanity);
         EventsManager.logInitSDKEvents(mContext);
+
+        fetchPGHealthForAllBanks();
+    }
+
+    private void fetchPGHealthForAllBanks() {
+        retrofitClient.getPGHealthForAllBanks(vanity, "ALLBANKS", new retrofit.Callback<JsonElement>() {
+                    @Override
+                    public void success(JsonElement jsonElement, Response response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(jsonElement.toString());
+                            Iterator<String> keys = jsonObject.keys();
+                            while (keys.hasNext()) {
+                                if (pgHealthMap == null) {
+                                    pgHealthMap = new HashMap<String, PGHealth>();
+                                }
+                                String key = keys.next();
+                                String health = jsonObject.optString(key);
+
+                                pgHealthMap.put(key, PGHealth.getPGHealth(health));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Logger.e("Error while fetching the health");
+                    }
+                }
+        );
+
     }
 
     private void saveSDKEnvironment() {
@@ -1100,7 +1138,7 @@ public class CitrusClient {
     // PG Health.
 
     /**
-     * It returns {@link com.citrus.sdk.classes.PGHealthResponse.PGHealth} which denotes the health of the PG.
+     * It returns {@link com.citrus.sdk.classes.PGHealth} which denotes the health of the PG for in
      * If the health is bad merchants can warn user to use another payment method.
      *
      * @param paymentOption
@@ -1110,7 +1148,7 @@ public class CitrusClient {
 
         // Currently PG health supports netbanking only. So in case of any other payment Options it will return GOOD by default.
         if (!(paymentOption instanceof NetbankingOption)) {
-            sendResponse(callback, new PGHealthResponse(PGHealthResponse.PGHealth.GOOD, "All Good"));
+            sendResponse(callback, new PGHealthResponse(PGHealth.GOOD, "All Good"));
         } else {
             RetroFitClient.setEndPoint(environment.getBaseCitrusUrl());
 

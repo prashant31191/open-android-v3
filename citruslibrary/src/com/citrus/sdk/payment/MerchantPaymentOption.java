@@ -17,12 +17,14 @@ package com.citrus.sdk.payment;
 
 import android.text.TextUtils;
 
+import com.citrus.sdk.classes.PGHealth;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static com.citrus.sdk.payment.CardOption.CardScheme;
@@ -57,6 +59,10 @@ public class MerchantPaymentOption {
     }
 
     public static MerchantPaymentOption getMerchantPaymentOptions(JsonObject merchantPaymentOptionsObj) {
+        return getMerchantPaymentOptions(merchantPaymentOptionsObj, null);
+    }
+
+    public static MerchantPaymentOption getMerchantPaymentOptions(JsonObject merchantPaymentOptionsObj, Map<String, PGHealth> pgHealthMap) {
         MerchantPaymentOption merchantPaymentOption;
         Set<CardScheme> debitCardSchemeSet = null;
         Set<CardScheme> creditCardSchemeSet = null;
@@ -108,6 +114,10 @@ public class MerchantPaymentOption {
 
                 if (!TextUtils.isEmpty(bankName) && !TextUtils.isEmpty(issuerCode)) {
                     NetbankingOption netbankingOption = new NetbankingOption(bankName, issuerCode);
+
+                    if (pgHealthMap != null) {
+                        netbankingOption.setPgHealth(pgHealthMap.get(issuerCode));
+                    }
 
                     if (netbankingOptionList == null) {
                         netbankingOptionList = new ArrayList<>();

@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
  * Created by salil on 26/6/15.
  */
 public final class PGHealthResponse {
-    public enum PGHealth {GOOD, BAD}
 
     @SerializedName("responseCode")
     private int responseCode = 1;

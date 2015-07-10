@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
 import com.citrus.sdk.classes.Month;
+import com.citrus.sdk.classes.PGHealth;
 import com.citrus.sdk.classes.Year;
 
 import org.json.JSONArray;
@@ -157,6 +158,12 @@ public abstract class CardOption extends PaymentOption {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    @Override
+    public PGHealth getPgHealth() {
+        // Currently PGHealth for card schemes is not supported. Hence returning GOOD everytime.
+        return PGHealth.GOOD;
     }
 
     private String normalizeCardNumber(String number) {

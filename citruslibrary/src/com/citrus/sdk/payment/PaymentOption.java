@@ -19,6 +19,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.citrus.sdk.classes.PGHealth;
+
 import org.json.JSONObject;
 
 import static com.citrus.sdk.payment.CardOption.CardScheme;
@@ -33,9 +35,10 @@ public abstract class PaymentOption implements Parcelable {
      * Hence no public constructor with these variables is required. If required create a constructor
      * with default access modifier so as to avoid confusion for the merchant developer.
      */
-    String name = null; // Denotes the friendly name for the payment option.
-    String token = null; // Denotes the token for the payment option.
-    boolean savePaymentOption = true;
+    protected String name = null; // Denotes the friendly name for the payment option.
+    protected String token = null; // Denotes the token for the payment option.
+    protected boolean savePaymentOption = false;
+    protected PGHealth pgHealth = PGHealth.GOOD;
 
     PaymentOption() {
     }
@@ -94,6 +97,14 @@ public abstract class PaymentOption implements Parcelable {
 
     public void setSavePaymentOption(boolean savePaymentOption) {
         this.savePaymentOption = savePaymentOption;
+    }
+
+    public PGHealth getPgHealth() {
+        return pgHealth;
+    }
+
+    protected void setPgHealth(PGHealth pgHealth) {
+        this.pgHealth = pgHealth;
     }
 
     public abstract String getSavePaymentOptionObject();
