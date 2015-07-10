@@ -166,9 +166,14 @@ public class CitrusClient {
     }
 
     private void fetchPGHealthForAllBanks() {
+
+        RetroFitClient.setEndPoint(environment.getBaseCitrusUrl());
+
         retrofitClient.getPGHealthForAllBanks(vanity, "ALLBANKS", new retrofit.Callback<JsonElement>() {
                     @Override
                     public void success(JsonElement jsonElement, Response response) {
+                        RetroFitClient.resetEndPoint();
+
                         try {
                             JSONObject jsonObject = new JSONObject(jsonElement.toString());
                             Iterator<String> keys = jsonObject.keys();
@@ -189,6 +194,8 @@ public class CitrusClient {
 
                     @Override
                     public void failure(RetrofitError error) {
+                        RetroFitClient.resetEndPoint();
+
                         Logger.e("Error while fetching the health");
                     }
                 }
