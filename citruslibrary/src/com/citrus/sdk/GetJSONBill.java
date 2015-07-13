@@ -4,8 +4,12 @@ import com.citrus.retrofit.RetroFitClient;
 import com.citrus.sdk.classes.Amount;
 import com.google.gson.JsonElement;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.logging.Logger;
 
 import retrofit.Callback;
 
@@ -32,8 +36,9 @@ public class GetJSONBill {
         String baseURL = url.getProtocol() + "://" + url.getAuthority();
         String path = url.getPath();
         path = path.substring(1);
+        String query = url.getQuery();
         RetroFitClient.setEndPoint(baseURL);
-        RetroFitClient.getBillGeneratorClient(baseURL).getBill(path, amount.getValue(), callback);
+        RetroFitClient.getBillGeneratorClient(baseURL).getBill(path + "?" + query, callback);
         RetroFitClient.resetEndPoint();
     }
 }

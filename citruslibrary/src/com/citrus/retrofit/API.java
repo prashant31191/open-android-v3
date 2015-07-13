@@ -115,7 +115,7 @@ public interface API {
 
     //bill generator response
     @GET("/{path}")
-    void getBill(@Path("path") String path, @Query("amount") String amount, Callback<JsonElement> callback);
+    void getBill(@Path(value = "path", encode = false) String path, Callback<JsonElement> callback);
 
     // Save payment option
     @Headers("Content-Type: application/json")
