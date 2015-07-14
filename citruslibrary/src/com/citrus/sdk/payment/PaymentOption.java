@@ -38,7 +38,7 @@ public abstract class PaymentOption implements Parcelable {
     protected String name = null; // Denotes the friendly name for the payment option.
     protected String token = null; // Denotes the token for the payment option.
     protected boolean savePaymentOption = false;
-    protected PGHealth pgHealth = PGHealth.GOOD;
+    protected PGHealth pgHealth = PGHealth.UNKNOWN;
 
     PaymentOption() {
     }
