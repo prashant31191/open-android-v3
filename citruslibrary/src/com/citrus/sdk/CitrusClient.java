@@ -39,6 +39,7 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CashoutInfo;
+import com.citrus.sdk.classes.MemberInfo;
 import com.citrus.sdk.classes.PGHealth;
 import com.citrus.sdk.classes.PGHealthResponse;
 import com.citrus.sdk.payment.CardOption;
@@ -289,6 +290,49 @@ public class CitrusClient {
         });
     }
 
+    public synchronized void getMemberInfo(final String emailId, final String mobileNo, final Callback<MemberInfo> callback) {
+        if (validate()) {
+            retrofitClient.getSignUpToken(signupId, signupSecret, OAuth2GrantType.implicit.toString(), new retrofit.Callback<AccessToken>() {
+                @Override
+                public void success(AccessToken accessToken, Response response) {
+                    if (accessToken != null && accessToken.getHeaderAccessToken() != null) {
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("email", emailId);
+                            jsonObject.put("mobile", mobileNo);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        retrofitClient.getMemberInfo(accessToken.getHeaderAccessToken(), new TypedString(jsonObject.toString()), new retrofit.Callback<JsonElement>() {
+                            @Override
+                            public void success(JsonElement jsonElement, Response response) {
+                                MemberInfo memberInfo = MemberInfo.fromJSON(jsonElement.toString());
+
+                                if (memberInfo != null) {
+                                    sendResponse(callback, memberInfo);
+                                } else {
+                                    sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_MEMBER_INFO, Status.FAILED));
+                                }
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                sendError(callback, error);
+                            }
+                        });
+                    } else {
+                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_SIGNUP_TOKEN, Status.FAILED));
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
+        }
+    }
 
     /**
      * This method can be used by non prepaid merchants - where email and mobile is enough for save/get Cards.
@@ -425,6 +469,97 @@ public class CitrusClient {
         });
     }
 
+    /**
+     * Signin with mobile no and password.
+     *
+     * @param mobileNo
+     * @param password
+     * @param callback
+     */
+    public synchronized void signInWithMobileNo(final String mobileNo, final String password, final Callback<CitrusResponse> callback) {
+
+        //grant Type username token saved
+        retrofitClient.getSignInToken(signinId, signinSecret, mobileNo, OAuth2GrantType.username.toString(), new retrofit.Callback<AccessToken>() {
+
+            @Override
+            public void success(AccessToken accessToken, Response response) {
+                if (accessToken.getHeaderAccessToken() != null) {
+                    OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
+                    token.createToken(accessToken.getJSON());///grant Type username token saved
+
+                    retrofitClient.getSignInWithPasswordResponse(signinId, signinSecret, mobileNo, password, OAuth2GrantType.password.toString(), new retrofit.Callback<AccessToken>() {
+                        @Override
+                        public void success(AccessToken accessToken, Response response) {
+                            Logger.d("SIGN IN RESPONSE " + accessToken.getJSON().toString());
+                            if (accessToken.getHeaderAccessToken() != null) {
+                                final OauthToken token = new OauthToken(mContext, PREPAID_TOKEN);
+                                token.createToken(accessToken.getJSON());///grant Type password token saved
+                                // Fetch the associated emailId and save the emailId.
+                                getMemberInfo(null, mobileNo, new Callback<MemberInfo>() {
+                                    @Override
+                                    public void success(MemberInfo memberInfo) {
+                                        if (memberInfo != null && memberInfo.getProfileByMobile() != null) {
+
+                                            token.saveUserDetails(memberInfo.getProfileByMobile().getEmailId(), mobileNo);//save email ID of the signed in user
+                                        }
+                                    }
+
+                                    @Override
+                                    public void error(CitrusError error) {
+                                        // NOOP
+                                        // Do nothing
+                                    }
+                                });
+
+
+                                RetroFitClient.setInterCeptor();
+                                EventBus.getDefault().register(CitrusClient.this);
+                                retrofitClient.getCookie(mobileNo, password, "true", new retrofit.Callback<String>() {
+                                    @Override
+                                    public void success(String s, Response response) {
+                                        // NOOP
+                                        // This method will never be called.
+                                    }
+
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        if (prepaidCookie != null) {
+                                            cookieManager = CookieManager.getInstance();
+                                            PersistentConfig config = new PersistentConfig(mContext);
+                                            if (config.getCookieString() != null) {
+                                                cookieManager.getInstance().removeSessionCookie();
+                                            }
+                                            CookieSyncManager.createInstance(mContext);
+                                            config.setCookie(prepaidCookie);
+                                        } else {
+                                            Logger.d("PREPAID LOGIN UNSUCCESSFUL");
+                                        }
+                                        EventBus.getDefault().unregister(CitrusClient.this);
+
+                                        // Since we have a got the cookie, we are giving the callback.
+                                        sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_SIGNIN, Status.SUCCESSFUL));
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Logger.d("SIGN IN RESPONSE ERROR **" + error.getMessage());
+                            sendError(callback, error);
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                sendError(callback, error);
+            }
+        });
+    }
+
     public synchronized void getCookie(String email, String password, final Callback<CitrusResponse> callback) {
         RetroFitClient.setInterCeptor();
         EventBus.getDefault().register(CitrusClient.this);
@@ -461,7 +596,6 @@ public class CitrusClient {
             }
         });
     }
-
 
     /**
      * Signout the existing logged in user.

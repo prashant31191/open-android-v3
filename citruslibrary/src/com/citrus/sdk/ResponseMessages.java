@@ -26,7 +26,6 @@ public interface ResponseMessages {
     String SUCCESS_COOKIE_SIGNIN = "User Cookie Sign In Suceesfully.";
 
 
-
     String SUCCESS_MESSAGE_USER_BIND = "User Bind Successfully.";
 
     String SUCCESS_MESSAGE_LOAD_MONEY = "Citrus Cash Wallet loaded successfully";
@@ -37,7 +36,6 @@ public interface ResponseMessages {
 
     String ERROR_MESSAGE_BLANK_EMAIL_ID_MOBILE_NO = "Please enter emaild id or the mobile no of your friend to send the money";
     String ERROR_MESSAGE_BLANK_AMOUNT = "Please enter the amount to be sent.";
-    String ERROR_MESSAGE_USER_NOT_LOGGED_IN = "ERROR: User not logged in. Please login the user before doing this.";
     String ERROR_MESSAGE_INVALID_JSON = "ERROR: Invlid json received.";
     String ERROR_MESSAGE_FAILED_MERCHANT_PAYMENT_OPTIONS = "ERROR: Unable to fetch merchant payment options";
     String ERROR_MESSAGE_BLANK_CONFIG_PARAMS = "Please make sure SignIn Id, SignIn Secret, SignUp Id, SignUp Secret & Vanity";
@@ -47,6 +45,7 @@ public interface ResponseMessages {
     String ERROR_SIGNIN_TOKEN_NOT_FOUND = "Have you done SignIn? Token not found.!!!";
 
     String ERROR_MESSAGE_LINK_USER = "ERROR: Unable to Link User";
+    String ERROR_MESSAGE_SIGNUP_TOKEN = "ERROR: Unable to fetch Signup token.";
 
     String SUCCESS_MESSAGE_SAVED_PAYMENT_OPTIONS = "Payment Option Saved Successfully.";
     String SUCCESS_MESSAGE_SAVED_CASHOUT_OPTIONS = "Cashout Information Saved Successfully.";
@@ -56,6 +55,7 @@ public interface ResponseMessages {
 
     String ERROR_MESSAGE_INVALID_BILL = "Invalid bill received from server.";
     String ERROR_MESSAGE_BIND_USER = "Failed to bind User!!!";
+    String ERROR_MESSAGE_MEMBER_INFO = "Unable to fetch member info";
     String ERROR_MESSAGE_INSUFFICIENT_BALANCE = "The balance in your Citrus Cash account is insufficient. Please load money.";
     String ERROR_MESSAGE_INVALID_CASHOUT_INFO = "Please make sure amount, accoutNo, accountHolderName and ifscCode are not null or empty.";
 
