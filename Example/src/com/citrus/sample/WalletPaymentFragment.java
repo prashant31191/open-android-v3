@@ -62,6 +62,8 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnPGPayment = null;
     private Button btnGetWithdrawInfo = null;
     private Button btnWithdraw = null;
+    private Button btnUpdateMobile = null;
+    private Button btnVerifyMobile = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -102,7 +104,8 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPGPayment = (Button) rootView.findViewById(R.id.btn_pg_payment);
         btnWithdraw = (Button) rootView.findViewById(R.id.btn_cashout);
         btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
-
+        btnUpdateMobile = (Button) rootView.findViewById(R.id.btn_update_mobile);
+        btnVerifyMobile = (Button) rootView.findViewById(R.id.btn_verify_mobile);
 
         btnGetBalance.setOnClickListener(this);
         btnLoadMoney.setOnClickListener(this);
@@ -110,6 +113,8 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPGPayment.setOnClickListener(this);
         btnGetWithdrawInfo.setOnClickListener(this);
         btnWithdraw.setOnClickListener(this);
+        btnUpdateMobile.setOnClickListener(this);
+        btnVerifyMobile.setOnClickListener(this);
 
         return rootView;
     }
@@ -152,6 +157,12 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.btn_get_cashout_info:
                 getCashoutInfo();
+                break;
+            case R.id.btn_update_mobile:
+                updateMobile();
+                break;
+            case R.id.btn_verify_mobile:
+                verifyMobile();
                 break;
         }
     }
@@ -199,6 +210,96 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 Utils.showToast(getActivity(), error.getMessage());
             }
         });
+    }
+
+    private void updateMobile() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        String message = "Enter Mobile No to update";
+        String positiveButtonText = "Update";
+
+        alert.setTitle("Enter Mobile No");
+        alert.setMessage(message);
+        // Set an EditText view to get user input
+        final EditText input = new EditText(getActivity());
+        alert.setView(input);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+
+                mCitrusClient.updateMobile(value, new Callback<String>() {
+                    @Override
+                    public void success(String s) {
+                        Utils.showToast(getActivity(), s);
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        Utils.showToast(getActivity(), error.getMessage());
+                    }
+                });
+
+                input.clearFocus();
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        input.requestFocus();
+        alert.show();
+    }
+
+    private void verifyMobile() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        String message = "Enter Verification Code";
+        String positiveButtonText = "Verify";
+
+        alert.setTitle("Enter Verification Code");
+        alert.setMessage(message);
+        // Set an EditText view to get user input
+        final EditText input = new EditText(getActivity());
+        alert.setView(input);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+
+                mCitrusClient.verifyMobile(value, new Callback<String>() {
+                    @Override
+                    public void success(String s) {
+                        Utils.showToast(getActivity(), s);
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        Utils.showToast(getActivity(), error.getMessage());
+                    }
+                });
+
+                input.clearFocus();
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        input.requestFocus();
+        alert.show();
     }
 
     private void showPrompt(final Utils.PaymentType paymentType) {

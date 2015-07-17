@@ -39,9 +39,12 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CashoutInfo;
+import com.citrus.sdk.classes.LinkUserResponse;
 import com.citrus.sdk.classes.MemberInfo;
 import com.citrus.sdk.classes.PGHealth;
 import com.citrus.sdk.classes.PGHealthResponse;
+import com.citrus.sdk.classes.UpdateMobileResponse;
+import com.citrus.sdk.classes.VerifyMobileResponse;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.payment.DebitCardOption;
@@ -300,27 +303,28 @@ public class CitrusClient {
                         try {
                             jsonObject.put("email", emailId);
                             jsonObject.put("mobile", mobileNo);
+
+                            retrofitClient.getMemberInfo(accessToken.getHeaderAccessToken(), new TypedString(jsonObject.toString()), new retrofit.Callback<JsonElement>() {
+                                @Override
+                                public void success(JsonElement jsonElement, Response response) {
+                                    MemberInfo memberInfo = MemberInfo.fromJSON(jsonElement.toString());
+
+                                    if (memberInfo != null) {
+                                        sendResponse(callback, memberInfo);
+                                    } else {
+                                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_MEMBER_INFO, Status.FAILED));
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    sendError(callback, error);
+                                }
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_MEMBER_INFO, Status.FAILED));
                         }
-
-                        retrofitClient.getMemberInfo(accessToken.getHeaderAccessToken(), new TypedString(jsonObject.toString()), new retrofit.Callback<JsonElement>() {
-                            @Override
-                            public void success(JsonElement jsonElement, Response response) {
-                                MemberInfo memberInfo = MemberInfo.fromJSON(jsonElement.toString());
-
-                                if (memberInfo != null) {
-                                    sendResponse(callback, memberInfo);
-                                } else {
-                                    sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_MEMBER_INFO, Status.FAILED));
-                                }
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                sendError(callback, error);
-                            }
-                        });
                     } else {
                         sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_SIGNUP_TOKEN, Status.FAILED));
                     }
@@ -386,6 +390,59 @@ public class CitrusClient {
                         });
                     } else {
                         sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_LINK_USER, Status.FAILED));
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    sendError(callback, error);
+                }
+            });
+        }
+    }
+
+    /**
+     * This method will enable the user to Sign in with OTP.
+     * <li>
+     * <ol>If user's mobileNo no is verified then OTP will be sent on the mobileNo and user will be able to sign in using mOTP. </ol>
+     * <ol>If the mobileNo no is not found/unverified and email is found then OTP is sent on the emailId and user will be able to sign in using eOTP. </ol>
+     * <ol>If the emailId and mobileNo no are not found then the user's account is created.</ol>
+     * </li>
+     *
+     * @param emailId
+     * @param mobileNo
+     * @param callback
+     */
+    public synchronized void linkUserWithOTP(final String emailId, final String mobileNo, final boolean forceMobileVerification, final Callback<LinkUserResponse> callback) {
+
+        if (validate()) {
+            retrofitClient.getSignUpToken(signupId, signupSecret, OAuth2GrantType.implicit.toString(), new retrofit.Callback<AccessToken>() {
+                @Override
+                public void success(AccessToken accessToken, Response response) {
+                    if (accessToken != null && accessToken.getHeaderAccessToken() != null) {
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("email", emailId);
+                            jsonObject.put("mobile", mobileNo);
+                            jsonObject.put("force_mobile_verification", forceMobileVerification);
+
+                            retrofitClient.linkUser(accessToken.getHeaderAccessToken(), new TypedString(jsonObject.toString()), new retrofit.Callback<LinkUserResponse>() {
+                                @Override
+                                public void success(LinkUserResponse linkUserResponse, Response response) {
+                                    sendResponse(callback, linkUserResponse);
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    sendError(callback, error);
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_LINK_USER, Status.FAILED));
+                        }
+                    } else {
+                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_SIGNUP_TOKEN, Status.FAILED));
                     }
                 }
 
@@ -560,6 +617,96 @@ public class CitrusClient {
         });
     }
 
+    /**
+     * Signin with mobile no and password.
+     *
+     * @param emailIdOrMobileNo
+     * @param otp
+     * @param callback
+     */
+    public synchronized void signInWithOTP(final String emailIdOrMobileNo, final String otp, final Callback<CitrusResponse> callback) {
+
+        //grant Type username token saved
+        retrofitClient.getSignInToken(signinId, signinSecret, emailIdOrMobileNo, OAuth2GrantType.username.toString(), new retrofit.Callback<AccessToken>() {
+
+            @Override
+            public void success(AccessToken accessToken, Response response) {
+                if (accessToken.getHeaderAccessToken() != null) {
+                    OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
+                    token.createToken(accessToken.getJSON());///grant Type username token saved
+
+                    retrofitClient.getSignInWithPasswordResponse(signinId, signinSecret, emailIdOrMobileNo, otp, OAuth2GrantType.onetimepass.toString(), new retrofit.Callback<AccessToken>() {
+                        @Override
+                        public void success(AccessToken accessToken, Response response) {
+                            Logger.d("SIGN IN RESPONSE " + accessToken.getJSON().toString());
+                            if (accessToken.getHeaderAccessToken() != null) {
+                                final OauthToken token = new OauthToken(mContext, PREPAID_TOKEN);
+                                token.createToken(accessToken.getJSON());///grant Type password token saved
+                                // Fetch the associated emailId and save the emailId.
+                                getMemberInfo(null, emailIdOrMobileNo, new Callback<MemberInfo>() {
+                                    @Override
+                                    public void success(MemberInfo memberInfo) {
+                                        if (memberInfo != null && memberInfo.getProfileByMobile() != null) {
+
+                                            token.saveUserDetails(memberInfo.getProfileByMobile().getEmailId(), emailIdOrMobileNo);//save email ID of the signed in user
+                                        }
+                                    }
+
+                                    @Override
+                                    public void error(CitrusError error) {
+                                        // NOOP
+                                        // Do nothing
+                                    }
+                                });
+
+
+                                RetroFitClient.setInterCeptor();
+                                EventBus.getDefault().register(CitrusClient.this);
+                                retrofitClient.getCookie(emailIdOrMobileNo, otp, "true", new retrofit.Callback<String>() {
+                                    @Override
+                                    public void success(String s, Response response) {
+                                        // NOOP
+                                        // This method will never be called.
+                                    }
+
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        if (prepaidCookie != null) {
+                                            cookieManager = CookieManager.getInstance();
+                                            PersistentConfig config = new PersistentConfig(mContext);
+                                            if (config.getCookieString() != null) {
+                                                cookieManager.getInstance().removeSessionCookie();
+                                            }
+                                            CookieSyncManager.createInstance(mContext);
+                                            config.setCookie(prepaidCookie);
+                                        } else {
+                                            Logger.d("PREPAID LOGIN UNSUCCESSFUL");
+                                        }
+                                        EventBus.getDefault().unregister(CitrusClient.this);
+
+                                        // Since we have a got the cookie, we are giving the callback.
+                                        sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_SIGNIN, Status.SUCCESSFUL));
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Logger.d("SIGN IN RESPONSE ERROR **" + error.getMessage());
+                            sendError(callback, error);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                sendError(callback, error);
+            }
+        });
+    }
+
     public synchronized void getCookie(String email, String password, final Callback<CitrusResponse> callback) {
         RetroFitClient.setInterCeptor();
         EventBus.getDefault().register(CitrusClient.this);
@@ -705,10 +852,121 @@ public class CitrusClient {
     }
 
     /**
+     * Update or Change or Verify mobile no.
+     *
+     * @param mobileNo
+     * @param callback
+     */
+    public synchronized void updateMobile(final String mobileNo, final Callback<String> callback) {
+        if (validate()) {
+
+            if (!TextUtils.isEmpty(mobileNo)) {
+                getPrepaidToken(new Callback<AccessToken>() {
+                                    @Override
+                                    public void success(AccessToken accessToken) {
+                                        String header;
+                                        if (accessToken != null && (header = accessToken.getHeaderAccessToken()) != null) {
+                                            JSONObject jsonObject = new JSONObject();
+                                            try {
+                                                jsonObject.put("mobile", mobileNo);
+
+                                                retrofitClient.updateMobile(header, new TypedString(jsonObject.toString()), new retrofit.Callback<UpdateMobileResponse>() {
+                                                    @Override
+                                                    public void success(UpdateMobileResponse updateMobileResponse, Response response) {
+                                                        if (updateMobileResponse.getResponseCode() == UpdateMobileResponse.VERIFICATION_CODE_SENT_SUCCESSFULLY) {
+                                                            sendResponse(callback, updateMobileResponse.getResponseMessage());
+                                                        } else {
+                                                            sendError(callback, new CitrusError(updateMobileResponse.getResponseMessage(), Status.FAILED));
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void failure(RetrofitError error) {
+                                                        sendError(callback, error);
+                                                    }
+                                                });
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                                sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_UPDATE_MOBILE, Status.FAILED));
+                                            }
+                                        } else {
+                                            sendError(callback, new CitrusError(ResponseMessages.ERROR_SIGNIN_TOKEN_NOT_FOUND, Status.FAILED));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void error(CitrusError error) {
+                                        sendError(callback, error);
+                                    }
+                                }
+                );
+            }
+        } else {
+            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_BLANK_MOBILE_NO, Status.FAILED));
+        }
+    }
+
+    /**
+     * Verify mobile no.
+     *
+     * @param verificationCode
+     * @param callback
+     */
+    public synchronized void verifyMobile(final String verificationCode, final Callback<String> callback) {
+        if (validate()) {
+
+            if (!TextUtils.isEmpty(verificationCode)) {
+                getPrepaidToken(new Callback<AccessToken>() {
+                                    @Override
+                                    public void success(AccessToken accessToken) {
+                                        String header;
+                                        if (accessToken != null && (header = accessToken.getHeaderAccessToken()) != null) {
+                                            JSONObject jsonObject = new JSONObject();
+                                            try {
+                                                jsonObject.put("verificationCode", verificationCode);
+
+                                                retrofitClient.verifyMobile(header, new TypedString(jsonObject.toString()), new retrofit.Callback<VerifyMobileResponse>() {
+                                                    @Override
+                                                    public void success(VerifyMobileResponse verifyMobileResponse, Response response) {
+                                                        if (verifyMobileResponse.getResponseCode() == VerifyMobileResponse.MOBILE_VERIFIED_SUCCESSFULLY) {
+                                                            sendResponse(callback, verifyMobileResponse.getResponseMessage());
+                                                        } else {
+                                                            sendError(callback, new CitrusError(verifyMobileResponse.getResponseMessage(), Status.FAILED));
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void failure(RetrofitError error) {
+                                                        sendError(callback, error);
+                                                    }
+                                                });
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                                sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_UPDATE_MOBILE, Status.FAILED));
+                                            }
+                                        } else {
+                                            sendError(callback, new CitrusError(ResponseMessages.ERROR_SIGNIN_TOKEN_NOT_FOUND, Status.FAILED));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void error(CitrusError error) {
+                                        sendError(callback, error);
+                                    }
+                                }
+                );
+            }
+        } else {
+            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_BLANK_VERIFICATION_CODE, Status.FAILED));
+        }
+    }
+
+    /**
      * Get the user saved payment options.
      *
      * @param callback - callback
      */
+
     public synchronized void getWallet(final Callback<List<PaymentOption>> callback) {
         /*
          * Get the saved payment options of the user.
