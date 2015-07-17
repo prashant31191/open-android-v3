@@ -459,3 +459,6 @@ This feature is used for loading money to Citrus wallet.
          @Override
          public void error(CitrusError error) { }
       });
+
+	  
+	  [ ![Download](https://api.bintray.com/packages/developer/maven/com.citrus.citruspay/images/download.svg) ](https://bintray.com/developer/maven/com.citrus.citruspay/_latestVersion)
