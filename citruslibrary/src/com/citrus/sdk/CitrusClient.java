@@ -1353,19 +1353,23 @@ public class CitrusClient {
                     TransactionResponse.TransactionStatus transactionStatus = transactionResponse.getTransactionStatus();
                     Status status = null;
 
-                    switch (transactionStatus) {
+                    if (transactionStatus != null) {
+                        switch (transactionStatus) {
 
-                        case SUCCESSFUL:
-                            status = Status.SUCCESSFUL;
-                            break;
-                        case FAILED:
-                            status = Status.FAILED;
-                            break;
-                        case CANCELLED:
-                            status = Status.CANCELLED;
-                            break;
+                            case SUCCESSFUL:
+                                status = Status.SUCCESSFUL;
+                                break;
+                            case FAILED:
+                                status = Status.FAILED;
+                                break;
+                            case CANCELLED:
+                                status = Status.CANCELLED;
+                                break;
+                            case PG_REJECTED:
+                                status = Status.PG_REJECTED;
+                                break;
+                        }
                     }
-
                     if (transactionStatus == TransactionResponse.TransactionStatus.SUCCESSFUL) {
                         sendResponse(callback, transactionResponse);
                     } else {

@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by salil on 29/4/15.
  */
 public class CitrusResponse implements Parcelable {
-    public enum Status { SUCCESSFUL, FAILED, CANCELLED }
+    public enum Status { SUCCESSFUL, FAILED, CANCELLED, PG_REJECTED }
 
     @SerializedName("reason")
     protected String message = null;
