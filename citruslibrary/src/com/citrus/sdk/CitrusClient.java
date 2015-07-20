@@ -1282,6 +1282,28 @@ public class CitrusClient {
 
     }
 
+    public synchronized void openConsumerPortal(final Callback<String> callback) {
+        if (validate()) {
+
+            oauthToken.getSignInToken(new Callback<AccessToken>() {
+                @Override
+                public void success(AccessToken accessToken) {
+                    Intent intent = new Intent(mContext, ConsumerPortalActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(Constants.INTENT_EXTRA_ACCESS_TOKEN, accessToken.getAccessToken());
+                    intent.putExtra(Constants.INTENT_EXTRA_CONSUMER_PORTAL_URL, environment.getConsumerPortalUrl());
+
+                    mContext.startActivity(intent);
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    sendError(callback, error);
+                }
+            });
+        }
+    }
+
     // PG Health.
 
     /**

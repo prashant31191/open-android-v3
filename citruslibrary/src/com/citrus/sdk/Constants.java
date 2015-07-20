@@ -22,13 +22,13 @@ public interface Constants {
     int SDK_VERSION = 3;
 
     String INTENT_EXTRA_TRANSACTION_RESPONSE = "INTENT_EXTRA_TRANSACTION_RESPONSE";
+    String INTENT_EXTRA_ACCESS_TOKEN = "INTENT_EXTRA_ACCESS_TOKEN";
+    String INTENT_EXTRA_CONSUMER_PORTAL_URL = "INTENT_EXTRA_CONSUMER_PORTAL_URL";
 
     /**
      * Use this constant to pass the payment type. {@link com.citrus.sdk.payment.PaymentType}
      */
     String INTENT_EXTRA_PAYMENT_TYPE = "INTENT_EXTRA_PAYMENT_TYPE";
-
-    String INTENT_EXTRA_CITRUS_CONFIG = "INTENT_EXTRA_CITRUS_CONFIG";
 
     @Deprecated
     String INTENT_EXTRA_PAYMENT_PARAMS = "INTENT_EXTRA_PAYMENT_PARAMS";
