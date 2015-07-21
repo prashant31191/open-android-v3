@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -63,12 +64,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import de.greenrobot.event.EventBus;
 import eventbus.CookieEvents;
@@ -828,21 +836,43 @@ public class CitrusClient {
      */
     public synchronized void getBalance(final Callback<Amount> callback) {
         if (validate()) {
+//            oauthToken.getSignInToken(new Callback<AccessToken>() {
+//                @Override
+//                public void success(AccessToken accessToken) {
+//
+//                    retrofitClient.getBalance(accessToken.getHeaderAccessToken(), new retrofit.Callback<Amount>() {
+//                        @Override
+//                        public void success(Amount amount, Response response) {
+//                            sendResponse(callback, amount);
+//                        }
+//
+//                        @Override
+//                        public void failure(RetrofitError error) {
+//                            sendError(callback, error);
+//                        }
+//                    });
+//                }
+//
+//                @Override
+//                public void error(CitrusError error) {
+//                    sendError(callback, error);
+//                }
+//            });
+
             oauthToken.getSignInToken(new Callback<AccessToken>() {
                 @Override
                 public void success(AccessToken accessToken) {
-
-                    retrofitClient.getBalance(accessToken.getHeaderAccessToken(), new retrofit.Callback<Amount>() {
+                    new GetBalanceAsync(accessToken.getHeaderAccessToken(), new GetBalanceListener() {
                         @Override
-                        public void success(Amount amount, Response response) {
+                        public void success(Amount amount) {
                             sendResponse(callback, amount);
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
+                        public void error(CitrusError error) {
                             sendError(callback, error);
                         }
-                    });
+                    }).execute();
                 }
 
                 @Override
@@ -1529,5 +1559,64 @@ public class CitrusClient {
     public void onEvent(CookieEvents cookieEvents) {
         Logger.d("COOKIE IN CITRUS CLIENT  ****" + cookieEvents.getCookie());
         prepaidCookie = cookieEvents.getCookie();
+    }
+
+    private class GetBalanceAsync extends AsyncTask<String, Void, Amount> {
+        private GetBalanceListener listener = null;
+        private String accessToken = null;
+
+        public GetBalanceAsync(String accessToken, GetBalanceListener listener) {
+            this.accessToken = accessToken;
+            this.listener = listener;
+        }
+
+        @Override
+        protected Amount doInBackground(String... strings) {
+            Amount amount = null;
+
+            String getBalanceUrl = environment.getBaseUrl() + "/service/v2/mycard/balance";
+            try {
+                URL url = new URL(getBalanceUrl);
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Authorization", accessToken);
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                // Parse the response and get the amount object.
+                amount = Amount.fromJSON(response.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return amount;
+        }
+
+        @Override
+        protected void onPostExecute(Amount amount) {
+            super.onPostExecute(amount);
+
+            if (amount != null) {
+                listener.success(amount);
+            } else {
+                listener.error(new CitrusError(ResponseMessages.ERROR_FAILED_TO_GET_BALANCE, CitrusResponse.Status.FAILED));
+            }
+        }
+    }
+
+    private interface GetBalanceListener {
+        void success(Amount amount);
+
+        void error(CitrusError error);
     }
 }
