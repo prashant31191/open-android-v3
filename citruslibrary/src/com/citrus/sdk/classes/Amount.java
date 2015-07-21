@@ -49,6 +49,23 @@ public class Amount implements Parcelable {
         return value;
     }
 
+    public static Amount fromJSON(String response) {
+        Amount amount = null;
+        JSONObject jsonObject = null;
+
+        if (!TextUtils.isEmpty(response)) {
+            try {
+                jsonObject = new JSONObject(response);
+
+                amount = fromJSONObject(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return amount;
+    }
+
     public static Amount fromJSONObject(JSONObject amountObject) {
         Amount amount = null;
 
