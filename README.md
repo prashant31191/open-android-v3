@@ -51,7 +51,7 @@ Citrus PG Prerequisites
    6. Load Money – money can be loaded to user’s account using CC/DC/NB option.
    7. Withdraw money
 
-<b> How to InitSDK? </b>
+<b> How to Init SDK? </b>
 
    Create a object of CitrusClient.
       
