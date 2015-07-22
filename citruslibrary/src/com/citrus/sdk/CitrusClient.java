@@ -113,11 +113,13 @@ public class CitrusClient {
     private MerchantPaymentOption merchantPaymentOption = null;
 
     private API retrofitClient;
+    private API citrusBaseUrlClient;
     private String prepaidCookie = null;
     private OauthToken oauthToken = null;
     private CookieManager cookieManager;
     private BroadcastReceiver paymentEventReceiver = null;
     private Map<String, PGHealth> pgHealthMap = null;
+    private boolean initialized = false;
 
     private CitrusClient(Context context) {
         mContext = context;
@@ -135,54 +137,58 @@ public class CitrusClient {
     }
 
     public void init(@NonNull String signupId, @NonNull String signupSecret, @NonNull String signinId, @NonNull String signinSecret, @NonNull String vanity, @NonNull Environment environment) {
-        this.signupId = signupId;
-        this.signupSecret = signupSecret;
-        this.signinId = signinId;
-        this.signinSecret = signinSecret;
-        this.vanity = vanity;
-        if (!CitrusLogger.isEnableLogs())
-            CitrusLogger.disableLogs();
+        if (!initialized) {
 
-        if (environment == null) {
-            this.environment = Environment.SANDBOX;
+            this.signupId = signupId;
+            this.signupSecret = signupSecret;
+            this.signinId = signinId;
+            this.signinSecret = signinSecret;
+            this.vanity = vanity;
+
+            if (!CitrusLogger.isEnableLogs()) {
+                CitrusLogger.disableLogs();
+            }
+
+            if (environment == null) {
+                this.environment = Environment.SANDBOX;
+            }
+            this.environment = environment;
+            saveSDKEnvironment();
+
+            if (validate()) {
+                initRetrofitClient();
+                initCitrusBaseUrlClient();
+            }
+
+            // TODO: Remove full dependency on this class.
+            Config.setupSignupId(signupId);
+            Config.setupSignupSecret(signupSecret);
+
+            Config.setSigninId(signinId);
+            Config.setSigninSecret(signinSecret);
+            Config.setVanity(vanity);
+            switch (environment) {
+                case SANDBOX:
+                    Config.setEnv("sandbox");
+                    break;
+                case PRODUCTION:
+                    Config.setEnv("production");
+                    break;
+            }
+            Logger.d("VANITY*** " + vanity);
+            EventsManager.logInitSDKEvents(mContext);
+
+            fetchPGHealthForAllBanks();
+
+            initialized = true;
         }
-        this.environment = environment;
-        saveSDKEnvironment();
-
-        if (validate()) {
-            initRetrofitClient();
-        }
-
-        // TODO: Remove full dependency on this class.
-        Config.setupSignupId(signupId);
-        Config.setupSignupSecret(signupSecret);
-
-        Config.setSigninId(signinId);
-        Config.setSigninSecret(signinSecret);
-        Config.setVanity(vanity);
-        switch (environment) {
-            case SANDBOX:
-                Config.setEnv("sandbox");
-                break;
-            case PRODUCTION:
-                Config.setEnv("production");
-                break;
-        }
-        Logger.d("VANITY*** " + vanity);
-        EventsManager.logInitSDKEvents(mContext);
-
-        fetchPGHealthForAllBanks();
     }
 
     private void fetchPGHealthForAllBanks() {
 
-        RetroFitClient.setEndPoint(environment.getBaseCitrusUrl());
-
-        retrofitClient.getPGHealthForAllBanks(vanity, "ALLBANKS", new retrofit.Callback<JsonElement>() {
+        citrusBaseUrlClient.getPGHealthForAllBanks(vanity, "ALLBANKS", new retrofit.Callback<JsonElement>() {
                     @Override
                     public void success(JsonElement jsonElement, Response response) {
-                        RetroFitClient.resetEndPoint();
-
                         try {
                             JSONObject jsonObject = new JSONObject(jsonElement.toString());
                             Iterator<String> keys = jsonObject.keys();
@@ -203,8 +209,6 @@ public class CitrusClient {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        RetroFitClient.resetEndPoint();
-
                         Logger.e("Error while fetching the health");
                     }
                 }
@@ -238,6 +242,10 @@ public class CitrusClient {
     private void initRetrofitClient() {
         RetroFitClient.initRetroFitClient(environment);
         retrofitClient = RetroFitClient.getCitrusRetroFitClient();
+    }
+
+    private void initCitrusBaseUrlClient() {
+        citrusBaseUrlClient = RetroFitClient.getCitrusBaseUrlClient(environment.getBaseCitrusUrl());
     }
 
     public static CitrusClient getInstance(Context context) {
@@ -1327,22 +1335,16 @@ public class CitrusClient {
         if (!(paymentOption instanceof NetbankingOption)) {
             sendResponse(callback, new PGHealthResponse(PGHealth.GOOD, "All Good"));
         } else {
-            RetroFitClient.setEndPoint(environment.getBaseCitrusUrl());
-
             // If the paymentOption is netbanking call the api.
-            retrofitClient.getPGHealth(vanity, ((NetbankingOption) paymentOption).getBankCID(), new retrofit.Callback<PGHealthResponse>() {
+            citrusBaseUrlClient.getPGHealth(vanity, ((NetbankingOption) paymentOption).getBankCID(), new retrofit.Callback<PGHealthResponse>() {
                 @Override
                 public void success(PGHealthResponse pgHealthResponse, Response response) {
                     sendResponse(callback, pgHealthResponse);
-
-                    RetroFitClient.resetEndPoint();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     sendError(callback, error);
-
-                    RetroFitClient.resetEndPoint();
                 }
             });
         }
