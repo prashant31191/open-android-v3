@@ -48,6 +48,12 @@ public abstract class PaymentType implements Parcelable {
         this.citrusUser = citrusUser;
     }
 
+    public PaymentType(PaymentBill paymentBill, PaymentOption paymentOption, CitrusUser citrusUser) {
+        this.paymentBill = paymentBill;
+        this.paymentOption = paymentOption;
+        this.citrusUser = citrusUser;
+    }
+
     public Amount getAmount() {
         return amount;
     }
@@ -283,6 +289,28 @@ public abstract class PaymentType implements Parcelable {
         public PGPayment(PaymentBill paymentBill, PaymentOption paymentOption) throws CitrusException {
             super(paymentBill);
             this.paymentOption = paymentOption;
+
+            if (paymentBill == null) {
+                throw new CitrusException("PaymentBill should not be null.");
+            }
+
+            if (paymentOption == null) {
+                throw new CitrusException("PaymentBill should not be null.");
+            }
+        }
+
+        /**
+         * Pay using the response of the billGenerator. If you are fetching your bill, please use this constructor.
+         *
+         * @param paymentBill
+         * @param paymentOption
+         * @param citrusUser
+         * @throws CitrusException if the paymentBill or paymentOption is null.
+         */
+        public PGPayment(PaymentBill paymentBill, PaymentOption paymentOption, CitrusUser citrusUser) throws CitrusException {
+            super(paymentBill, paymentOption, citrusUser);
+            this.paymentOption = paymentOption;
+            this.citrusUser = citrusUser;
 
             if (paymentBill == null) {
                 throw new CitrusException("PaymentBill should not be null.");

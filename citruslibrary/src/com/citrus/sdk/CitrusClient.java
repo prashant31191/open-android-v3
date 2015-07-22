@@ -51,6 +51,7 @@ import com.citrus.sdk.payment.NetbankingOption;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
+import com.citrus.sdk.response.BindUserResponse;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusLogger;
 import com.citrus.sdk.response.CitrusResponse;
@@ -407,6 +408,92 @@ public class CitrusClient {
 
                 @Override
                 public void failure(RetrofitError error) {
+                    sendError(callback, error);
+                }
+            });
+        }
+    }
+
+    public synchronized void bindUserByMobile(final String emailId, final String mobileNo, final Callback<BindUserResponse> callback) {
+        if (validate()) {
+            getMemberInfo(emailId, mobileNo, new Callback<MemberInfo>() {
+                @Override
+                public void success(final MemberInfo memberInfo) {
+                    // No need to check for not null, since if null the callback will be in error.
+                    retrofitClient.getSignUpToken(signupId, signupSecret,
+                            OAuth2GrantType.implicit.toString(), new retrofit.Callback<AccessToken>() {
+                                @Override
+                                public void success(AccessToken accessToken, Response response) {
+                                    Logger.d("accessToken " + accessToken.getJSON().toString());
+
+                                    if (accessToken.getHeaderAccessToken() != null) {
+                                        OauthToken signuptoken = new OauthToken(mContext, SIGNUP_TOKEN);
+                                        signuptoken.createToken(accessToken.getJSON()); //Oauth Token received
+
+                                        retrofitClient.bindUserByMobile(accessToken.getHeaderAccessToken(), emailId, mobileNo, new retrofit.Callback<BindPOJO>() {
+                                            @Override
+                                            public void success(final BindPOJO bindPOJO, Response response) {
+                                                Logger.d("BIND BY MOBILE RESPONSE " + bindPOJO.getUsername());
+
+                                                final BindUserResponse bindUserResponse;
+
+                                                // If the user is fresh user then send the password reset link.
+                                                if (memberInfo.getProfileByMobile() == null && memberInfo.getProfileByEmail() == null) {
+                                                    bindUserResponse = new BindUserResponse(BindUserResponse.RESPONSE_CODE_NEW_USER_BOUND);
+
+                                                    resetPassword(emailId, new Callback<CitrusResponse>() {
+                                                        @Override
+                                                        public void success(CitrusResponse citrusResponse) {
+                                                        }
+
+                                                        @Override
+                                                        public void error(CitrusError error) {
+                                                        }
+                                                    });
+                                                } else {
+                                                    bindUserResponse = new BindUserResponse(BindUserResponse.RESPONSE_CODE_EXISTING_USER_BOUND);
+                                                }
+
+                                                retrofitClient.getSignInToken(signinId, signinSecret, bindPOJO.getUsername(), OAuth2GrantType.username.toString(), new retrofit.Callback<AccessToken>() {
+                                                    @Override
+                                                    public void success(AccessToken accessToken, Response response) {
+                                                        Logger.d("SIGNIN accessToken" + accessToken.getJSON().toString());
+                                                        if (accessToken.getHeaderAccessToken() != null) {
+                                                            OauthToken token = new OauthToken(mContext, SIGNIN_TOKEN);
+                                                            token.createToken(accessToken.getJSON());
+                                                            token.saveUserDetails(emailId, mobileNo);//save email and mobile No of the user
+                                                            Logger.d("USER BIND BY MOBILE SUCCESSFULLY***");
+
+                                                            sendResponse(callback, bindUserResponse);
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void failure(RetrofitError error) {
+                                                        sendError(callback, error);
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void failure(RetrofitError error) {
+                                                sendError(callback, error);
+                                            }
+                                        });
+                                    } else {
+                                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_SIGNUP_TOKEN, Status.FAILED));
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    sendError(callback, error);
+                                }
+                            });
+                }
+
+                @Override
+                public void error(CitrusError error) {
                     sendError(callback, error);
                 }
             });
