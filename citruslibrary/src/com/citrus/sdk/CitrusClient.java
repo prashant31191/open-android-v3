@@ -1098,6 +1098,11 @@ public class CitrusClient {
 
     }
 
+    // Dynamic Pricing.
+    public synchronized void performDynamicPricing() {
+
+    }
+
 
     /**
      * Send money to your friend.
