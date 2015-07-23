@@ -1542,18 +1542,18 @@ public class CitrusClient {
                         JSONObject jsonObject = new JSONObject(message);
                         // If the response does not contain error_description then look for errorMessage.
                         String errorMessage = null;
-                        if (jsonObject.optString("error_description") != null) {
+                        if (!TextUtils.isEmpty(jsonObject.optString("error_description"))) {
                             errorMessage = jsonObject.optString("error_description");
-                        } else if (jsonObject.optString("errorMessage") != null) {
+                        } else if (!TextUtils.isEmpty(jsonObject.optString("errorMessage"))) {
                             errorMessage = jsonObject.optString("errorMessage");
                         } else {
-                            error.getMessage();
+                            errorMessage = message;
                         }
 
                         citrusError = new CitrusError(errorMessage, Status.FAILED);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        citrusError = new CitrusError(error.getMessage(), Status.FAILED);
+                        citrusError = new CitrusError(message, Status.FAILED);
                     }
                 } else {
                     citrusError = new CitrusError(error.getMessage(), Status.FAILED);
