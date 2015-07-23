@@ -1193,8 +1193,6 @@ public class CitrusClient {
                         if (paymentOptionObj != null) {
                             merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
 
-                            saveMerchantPaymentOptions(merchantPaymentOption);
-
                             sendResponse(callback, merchantPaymentOption);
 
                         } else {
@@ -1231,8 +1229,6 @@ public class CitrusClient {
                         JsonObject paymentOptionObj = element.getAsJsonObject();
                         if (paymentOptionObj != null) {
                             merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
-
-                            saveMerchantPaymentOptions(merchantPaymentOption);
 
                             sendResponse(callback, merchantPaymentOption);
 
@@ -1562,12 +1558,6 @@ public class CitrusClient {
 
             sendError(callback, citrusError);
         }
-    }
-
-    private void saveMerchantPaymentOptions(MerchantPaymentOption merchantPaymentOption) {
-        this.merchantPaymentOption = merchantPaymentOption;
-
-        // TODO Save these values in DB
     }
 
     // Getters and setters.
