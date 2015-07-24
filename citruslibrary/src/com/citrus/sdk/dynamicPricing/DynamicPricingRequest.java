@@ -1,5 +1,6 @@
 package com.citrus.sdk.dynamicPricing;
 
+import com.citrus.sdk.CitrusUser;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.NetbankingOption;
@@ -20,24 +21,26 @@ public class DynamicPricingRequest {
     private final String signature;
     private final String merchantAccessKey;
     private final String merchantTransactionId;
-    private final String email;
-    private final String phone;
+    private final CitrusUser user;
     private final PaymentOption paymentOption;
     private final Map<String, String> extraParameters;
-    private final String operation;
+    private final DynamicPricingOperation operation;
 
-    public DynamicPricingRequest(Amount originalAmount, String signature, String merchantAccessKey, String merchantTransactionId, String email, String phone, PaymentOption paymentOption, String operation) {
+    public DynamicPricingRequest(Amount originalAmount, String signature, String merchantAccessKey, String merchantTransactionId, CitrusUser user, PaymentOption paymentOption, DynamicPricingOperation operation) {
         this.originalAmount = originalAmount;
         this.signature = signature;
         this.merchantAccessKey = merchantAccessKey;
         this.merchantTransactionId = merchantTransactionId;
-        this.email = email;
-        this.phone = phone;
+        if (user != null) {
+            this.user = user;
+        } else {
+            this.user = CitrusUser.DEFAULT_USER;
+        }
         this.paymentOption = paymentOption;
         this.operation = operation;
 
         extraParameters = new HashMap<>();
-        extraParameters.put("operation", operation);
+        extraParameters.put("operation", operation.toString());
     }
 
     public Amount getOriginalAmount() {
@@ -56,12 +59,8 @@ public class DynamicPricingRequest {
         return merchantTransactionId;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
+    public CitrusUser getUser() {
+        return user;
     }
 
     public PaymentOption getPaymentInformation() {
@@ -79,8 +78,8 @@ public class DynamicPricingRequest {
             JSONObject jsonObject = new JSONObject();
 
             try {
-                jsonObject.put("email", request.email);
-                jsonObject.put("phone", request.phone);
+                jsonObject.put("email", request.user.getEmailId());
+                jsonObject.put("phone", request.user.getMobileNo());
                 jsonObject.put("merchantTransactionId", request.merchantTransactionId);
                 jsonObject.put("merchantAccessKey", request.merchantAccessKey);
                 jsonObject.put("signature", request.signature);
