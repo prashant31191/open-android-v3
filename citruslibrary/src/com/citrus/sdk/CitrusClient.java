@@ -40,6 +40,7 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CashoutInfo;
+import com.citrus.sdk.classes.CitrusException;
 import com.citrus.sdk.classes.MemberInfo;
 import com.citrus.sdk.classes.PGHealth;
 import com.citrus.sdk.classes.PGHealthResponse;
@@ -1171,6 +1172,9 @@ public class CitrusClient {
                 citrusBaseUrlClient.performDynamicPricing(new TypedString(DynamicPricingRequest.toJSON(request)), new retrofit.Callback<DynamicPricingResponse>() {
                     @Override
                     public void success(DynamicPricingResponse dynamicPricingResponse, Response response) {
+                        dynamicPricingResponse.setPaymentBill(paymentBill);
+                        dynamicPricingResponse.setPaymentOption(paymentOption);
+                        dynamicPricingResponse.setCitrusUser(citrusUser);
                         sendResponse(callback, dynamicPricingResponse);
                     }
 
@@ -1280,8 +1284,6 @@ public class CitrusClient {
                         if (paymentOptionObj != null) {
                             merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
 
-                            saveMerchantPaymentOptions(merchantPaymentOption);
-
                             sendResponse(callback, merchantPaymentOption);
 
                         } else {
@@ -1318,8 +1320,6 @@ public class CitrusClient {
                         JsonObject paymentOptionObj = element.getAsJsonObject();
                         if (paymentOptionObj != null) {
                             merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
-
-                            saveMerchantPaymentOptions(merchantPaymentOption);
 
                             sendResponse(callback, merchantPaymentOption);
 
@@ -1366,6 +1366,27 @@ public class CitrusClient {
         registerReceiver(callback, new IntentFilter(pgPayment.getIntentAction()));
 
         startCitrusActivity(pgPayment);
+    }
+
+    public synchronized void pgPayment(final DynamicPricingResponse dynamicPricingResponse, final Callback<TransactionResponse> callback) {
+
+        if (dynamicPricingResponse != null) {
+            PaymentBill paymentBill = dynamicPricingResponse.getPaymentBill();
+
+            PaymentType.PGPayment pgPayment;
+            try {
+                pgPayment = new PaymentType.PGPayment(paymentBill, dynamicPricingResponse.getPaymentOption(), dynamicPricingResponse.getCitrusUser());
+
+                registerReceiver(callback, new IntentFilter(pgPayment.getIntentAction()));
+
+                startCitrusActivity(pgPayment, dynamicPricingResponse);
+            } catch (CitrusException e) {
+                e.printStackTrace();
+                sendError(callback, new CitrusError(e.getMessage(), Status.FAILED));
+            }
+        } else {
+            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_NULL_DYNAMIC_RESPONSE, Status.FAILED));
+        }
     }
 
     public synchronized void payUsingCitrusCash(final PaymentType.CitrusCash citrusCash, final Callback<TransactionResponse> callback) {
@@ -1540,12 +1561,17 @@ public class CitrusClient {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
     }
 
-    private void startCitrusActivity(PaymentType paymentType) {
+    private void startCitrusActivity(PaymentType paymentType, DynamicPricingResponse dynamicPricingResponse) {
         Intent intent = new Intent(mContext, CitrusActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_TYPE, paymentType);
+        intent.putExtra(Constants.INTENT_EXTRA_DYNAMIC_PRICING_RESPONSE, dynamicPricingResponse);
 
         mContext.startActivity(intent);
+    }
+
+    private void startCitrusActivity(PaymentType paymentType) {
+        startCitrusActivity(paymentType, null);
     }
 
     private <T> void registerReceiver(final Callback<T> callback, IntentFilter intentFilter) {
@@ -1649,12 +1675,6 @@ public class CitrusClient {
 
             sendError(callback, citrusError);
         }
-    }
-
-    private void saveMerchantPaymentOptions(MerchantPaymentOption merchantPaymentOption) {
-        this.merchantPaymentOption = merchantPaymentOption;
-
-        // TODO Save these values in DB
     }
 
     // Getters and setters.

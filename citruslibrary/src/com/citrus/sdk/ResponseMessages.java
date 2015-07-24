@@ -62,5 +62,6 @@ public interface ResponseMessages {
 
     String ERROR_MESSAGE_INVALID_PASSWORD = "Invalid Credentials!!! Please check your passsword.";
     String ERROR_MESSAGE_BLANK_NULL_DP_PARAMS = "Dynamic Pricing Opration, Bill Url or PaymentBill, Amount and PaymentOption should not be null";
+    String ERROR_MESSAGE_NULL_DYNAMIC_RESPONSE = "Dynamic Pricing Response can not be null";
 
 }
