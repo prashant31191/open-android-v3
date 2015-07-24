@@ -81,6 +81,11 @@ public interface API {
     @POST("/oauth/token")
     void getRefreshTokenAsync(@Field("client_id") String client_ID, @Field("client_secret") String client_Secret, @Field("grant_type") String grantType, @Field("refresh_token") String refreshToken, Callback<AccessToken> accessTokenPOJOCallback);
 
+    // BindUser by mobile
+    @FormUrlEncoded
+    @POST("/service/v2/identity/bind")
+    void bindUserByMobile(@Header("Authorization") String header, @Field("email") String email, @Field("mobile") String mobile, Callback<BindPOJO> bindPOJOCallback);
+
     // MemberInfo API
     @Headers("Content-Type: application/json")
     @POST("/service/um/profile/memberInfo")

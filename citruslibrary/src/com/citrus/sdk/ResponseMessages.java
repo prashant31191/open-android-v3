@@ -52,6 +52,7 @@ public interface ResponseMessages {
     String SUCCESS_MESSAGE_DELETE_PAYMENT_OPTIONS = "Payment Option Deleted Successfully.";
 
     String ERROR_NETWORK_CONNECTION = "Please check your internet connection.";
+    String ERROR_FAILED_TO_GET_BALANCE = "Failed to get the balance.";
 
     String ERROR_MESSAGE_INVALID_BILL = "Invalid bill received from server.";
     String ERROR_MESSAGE_BIND_USER = "Failed to bind User!!!";

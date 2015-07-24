@@ -49,7 +49,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
         fragmentManager = getSupportFragmentManager();
 
         citrusClient = CitrusClient.getInstance(mContext);
-        citrusClient.enableLog(false);
+        citrusClient.enableLog(Constants.enableLogging);
 
         citrusClient.init(Constants.SIGNUP_ID, Constants.SIGNUP_SECRET, Constants.SIGNIN_ID, Constants.SIGNIN_SECRET, Constants.VANITY, Constants.environment);
 

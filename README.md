@@ -1,7 +1,14 @@
 # open-android-v3
 Enhanced Payment SDK 
 
-Last updated : 08/07/2015
+Release Notes:
+v3.0.2 
+* BindByMobileNo API integrated.
+* Fix for SSL error.
+* Avoided multiple initialization of the CitrusClient
+* Bug fixes.
+
+Last updated : 22/07/2015
 
 What's new?
 open-android-v3 is enhanced version of SDK V2. 
@@ -51,7 +58,7 @@ Citrus PG Prerequisites
    6. Load Money – money can be loaded to user’s account using CC/DC/NB option.
    7. Withdraw money
 
-<b> How to InitSDK? </b>
+<b> How to Init SDK? </b>
 
    Create a object of CitrusClient.
       
