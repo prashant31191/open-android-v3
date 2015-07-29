@@ -255,7 +255,7 @@ This feature is used for loading money to Citrus wallet.
       NetbankingOption netbankingOptio = new NetbankingOption(“ICICI Bank” ,”CID001”);
       
       // Init Net Banking PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption);
       
       citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
       
@@ -275,7 +275,7 @@ This feature is used for loading money to Citrus wallet.
       //Note: The Token for sandbox and production will be different
       
       // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption);
       
       citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
          
@@ -295,7 +295,7 @@ This feature is used for loading money to Citrus wallet.
       //Note: The Token for sandbox and production will be different
       
       // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption);
       // Call LoadMoney
       citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
       
