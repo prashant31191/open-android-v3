@@ -476,7 +476,10 @@ show in the UI. When user selects the particular bank, you should use CID agains
 There are two types of Payment Options
 
 <b>1. Payment Options for Load Money </b>
-Load Money payment options differes from normal PG Payment. Following method should be used for loadMoney Payment Options
+
+Load Money payment options differes from normal PG Payment. 
+
+Following method should be used for loadMoney Payment Options
 		
 		citrusClient.getInstance(getActivity()).getLoadMoneyPaymentOptions(new Callback<MerchantPaymentOption>() {
                 @Override
