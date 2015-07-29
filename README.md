@@ -8,7 +8,7 @@ v3.0.2
 * Avoided multiple initialization of the CitrusClient
 * Bug fixes.
 
-Last updated : 22/07/2015
+Last updated : 29/07/2015
 
 What's new?
 open-android-v3 is enhanced version of SDK V2. 
@@ -27,7 +27,8 @@ open-android-v3 is enhanced version of SDK V2.
    * Java JDK version 1.6 or greater.
    * Android SDK Platform 22 (Android 5.1.1)
    * A Git client
-   * Eclipse IDE with ADT or Android Studio
+   * Android Studio (Currently this project is compatible with Android Studio Only. Do get in touch with us
+     if you are using Eclipse IDE).
    * All Citrus PG Prerequisites.
 
 Note: Please DO NOT PROCEED if the above mentioned requirements have not been met.
