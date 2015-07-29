@@ -466,3 +466,42 @@ This feature is used for loading money to Citrus wallet.
          @Override
          public void error(CitrusError error) { }
       });
+<b> How to get Payment Options? </b>
+This is useful to find the type of debit/credit card enabled for you, list of banks available for transaction. You have to use this list of banks and 
+show in the UI. When user selects the particular bank, you should use CID against that bank for payment.
+There are two types of Payment Options
+<b>1. Payment Options for Load Money </b>
+Load Money payment options differes from normal PG Payment. Following method should be used for loadMoney Payment Options
+		
+		citrusClient.getInstance(getActivity()).getLoadMoneyPaymentOptions(new Callback<MerchantPaymentOption>() {
+                @Override
+                public void success(MerchantPaymentOption loadMoneyPaymentOptions) {
+                   ArrayList<NetbankingOption> mNetbankingOptionsList = mMerchantPaymentOption.getNetbankingOptionList();//this will give you only bank list
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                 
+                }
+            });
+
+<b>2. Payment Options for PG Payment </b>
+Following method should be used for PG Payment Options
+
+
+		 CitrusClient.getInstance(getActivity()).getMerchantPaymentOptions(new Callback<MerchantPaymentOption>() {
+                @Override
+                public void success(MerchantPaymentOption merchantPaymentOption) {
+                   
+					ArrayList<NetbankingOption> mNetbankingOptionsList = mMerchantPaymentOption.getNetbankingOptionList();//this will give you only bank list
+                    
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    
+                }
+            });
+
+
+
