@@ -84,7 +84,7 @@ public interface API {
 
     // BindUser by mobile
     @FormUrlEncoded
-    @POST("/service/v2/identity/bind")
+    @POST("/service/um/identity/bind/mobile")
     void bindUserByMobile(@Header("Authorization") String header, @Field("email") String email, @Field("mobile") String mobile, Callback<BindPOJO> bindPOJOCallback);
 
     // MemberInfo API

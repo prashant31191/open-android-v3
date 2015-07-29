@@ -110,7 +110,7 @@ public class Card {
 
     public String getExpiryYear() {
         if (!android.text.TextUtils.isEmpty(expYear)) {
-            if (expYear.substring(0, 2).equalsIgnoreCase("20"))
+            if (expYear.length() > 2 && expYear.substring(0, 2).equalsIgnoreCase("20"))
                 return String.valueOf(expYear);
             else
                 return ("20" + String.valueOf(expYear));
