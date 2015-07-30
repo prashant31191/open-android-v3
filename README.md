@@ -8,7 +8,7 @@ v3.0.2
 * Avoided multiple initialization of the CitrusClient
 * Bug fixes.
 
-Last updated : 22/07/2015
+Last updated : 29/07/2015
 
 What's new?
 open-android-v3 is enhanced version of SDK V2. 
@@ -27,7 +27,8 @@ open-android-v3 is enhanced version of SDK V2.
    * Java JDK version 1.6 or greater.
    * Android SDK Platform 22 (Android 5.1.1)
    * A Git client
-   * Eclipse IDE with ADT or Android Studio
+   * Android Studio (Currently this project is compatible with Android Studio Only. Do get in touch with us
+     if you are using Eclipse IDE).
    * All Citrus PG Prerequisites.
 
 Note: Please DO NOT PROCEED if the above mentioned requirements have not been met.
@@ -254,7 +255,7 @@ This feature is used for loading money to Citrus wallet.
       NetbankingOption netbankingOptio = new NetbankingOption(“ICICI Bank” ,”CID001”);
       
       // Init Net Banking PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption);
       
       citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
       
@@ -274,7 +275,7 @@ This feature is used for loading money to Citrus wallet.
       //Note: The Token for sandbox and production will be different
       
       // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption);
       
       citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
          
@@ -294,7 +295,7 @@ This feature is used for loading money to Citrus wallet.
       //Note: The Token for sandbox and production will be different
       
       // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption);
       // Call LoadMoney
       citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
       
@@ -466,3 +467,53 @@ This feature is used for loading money to Citrus wallet.
          @Override
          public void error(CitrusError error) { }
       });
+	  
+	  
+<b> How to get Payment Options? </b>
+
+
+This is useful to find the type of debit/credit card enabled for you, list of banks available for transaction. You have to use this list of banks and 
+show in the UI. When user selects the particular bank, you should use CID against that bank for payment.
+There are two types of Payment Options
+
+<b>1. Payment Options for Load Money </b>
+
+Load Money payment options differes from normal PG Payment. 
+
+Following method should be used for loadMoney Payment Options
+		
+		citrusClient.getInstance(getActivity()).getLoadMoneyPaymentOptions(new Callback<MerchantPaymentOption>() {
+                @Override
+                public void success(MerchantPaymentOption loadMoneyPaymentOptions) {
+                   ArrayList<NetbankingOption> mNetbankingOptionsList = mMerchantPaymentOption.getNetbankingOptionList();//this will give you only bank list
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                 
+                }
+            });
+
+			
+<b>2. Payment Options for PG Payment </b>
+
+
+Following method should be used for PG Payment Options
+
+
+		 CitrusClient.getInstance(getActivity()).getMerchantPaymentOptions(new Callback<MerchantPaymentOption>() {
+                @Override
+                public void success(MerchantPaymentOption merchantPaymentOption) {
+                   
+					ArrayList<NetbankingOption> mNetbankingOptionsList = mMerchantPaymentOption.getNetbankingOptionList();//this will give you only bank list
+                    
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    
+                }
+            });
+
+
+
