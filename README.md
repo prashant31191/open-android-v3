@@ -339,7 +339,7 @@ This feature is used for loading money to Citrus wallet.
       // Init PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -359,7 +359,7 @@ This feature is used for loading money to Citrus wallet.
       // Init PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -379,7 +379,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -398,7 +398,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -417,7 +417,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -436,7 +436,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, ne, netbankingOption CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
