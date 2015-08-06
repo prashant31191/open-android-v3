@@ -1374,7 +1374,7 @@ public class CitrusClient {
                 public void success(Amount balanceAmount) {
                     // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
                     if (balanceAmount.getValueAsDouble() >= cashoutInfo.getAmount().getValueAsDouble()) {
-                        oauthToken.getSignInToken(new Callback<AccessToken>() {
+                        oauthToken.getPrepaidToken(new Callback<AccessToken>() {
                             @Override
                             public void success(AccessToken accessToken) {
                                 // Since we have access Token, withdraw the money.
@@ -1412,7 +1412,7 @@ public class CitrusClient {
     }
 
     public synchronized void getCashoutInfo(final Callback<CashoutInfo> callback) {
-        oauthToken.getSignInToken(new Callback<AccessToken>() {
+        oauthToken.getPrepaidToken(new Callback<AccessToken>() {
             @Override
             public void success(AccessToken accessToken) {
                 retrofitClient.getCashoutInfo(accessToken.getHeaderAccessToken(), new retrofit.Callback<JsonElement>() {
@@ -1439,7 +1439,7 @@ public class CitrusClient {
     }
 
     public synchronized void saveCashoutInfo(final CashoutInfo cashoutInfo, final Callback<CitrusResponse> callback) {
-        oauthToken.getSignInToken(new Callback<AccessToken>() {
+        oauthToken.getPrepaidToken(new Callback<AccessToken>() {
             @Override
             public void success(AccessToken accessToken) {
                 if (cashoutInfo != null) {
