@@ -70,7 +70,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1343,25 +1346,74 @@ public class CitrusClient {
 
     public synchronized void payUsingCitrusCash(final PaymentType.CitrusCash citrusCash, final Callback<TransactionResponse> callback) {
 
-        // Check whether the balance in the wallet is greater than the transaction amount.
-        getBalance(new Callback<Amount>() {
-            @Override
-            public void success(Amount balanceAmount) {
-                // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
-                if (balanceAmount.getValueAsDouble() >= citrusCash.getAmount().getValueAsDouble()) {
-                    registerReceiver(callback, new IntentFilter(citrusCash.getIntentAction()));
+        String cookieExpiryDate = "";
+        PersistentConfig persistentConfig = new PersistentConfig(mContext);
+        String sessionCookie = persistentConfig.getCookieString();
+        // Extract the cookie expiry date
+        int start = sessionCookie.indexOf("Expires=");
+        int end = sessionCookie.indexOf("GMT;");
+        if (start != -1 && end != -1 && sessionCookie.length() > start + 13 && sessionCookie.length() > end) {
+            cookieExpiryDate = sessionCookie.substring(start + 13, end);
+        }
 
-                    startCitrusActivity(citrusCash);
-                } else {
-                    sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
+        Date expiryDate = new Date();
+        Date currentDate = new Date(System.currentTimeMillis());
+        try {
+            expiryDate = dateFormat.parse(cookieExpiryDate);
+
+            Logger.d("Expiry date : %s, Current Date : %s", expiryDate, currentDate);
+
+            if (currentDate.before(expiryDate)) {
+
+                // Check whether the balance in the wallet is greater than the transaction amount.
+                getBalance(new Callback<Amount>() {
+                    @Override
+                    public void success(Amount balanceAmount) {
+                        // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
+                        if (balanceAmount.getValueAsDouble() >= citrusCash.getAmount().getValueAsDouble()) {
+                            registerReceiver(callback, new IntentFilter(citrusCash.getIntentAction()));
+
+                            startCitrusActivity(citrusCash);
+                        } else {
+                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
+                        }
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        sendError(callback, error);
+                    }
+                });
+            } else {
+                Logger.d("User's cookie has expired. Please signin");
+                sendError(callback, new CitrusError("User's cookie has expired. Please signin.", Status.FAILED));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+            // In the worst case, it will try to redirect user to the Citrus Page.
+
+            // Check whether the balance in the wallet is greater than the transaction amount.
+            getBalance(new Callback<Amount>() {
+                @Override
+                public void success(Amount balanceAmount) {
+                    // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
+                    if (balanceAmount.getValueAsDouble() >= citrusCash.getAmount().getValueAsDouble()) {
+                        registerReceiver(callback, new IntentFilter(citrusCash.getIntentAction()));
+
+                        startCitrusActivity(citrusCash);
+                    } else {
+                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
+                    }
                 }
-            }
 
-            @Override
-            public void error(CitrusError error) {
-                sendError(callback, error);
-            }
-        });
+                @Override
+                public void error(CitrusError error) {
+                    sendError(callback, error);
+                }
+            });
+        }
     }
 
     // Cashout Related APIs
