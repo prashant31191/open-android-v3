@@ -59,7 +59,6 @@ public final class DebitCardOption extends CardOption implements Parcelable {
     }
 
     /**
-     *
      * @param cardNumber
      * @param cardScheme
      */
@@ -103,6 +102,11 @@ public final class DebitCardOption extends CardOption implements Parcelable {
     @Override
     public com.citrus.analytics.PaymentType getAnalyticsPaymentType() {
         return com.citrus.analytics.PaymentType.DEBIT_CARD;
+    }
+
+    @Override
+    public String getPaymentMode() {
+        return "DEBIT_CARD";
     }
 
     @Override

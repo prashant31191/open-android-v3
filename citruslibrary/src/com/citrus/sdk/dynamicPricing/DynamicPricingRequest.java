@@ -106,11 +106,12 @@ public class DynamicPricingRequest {
                     jsonObject.put("paymentToken", paymentOption.getToken());
                 } else if (paymentOption instanceof NetbankingOption) {
                     jsonObject.put("issuerId", ((NetbankingOption) paymentOption).getBankCID());
-                    jsonObject.put("paymentMode", "NET_BANKING");
                 } else if (paymentOption instanceof CardOption) {
                     jsonObject.put("cardNo", ((CardOption) paymentOption).getCardNumber());
                     jsonObject.put("cardType", ((CardOption) paymentOption).getCardScheme().toString());
                 }
+
+                jsonObject.put("paymentMode", paymentOption.getPaymentMode());
             }
         } catch (JSONException e) {
             e.printStackTrace();

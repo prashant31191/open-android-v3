@@ -78,6 +78,11 @@ public final class CreditCardOption extends CardOption implements android.os.Par
     }
 
     @Override
+    public String getPaymentMode() {
+        return "CREDIT_CARD";
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

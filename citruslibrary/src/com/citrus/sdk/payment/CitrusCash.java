@@ -63,6 +63,11 @@ public final class CitrusCash extends PaymentOption {
     }
 
     @Override
+    public String getPaymentMode() {
+        return "CITRUS_CASH";
+    }
+
+    @Override
     public String toString() {
         return super.toString() + "CitrusCash{" +
                 "amount='" + amount + '\'' +

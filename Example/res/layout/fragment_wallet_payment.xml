@@ -69,4 +69,18 @@
         android:layout_margin="@dimen/button_margin"
         android:text="Send Money" />
 
+    <Button
+        android:id="@+id/btn_perform_dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:text="Perform Dynamic Pricing" />
+
+    <Button
+        android:id="@+id/btn_pay_using_dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:text="Pay Using Dynamic Pricing" />
+
 </LinearLayout>
