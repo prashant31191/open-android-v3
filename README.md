@@ -255,7 +255,7 @@ This feature is used for loading money to Citrus wallet.
       NetbankingOption netbankingOptio = new NetbankingOption(“ICICI Bank” ,”CID001”);
       
       // Init Net Banking PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption);
       
       citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
       
@@ -275,7 +275,7 @@ This feature is used for loading money to Citrus wallet.
       //Note: The Token for sandbox and production will be different
       
       // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption);
       
       citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
          
@@ -295,7 +295,7 @@ This feature is used for loading money to Citrus wallet.
       //Note: The Token for sandbox and production will be different
       
       // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
+      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption);
       // Call LoadMoney
       citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
       
@@ -339,7 +339,7 @@ This feature is used for loading money to Citrus wallet.
       // Init PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -359,7 +359,7 @@ This feature is used for loading money to Citrus wallet.
       // Init PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -379,7 +379,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -398,7 +398,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -417,7 +417,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -436,7 +436,7 @@ This feature is used for loading money to Citrus wallet.
       // Init Net Banking PaymentType     
       PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, ne, netbankingOption CitrusUser("developercitrus@gmail.com","9876543210"));
       
-      citrusClient.PGPayment(pgPayment, new Callback<TransactionResponse>() {
+      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
       
          @Override
          public void success(TransactionResponse transactionResponse) { }
@@ -516,4 +516,33 @@ Following method should be used for PG Payment Options
             });
 
 
+<b> Send Money To Your Friend </b>
+Now you can send money to your friend using Mobile No.
+Please refer below code snippet.
 
+	citrusClient.sendMoneyToMoblieNo(new Amount("10"), "9999999999", "My contribution", new Callback<PaymentResponse>() {
+		@Override
+		public void success(PaymentResponse paymentResponse) { }
+		
+		@Override
+		public void error(CitrusError error) { }
+	});
+	
+
+<b> Withdraw Money to Your Account </b>
+You can withdraw money to your bank account.
+Make sure the user is signed in with password to be able to withdraw the money.
+
+	String amount = "10";
+        String accontNo = "12345678901";
+        String accountHolderName = "FirstName LastName;
+        String ifsc = "BANK0000123";
+
+	CashoutInfo cashoutInfo = new CashoutInfo(new Amount(amount), accontNo, accountHolderName, ifsc);
+	citrusClient.cashout(cashoutInfo, new Callback<PaymentResponse>() {
+            @Override
+            public void success(PaymentResponse paymentResponse) { }
+
+            @Override
+            public void error(CitrusError error) {}
+        });

@@ -171,6 +171,10 @@ public final class NetbankingOption extends PaymentOption implements Parcelable 
             resourceId = context.getResources().getIdentifier("default_bank", "drawable", context.getPackageName());
         }
 
+        if (resourceId == 0) {
+            resourceId = context.getResources().getIdentifier("default_bank", "drawable", context.getPackageName());
+        }
+
         if (resourceId != 0) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = context.getResources().getDrawable(resourceId, null);
