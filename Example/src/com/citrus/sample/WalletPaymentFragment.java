@@ -36,6 +36,8 @@ import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CashoutInfo;
 import com.citrus.sdk.response.CitrusError;
+import com.citrus.sdk.response.CitrusResponse;
+import com.citrus.sdk.response.PaymentResponse;
 
 import static com.citrus.sample.Utils.PaymentType.CITRUS_CASH;
 import static com.citrus.sample.Utils.PaymentType.LOAD_MONEY;
@@ -62,6 +64,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnPGPayment = null;
     private Button btnGetWithdrawInfo = null;
     private Button btnWithdraw = null;
+    private Button btnSendMoney = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -102,7 +105,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPGPayment = (Button) rootView.findViewById(R.id.btn_pg_payment);
         btnWithdraw = (Button) rootView.findViewById(R.id.btn_cashout);
         btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
-
+        btnSendMoney = (Button) rootView.findViewById(R.id.btn_send_money);
 
         btnGetBalance.setOnClickListener(this);
         btnLoadMoney.setOnClickListener(this);
@@ -110,6 +113,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPGPayment.setOnClickListener(this);
         btnGetWithdrawInfo.setOnClickListener(this);
         btnWithdraw.setOnClickListener(this);
+        btnSendMoney.setOnClickListener(this);
 
         return rootView;
     }
@@ -152,6 +156,9 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.btn_get_cashout_info:
                 getCashoutInfo();
+                break;
+            case R.id.btn_send_money:
+                sendMoney();
                 break;
         }
     }
@@ -199,6 +206,10 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 Utils.showToast(getActivity(), error.getMessage());
             }
         });
+    }
+
+    private void sendMoney() {
+        showSendMoneyPrompt();
     }
 
     private void showPrompt(final Utils.PaymentType paymentType) {
@@ -319,6 +330,82 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 CashoutInfo cashoutInfo = new CashoutInfo(new Amount(amount), accontNo, accountHolderName, ifsc);
                 mListener.onCashoutSelected(cashoutInfo);
 
+                // Hide the keyboard.
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editAmount.getWindowToken(), 0);
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        editAmount.requestFocus();
+        alert.show();
+    }
+
+    private void showSendMoneyPrompt() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        final String message = "Send Money to Friend In A Flash";
+        String positiveButtonText = "Send";
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        final TextView labelAmount = new TextView(getActivity());
+        final EditText editAmount = new EditText(getActivity());
+        final TextView labelMobileNo = new TextView(getActivity());
+        final EditText editMobileNo = new EditText(getActivity());
+        final TextView labelMessage = new TextView(getActivity());
+        final EditText editMessage = new EditText(getActivity());
+
+        labelAmount.setText("Amount");
+        labelMobileNo.setText("Enter Mobile No of Friend");
+        labelMessage.setText("Enter Message (Optional)");
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        labelAmount.setLayoutParams(layoutParams);
+        labelMobileNo.setLayoutParams(layoutParams);
+        labelMessage.setLayoutParams(layoutParams);
+        editAmount.setLayoutParams(layoutParams);
+        editMobileNo.setLayoutParams(layoutParams);
+        editMessage.setLayoutParams(layoutParams);
+
+        linearLayout.addView(labelAmount);
+        linearLayout.addView(editAmount);
+        linearLayout.addView(labelMobileNo);
+        linearLayout.addView(editMobileNo);
+        linearLayout.addView(labelMessage);
+        linearLayout.addView(editMessage);
+
+        editAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editMobileNo.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setTitle("Send Money In A Flash");
+        alert.setMessage(message);
+
+        alert.setView(linearLayout);
+        alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String amount = editAmount.getText().toString();
+                String mobileNo = editMobileNo.getText().toString();
+                String message = editMessage.getText().toString();
+
+                mCitrusClient.sendMoneyToMoblieNo(new Amount(amount), mobileNo, message, new Callback<PaymentResponse>() {
+                    @Override
+                    public void success(PaymentResponse paymentResponse) {
+                        Utils.showToast(getActivity(), paymentResponse.getStatus() == CitrusResponse.Status.SUCCESSFUL ? "Sent Money Successfully." : "Failed To Send the Money");
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        Utils.showToast(getActivity(), error.getMessage());
+                    }
+                });
                 // Hide the keyboard.
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                         Context.INPUT_METHOD_SERVICE);

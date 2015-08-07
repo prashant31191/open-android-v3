@@ -1150,6 +1150,7 @@ public class CitrusClient {
      * @param toUser   - The user detalis. Enter emailId if send by email or mobileNo if send by mobile.
      * @param message  - Optional message
      * @param callback - Callback
+     * @deprecated Use {@link CitrusClient#sendMoneyToMoblieNo(Amount, String, String, Callback)} instead.
      */
     public synchronized void sendMoney(final Amount amount, final CitrusUser toUser, final String message, final Callback<PaymentResponse> callback) {
         if (validate()) {
@@ -1176,7 +1177,7 @@ public class CitrusClient {
                 }
             };
 
-            oauthToken.getSignInToken(new Callback<AccessToken>() {
+            getPrepaidToken(new Callback<AccessToken>() {
                 @Override
                 public void success(AccessToken accessToken) {
                     if (!TextUtils.isEmpty(toUser.getEmailId())) {
@@ -1188,6 +1189,55 @@ public class CitrusClient {
                         } else {
                             sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_MOBILE_NO, Status.FAILED));
                         }
+                    }
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    sendError(callback, error);
+                }
+            });
+        }
+    }
+
+    /**
+     * @param amount
+     * @param mobileNo
+     * @param message
+     * @param callback
+     */
+    public synchronized void sendMoneyToMoblieNo(final Amount amount, final String mobileNo, final String message, final Callback<PaymentResponse> callback) {
+        if (validate()) {
+
+            if (amount == null || TextUtils.isEmpty(amount.getValue())) {
+                sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_BLANK_AMOUNT, Status.FAILED));
+                return;
+            }
+
+            if (TextUtils.isEmpty(mobileNo)) {
+                sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_BLANK_MOBILE_NO, Status.FAILED));
+                return;
+            }
+
+            getPrepaidToken(new Callback<AccessToken>() {
+                @Override
+                public void success(AccessToken accessToken) {
+
+                    long validMobileNo = com.citrus.card.TextUtils.isValidMobileNumber(mobileNo);
+                    if (validMobileNo != -1) {
+                        retrofitClient.sendMoneyByMobile(accessToken.getHeaderAccessToken(), amount.getValue(), amount.getCurrency(), message, String.valueOf(validMobileNo), new retrofit.Callback<PaymentResponse>() {
+                            @Override
+                            public void success(PaymentResponse paymentResponse, Response response) {
+                                sendResponse(callback, paymentResponse);
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                sendError(callback, error);
+                            }
+                        });
+                    } else {
+                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_MOBILE_NO, Status.FAILED));
                     }
                 }
 
