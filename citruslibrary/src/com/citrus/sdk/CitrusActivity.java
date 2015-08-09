@@ -60,6 +60,7 @@ import com.citrus.payment.UserDetails;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusConfig;
 import com.citrus.sdk.classes.Utils;
+import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
@@ -95,6 +96,7 @@ public class CitrusActivity extends ActionBarActivity {
     private Map<String, String> customParametersOriginalMap = null;
     private CitrusClient mCitrusClient = null;
     private String mActivityTitle = null;
+    private int mRequestCode = -1;
 
     private boolean isBackKeyPressedByUser = false;
     private boolean passwordPromptShown = false;
@@ -103,6 +105,7 @@ public class CitrusActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         mPaymentType = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_PAYMENT_TYPE);
+        mRequestCode = getIntent().getIntExtra(Constants.INTENT_EXTRA_REQUEST_CODE_PAYMENT, -1);
 
         if (!(mPaymentType instanceof PaymentType.CitrusCash)) {
             setTheme(R.style.Base_Theme_AppCompat_Light_DarkActionBar);
@@ -160,6 +163,25 @@ public class CitrusActivity extends ActionBarActivity {
             mPaymentWebview.setVisibility(View.GONE);
         }
 
+        if (TextUtils.isEmpty(mActivityTitle)) {
+            mActivityTitle = "Processing...";
+        }
+
+        setTitle(Html.fromHtml("<font color=\"" + mTextColorPrimary + "\">" + mActivityTitle + "</font>"));
+        setActionBarBackground();
+
+        /*
+         * Validations and Process payments
+         */
+        // Check whether the request is coming directly for payment without validation. Do validation.
+        if (mRequestCode == Constants.REQUEST_CODE_PAYMENT) {
+            if (mPaymentOption instanceof CardOption && !((CardOption) mPaymentOption).validateCard()) {
+                sendResult(new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, ((CardOption) mPaymentOption).getCardValidityFailureReasons(), null));
+
+                return;
+            }
+        }
+
         if (mPaymentType instanceof PaymentType.PGPayment || mPaymentType instanceof PaymentType.CitrusCash) {
             if (mPaymentType.getPaymentBill() != null) {
                 // TODO Need to refactor the code.
@@ -182,13 +204,6 @@ public class CitrusActivity extends ActionBarActivity {
                 }
             });
         }
-
-        if (TextUtils.isEmpty(mActivityTitle)) {
-            mActivityTitle = "Processing...";
-        }
-
-        setTitle(Html.fromHtml("<font color=\"" + mTextColorPrimary + "\">" + mActivityTitle + "</font>"));
-        setActionBarBackground();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -425,7 +440,10 @@ public class CitrusActivity extends ActionBarActivity {
 
         // According new implementation, finish the activity and post the event to citrusClient.
         intent.setAction(mPaymentType.getIntentAction());
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        // Send the broadcast for normal requets.
+        if (mRequestCode != Constants.REQUEST_CODE_PAYMENT) {
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        }
 
         setResult(RESULT_OK, intent);
         finish();
