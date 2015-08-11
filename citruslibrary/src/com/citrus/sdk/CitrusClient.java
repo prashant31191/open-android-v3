@@ -1094,10 +1094,10 @@ public class CitrusClient {
                             CardOption.CardScheme cardScheme = ((CardOption) paymentOption).getCardScheme();
                             String scheme = null;
                             if (cardScheme != null) {
-                                scheme = cardScheme.name();
+                                scheme = cardScheme.getName();
                             }
 
-                            retrofitClient.deleteBank(accessToken.getHeaderAccessToken(), last4Digits, scheme, deleteCallback);
+                            retrofitClient.deleteCard(accessToken.getHeaderAccessToken(), last4Digits, scheme, deleteCallback);
                         }
                     }
 

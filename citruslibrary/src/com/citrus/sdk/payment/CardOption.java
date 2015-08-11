@@ -416,7 +416,35 @@ public abstract class CardOption extends PaymentOption {
     }
 
     public enum CardScheme {
-        VISA, MASTER_CARD, MAESTRO, DINERS, JCB, AMEX, DISCOVER;
+        VISA {
+            public String getName() {
+                return "visa";
+            }
+        }, MASTER_CARD {
+            public String getName() {
+                return "mcrd";
+            }
+        }, MAESTRO {
+            public String getName() {
+                return "mtro";
+            }
+        }, DINERS {
+            public String getName() {
+                return "DINERS";
+            }
+        }, JCB {
+            public String getName() {
+                return "jcb";
+            }
+        }, AMEX {
+            public String getName() {
+                return "amex";
+            }
+        }, DISCOVER {
+            public String getName() {
+                return "DISCOVER";
+            }
+        };
 
         public static CardScheme getCardScheme(String cardScheme) {
             if ("visa".equalsIgnoreCase(cardScheme)) {
@@ -479,5 +507,7 @@ public abstract class CardOption extends PaymentOption {
                 return 3;
             }
         }
+
+        public abstract String getName();
     }
 }
