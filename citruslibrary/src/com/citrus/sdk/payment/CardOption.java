@@ -343,6 +343,30 @@ public abstract class CardOption extends PaymentOption {
         }
     }
 
+    public String getCardValidityFailureReasons() {
+        String reason = null;
+        if (!validateCard()) {
+            StringBuilder builder = new StringBuilder();
+            // Avoid this check in case of tokenized payment
+            if (TextUtils.isEmpty(token) && !validateCardNumber()) {
+                builder.append(" Invalid Card Number. ");
+            }
+
+            // Avoid this check in case of tokenized payment
+            if (TextUtils.isEmpty(token) && !validateExpiryDate()) {
+                builder.append(" Invalid Expiry Date. ");
+            }
+
+            if (!validateCVV()) {
+                builder.append(" Invalid CVV. ");
+            }
+
+            reason = builder.toString();
+        }
+
+        return reason;
+    }
+
     @Override
     public String getSavePaymentOptionObject() {
         JSONObject object = null;

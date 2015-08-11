@@ -516,4 +516,33 @@ Following method should be used for PG Payment Options
             });
 
 
+<b> Send Money To Your Friend </b>
+Now you can send money to your friend using Mobile No.
+Please refer below code snippet.
 
+	citrusClient.sendMoneyToMoblieNo(new Amount("10"), "9999999999", "My contribution", new Callback<PaymentResponse>() {
+		@Override
+		public void success(PaymentResponse paymentResponse) { }
+		
+		@Override
+		public void error(CitrusError error) { }
+	});
+	
+
+<b> Withdraw Money to Your Account </b>
+You can withdraw money to your bank account.
+Make sure the user is signed in with password to be able to withdraw the money.
+
+	String amount = "10";
+        String accontNo = "12345678901";
+        String accountHolderName = "FirstName LastName;
+        String ifsc = "BANK0000123";
+
+	CashoutInfo cashoutInfo = new CashoutInfo(new Amount(amount), accontNo, accountHolderName, ifsc);
+	citrusClient.cashout(cashoutInfo, new Callback<PaymentResponse>() {
+            @Override
+            public void success(PaymentResponse paymentResponse) { }
+
+            @Override
+            public void error(CitrusError error) {}
+        });
