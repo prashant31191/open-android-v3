@@ -184,6 +184,8 @@ public class CitrusClient {
 
             fetchPGHealthForAllBanks();
 
+            getMerchantPaymentOptions(null);
+
             initialized = true;
         }
     }
@@ -1276,32 +1278,39 @@ public class CitrusClient {
     public synchronized void getMerchantPaymentOptions(final Callback<MerchantPaymentOption> callback) {
         if (validate()) {
 
-            retrofitClient.getMerchantPaymentOptions(vanity, new retrofit.Callback<JsonElement>() {
-                @Override
-                public void success(JsonElement element, Response response) {
+            if (merchantPaymentOption == null) {
+                retrofitClient.getMerchantPaymentOptions(vanity, new retrofit.Callback<JsonElement>() {
+                    @Override
+                    public void success(JsonElement element, Response response) {
 
-                    MerchantPaymentOption merchantPaymentOption;
+                        MerchantPaymentOption merchantPaymentOption;
 
-                    if (element.isJsonObject()) {
-                        JsonObject paymentOptionObj = element.getAsJsonObject();
-                        if (paymentOptionObj != null) {
-                            merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
+                        if (element.isJsonObject()) {
+                            JsonObject paymentOptionObj = element.getAsJsonObject();
+                            if (paymentOptionObj != null) {
+                                merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
 
-                            sendResponse(callback, merchantPaymentOption);
+                                // Store merchant payment options locally.
+                                setMerchantPaymentOption(merchantPaymentOption);
 
+                                sendResponse(callback, merchantPaymentOption);
+
+                            } else {
+                                sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_FAILED_MERCHANT_PAYMENT_OPTIONS, Status.FAILED));
+                            }
                         } else {
-                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_FAILED_MERCHANT_PAYMENT_OPTIONS, Status.FAILED));
+                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_JSON, Status.FAILED));
                         }
-                    } else {
-                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_JSON, Status.FAILED));
                     }
-                }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    sendError(callback, error);
-                }
-            });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        sendError(callback, error);
+                    }
+                });
+            }
+        } else {
+            sendResponse(callback, merchantPaymentOption);
         }
     }
 
