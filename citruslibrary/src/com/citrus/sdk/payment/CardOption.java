@@ -257,7 +257,11 @@ public abstract class CardOption extends PaymentOption {
             return validateCVV();
         }
 
-        return validateForSaveCard() && validateCVV();
+        if (cardScheme == CardScheme.MAESTRO) {
+            return validateCardNumber();
+        }
+
+        return validateCardNumber() && validateExpiryDate() && validateCVV();
     }
 
     public boolean validateForSaveCard() {
