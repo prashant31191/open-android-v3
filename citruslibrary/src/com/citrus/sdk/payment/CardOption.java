@@ -265,6 +265,10 @@ public abstract class CardOption extends PaymentOption {
     }
 
     public boolean validateForSaveCard() {
+        if (cardScheme == CardScheme.MAESTRO) {
+            return validateCardNumber();
+        }
+
         return validateCardNumber() && validateExpiryDate();
     }
 
