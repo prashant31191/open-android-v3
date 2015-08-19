@@ -1308,9 +1308,9 @@ public class CitrusClient {
                         sendError(callback, error);
                     }
                 });
+            } else {
+                sendResponse(callback, merchantPaymentOption);
             }
-        } else {
-            sendResponse(callback, merchantPaymentOption);
         }
     }
 
