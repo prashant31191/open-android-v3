@@ -31,8 +31,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
-import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -258,9 +258,8 @@ public class CitrusActivity extends ActionBarActivity {
         if (mPaymentType instanceof PaymentType.CitrusCash) { //pay using citrus cash
 
             // analyticsPaymentType = com.citrus.analytics.PaymentType.CITRUS_CASH;
-            CitrusClient citrusClient = CitrusClient.getInstance(CitrusActivity.this);
-            String emailId = citrusClient.getUserEmailId();
-            String mobileNo = citrusClient.getUserMobileNumber();
+            String emailId = mCitrusClient.getUserEmailId();
+            String mobileNo = mCitrusClient.getUserMobileNumber();
 
             if (mCitrusUser == null) {
                 mCitrusUser = new CitrusUser(emailId, mobileNo);
@@ -338,7 +337,7 @@ public class CitrusActivity extends ActionBarActivity {
 
                 JSONObject redirect = new JSONObject(response);
                 if (!android.text.TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
-                    setCookie();
+                    //setCookie();
 
                     mPaymentWebview.loadUrl(redirect.getString("redirectUrl"));
                     if (mPaymentOption != null) {
@@ -580,12 +579,12 @@ public class CitrusActivity extends ActionBarActivity {
         alert.setMessage(message);
         // Set an EditText view to get user input
         final EditText input = new EditText(mContext);
+        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         alert.setView(input);
         alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int whichButton) {
                 String password = input.getText().toString();
-                input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
                 if (!TextUtils.isEmpty(password)) {
                     mPaymentWebview.loadUrl("javascript:(function() { " +
