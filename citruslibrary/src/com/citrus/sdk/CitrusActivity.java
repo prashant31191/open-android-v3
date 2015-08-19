@@ -337,7 +337,7 @@ public class CitrusActivity extends ActionBarActivity {
 
                 JSONObject redirect = new JSONObject(response);
                 if (!android.text.TextUtils.isEmpty(redirect.getString("redirectUrl"))) {
-                    //setCookie();
+                    setCookie();
 
                     mPaymentWebview.loadUrl(redirect.getString("redirectUrl"));
                     if (mPaymentOption != null) {
