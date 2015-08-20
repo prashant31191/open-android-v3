@@ -140,7 +140,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient.signIn(emailId, password, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
+                mListener.showSnackBar(citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
 
                 mListener.onShowWalletScreen();
@@ -148,7 +148,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
+                mListener.showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
             }
         });
@@ -162,7 +162,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient.signUp(emailId, mobileNo, password, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
+                mListener.showSnackBar(citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
 
                 btnSignUp.setVisibility(View.GONE);
@@ -173,7 +173,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
+                mListener.showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
             }
         });
@@ -185,13 +185,13 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
         citrusClient.resetPassword(emailId, new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) {
-                Utils.showToast(context, citrusResponse.getMessage());
+                mListener.showSnackBar(citrusResponse.getMessage());
                 textMessage.setText(citrusResponse.getMessage());
             }
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(context, error.getMessage());
+                mListener.showSnackBar(error.getMessage());
                 textMessage.setText(error.getMessage());
             }
         });
@@ -240,5 +240,7 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
 
     public interface UserManagementInteractionListener {
         void onShowWalletScreen();
+
+        void showSnackBar(String message);
     }
 }

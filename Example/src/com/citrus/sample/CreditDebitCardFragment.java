@@ -117,7 +117,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
 
             @Override
             public void error(CitrusError error) {
-                Utils.showToast(getActivity(), error.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(error.getMessage());
             }
         };
 
@@ -134,7 +134,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
         } catch (CitrusException e) {
             e.printStackTrace();
 
-            Utils.showToast(getActivity(), e.getMessage());
+            ((UIActivity) getActivity()).showSnackBar(e.getMessage());
         }
     }
 }

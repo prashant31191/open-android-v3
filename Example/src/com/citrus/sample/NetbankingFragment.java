@@ -94,7 +94,7 @@ public final class NetbankingFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 }
             });
         } else {
@@ -111,7 +111,7 @@ public final class NetbankingFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 }
             });
         }
@@ -162,7 +162,7 @@ public final class NetbankingFragment extends Fragment {
 
                 @Override
                 public void error(CitrusError error) {
-                    Utils.showToast(getActivity(), error.getMessage());
+                    ((UIActivity) getActivity()).showSnackBar(error.getMessage());
                 }
             };
 
@@ -177,7 +177,7 @@ public final class NetbankingFragment extends Fragment {
             } catch (CitrusException e) {
                 e.printStackTrace();
 
-                Utils.showToast(getActivity(), e.getMessage());
+                ((UIActivity) getActivity()).showSnackBar(e.getMessage());
             }
         }
     }
