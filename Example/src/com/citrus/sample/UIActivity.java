@@ -173,7 +173,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
 
     @Override
     public void showSnackBar(String message) {
-        Snackbar.make(snackBarParent, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(snackBarParent, message, Snackbar.LENGTH_LONG).show();
     }
 
     public void onWalletPaymentClicked(View view) {
