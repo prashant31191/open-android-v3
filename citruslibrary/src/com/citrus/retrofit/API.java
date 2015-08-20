@@ -63,6 +63,11 @@ public interface API {
     @POST("/oauth/token")
     void getSignInWithPasswordResponse(@Field("client_id") String client_ID, @Field("client_secret") String client_Secret, @Field("username") String username, @Field("password") String password, @Field("grant_type") String grantType, Callback<AccessToken> accessTokenPOJOCallback);
 
+    // Get signin with password token, mostly used for pay using citrus cash.
+    @FormUrlEncoded
+    @POST("/oauth/token")
+    void getPayUsingCitrusCashToken(@Field("client_id") String client_ID, @Field("client_secret") String client_Secret, @Field("username") String username, @Field("password") String password, @Field("grant_type") String grantType, @Field("scope") String scope, Callback<AccessToken> accessTokenPOJOCallback);
+
     //getCookie
     @FormUrlEncoded
     @POST("/prepaid/pg/_verify")
@@ -95,6 +100,11 @@ public interface API {
     @FormUrlEncoded
     @POST("/service/v2/identity/passwords/reset")
     void resetPassword(@Header("Authorization") String header, @Field("username") String username, Callback<JsonElement> callback);
+
+    //Pay Using Citrus Cash API call
+    @FormUrlEncoded
+    @POST("/service/v2/prepayment/prepaid_pay")
+    void payUsingCitrusCash(@Header("Authorization") String header, @Field("amount") String amount, @Field("currency") String currency, @Field("accessKey") String accessKey, @Field("merchantTransactionId") String merchantTransactionId, @Field("signature") String signature, @Field("comment") String comment, Callback<PaymentResponse> callback);
 
     //return url from citrus
     @Headers("Content-Type: application/json")

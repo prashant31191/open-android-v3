@@ -70,10 +70,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -171,14 +168,8 @@ public class CitrusClient {
             Config.setSigninId(signinId);
             Config.setSigninSecret(signinSecret);
             Config.setVanity(vanity);
-            switch (environment) {
-                case SANDBOX:
-                    Config.setEnv("sandbox");
-                    break;
-                case PRODUCTION:
-                    Config.setEnv("production");
-                    break;
-            }
+            Config.setEnv(environment.toString().toLowerCase());
+
             Logger.d("VANITY*** " + vanity);
             EventsManager.logInitSDKEvents(mContext);
 
@@ -537,6 +528,20 @@ public class CitrusClient {
                                         RetroFitClient.setInterCeptor();
                                         EventBus.getDefault().register(CitrusClient.this);
 
+                                        // Fetch PayUsingCitrusCash token
+                                        getPayUsingCitrusCashToken(emailId, password, new Callback<AccessToken>() {
+                                            @Override
+                                            public void success(AccessToken accessToken) {
+                                                OauthToken token = new OauthToken(mContext, Constants.PAY_USING_CITRUS_CASH_TOKEN);
+                                                token.createToken(accessToken.getJSON());///grant Type username token saved
+                                            }
+
+                                            @Override
+                                            public void error(CitrusError error) {
+                                                // NOOP
+                                            }
+                                        });
+
                                         retrofitClient.getCookie(emailId, password, "true", new retrofit.Callback<String>() {
                                             @Override
                                             public void success(String s, Response response) {
@@ -563,6 +568,8 @@ public class CitrusClient {
                                                 sendResponse(callback, new CitrusResponse(ResponseMessages.SUCCESS_MESSAGE_SIGNIN, Status.SUCCESSFUL));
                                             }
                                         });
+
+
                                     }
 
                                     @Override
@@ -640,6 +647,21 @@ public class CitrusClient {
                                     public void success(Amount amount) {
                                         RetroFitClient.setInterCeptor();
                                         EventBus.getDefault().register(CitrusClient.this);
+
+                                        // Fetch PayUsingCitrusCash token
+                                        getPayUsingCitrusCashToken(mobileNo, password, new Callback<AccessToken>() {
+                                            @Override
+                                            public void success(AccessToken accessToken) {
+                                                OauthToken token = new OauthToken(mContext, Constants.PAY_USING_CITRUS_CASH_TOKEN);
+                                                token.createToken(accessToken.getJSON());///grant Type username token saved
+                                            }
+
+                                            @Override
+                                            public void error(CitrusError error) {
+                                                // NOOP
+                                            }
+                                        });
+
                                         retrofitClient.getCookie(mobileNo, password, "true", new retrofit.Callback<String>() {
                                             @Override
                                             public void success(String s, Response response) {
@@ -684,6 +706,20 @@ public class CitrusClient {
                     });
 
                 }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                sendError(callback, error);
+            }
+        });
+    }
+
+    private void getPayUsingCitrusCashToken(String username, String password, final Callback<AccessToken> callback) {
+        retrofitClient.getPayUsingCitrusCashToken(signinId, signinSecret, username, password, OAuth2GrantType.password.toString(), "prepaid_merchant_pay", new retrofit.Callback<AccessToken>() {
+            @Override
+            public void success(AccessToken accessToken, Response response) {
+                sendResponse(callback, accessToken);
             }
 
             @Override
@@ -1404,38 +1440,34 @@ public class CitrusClient {
 
     public synchronized void payUsingCitrusCash(final PaymentType.CitrusCash citrusCash, final Callback<TransactionResponse> callback) {
 
-        String cookieExpiryDate = "";
-        PersistentConfig persistentConfig = new PersistentConfig(mContext);
-        String sessionCookie = persistentConfig.getCookieString();
-        // Extract the cookie expiry date
-        int start = sessionCookie.indexOf("Expires=");
-        int end = sessionCookie.indexOf("GMT;");
-        if (start != -1 && end != -1 && sessionCookie.length() > start + 13 && sessionCookie.length() > end) {
-            cookieExpiryDate = sessionCookie.substring(start + 13, end);
+        String billUrl = citrusCash.getUrl();
+
+        if (billUrl.contains("?")) {
+            billUrl = billUrl + "&amount=" + citrusCash.getAmount().getValue();
+        } else {
+            billUrl = billUrl + "?amount=" + citrusCash.getAmount().getValue();
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
-        Date expiryDate = new Date();
-        Date currentDate = new Date(System.currentTimeMillis());
-        try {
-            expiryDate = dateFormat.parse(cookieExpiryDate);
+        getBill(billUrl, citrusCash.getAmount(), new Callback<PaymentBill>() {
+            @Override
+            public void success(final PaymentBill paymentBill) {
 
-            Logger.d("Expiry date : %s, Current Date : %s", expiryDate, currentDate);
-
-            if (currentDate.before(expiryDate)) {
-
-                // Check whether the balance in the wallet is greater than the transaction amount.
-                getBalance(new Callback<Amount>() {
+                oauthToken.getPayUsingCitrusCashToken(new Callback<AccessToken>() {
                     @Override
-                    public void success(Amount balanceAmount) {
-                        // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
-                        if (balanceAmount.getValueAsDouble() >= citrusCash.getAmount().getValueAsDouble()) {
-                            registerReceiver(callback, new IntentFilter(citrusCash.getIntentAction()));
+                    public void success(AccessToken accessToken) {
+                        Amount amount = paymentBill.getAmount();
 
-                            startCitrusActivity(citrusCash);
-                        } else {
-                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
-                        }
+                        retrofitClient.payUsingCitrusCash(accessToken.getHeaderAccessToken(), amount.getValue(), amount.getCurrency(), paymentBill.getMerchantAccessKey(), paymentBill.getMerchantTransactionId(), "aadddvvcc", "Pay Using Citrus Cash", new retrofit.Callback<PaymentResponse>() {
+                            @Override
+                            public void success(PaymentResponse paymentResponse, Response response) {
+                                sendResponse(callback, paymentResponse);
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                sendError(callback, error);
+                            }
+                        });
                     }
 
                     @Override
@@ -1443,35 +1475,83 @@ public class CitrusClient {
                         sendError(callback, error);
                     }
                 });
-            } else {
-                Logger.d("User's cookie has expired. Please signin");
-                sendError(callback, new CitrusError("User's cookie has expired. Please signin.", Status.FAILED));
+
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
 
-            // In the worst case, it will try to redirect user to the Citrus Page.
+            @Override
+            public void error(CitrusError error) {
+                sendError(callback, error);
+            }
+        });
 
-            // Check whether the balance in the wallet is greater than the transaction amount.
-            getBalance(new Callback<Amount>() {
-                @Override
-                public void success(Amount balanceAmount) {
-                    // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
-                    if (balanceAmount.getValueAsDouble() >= citrusCash.getAmount().getValueAsDouble()) {
-                        registerReceiver(callback, new IntentFilter(citrusCash.getIntentAction()));
-
-                        startCitrusActivity(citrusCash);
-                    } else {
-                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
-                    }
-                }
-
-                @Override
-                public void error(CitrusError error) {
-                    sendError(callback, error);
-                }
-            });
-        }
+//        String cookieExpiryDate = "";
+//        PersistentConfig persistentConfig = new PersistentConfig(mContext);
+//        String sessionCookie = persistentConfig.getCookieString();
+//        // Extract the cookie expiry date
+//        int start = sessionCookie.indexOf("Expires=");
+//        int end = sessionCookie.indexOf("GMT;");
+//        if (start != -1 && end != -1 && sessionCookie.length() > start + 13 && sessionCookie.length() > end) {
+//            cookieExpiryDate = sessionCookie.substring(start + 13, end);
+//        }
+//
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
+//        Date expiryDate = new Date();
+//        Date currentDate = new Date(System.currentTimeMillis());
+//        try {
+//            expiryDate = dateFormat.parse(cookieExpiryDate);
+//
+//            Logger.d("Expiry date : %s, Current Date : %s", expiryDate, currentDate);
+//
+//            if (currentDate.before(expiryDate)) {
+//
+//                // Check whether the balance in the wallet is greater than the transaction amount.
+//                getBalance(new Callback<Amount>() {
+//                    @Override
+//                    public void success(Amount balanceAmount) {
+//                        // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
+//                        if (balanceAmount.getValueAsDouble() >= citrusCash.getAmount().getValueAsDouble()) {
+//                            registerReceiver(callback, new IntentFilter(citrusCash.getIntentAction()));
+//
+//                            startCitrusActivity(citrusCash);
+//                        } else {
+//                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void error(CitrusError error) {
+//                        sendError(callback, error);
+//                    }
+//                });
+//            } else {
+//                Logger.d("User's cookie has expired. Please signin");
+//                sendError(callback, new CitrusError("User's cookie has expired. Please signin.", Status.FAILED));
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//
+//            // In the worst case, it will try to redirect user to the Citrus Page.
+//
+//            // Check whether the balance in the wallet is greater than the transaction amount.
+//            getBalance(new Callback<Amount>() {
+//                @Override
+//                public void success(Amount balanceAmount) {
+//                    // If the balance amount is greater than equal to the transaction amount, proceed with the payment.
+//                    if (balanceAmount.getValueAsDouble() >= citrusCash.getAmount().getValueAsDouble()) {
+//                        registerReceiver(callback, new IntentFilter(citrusCash.getIntentAction()));
+//
+//                        startCitrusActivity(citrusCash);
+//                    } else {
+//                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INSUFFICIENT_BALANCE, Status.FAILED));
+//                    }
+//                }
+//
+//                @Override
+//                public void error(CitrusError error) {
+//                    sendError(callback, error);
+//                }
+//            });
+//        }
     }
 
     // Cashout Related APIs
