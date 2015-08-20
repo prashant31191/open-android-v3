@@ -66,7 +66,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
         citrusConfig.setTextColorPrimary(Constants.textColor);
 
         snackBarParent = new View(this);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 200);
         layoutParams.gravity = Gravity.BOTTOM;
         snackBarParent.setLayoutParams(layoutParams);
         frameLayout.addView(snackBarParent);
@@ -111,7 +111,7 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
     @Override
     public void onPaymentComplete(TransactionResponse transactionResponse) {
         if (transactionResponse != null) {
-            showSnackBar( transactionResponse.getMessage());
+            showSnackBar(transactionResponse.getMessage());
         }
     }
 

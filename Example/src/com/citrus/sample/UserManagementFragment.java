@@ -115,11 +115,13 @@ public class UserManagementFragment extends Fragment implements View.OnClickList
                 if (isMember) {
                     btnSignIn.setVisibility(View.VISIBLE);
                     btnSignUp.setVisibility(View.GONE);
+                    mListener.showSnackBar("User is already a Citrus Member. Please Sign In the user.");
                     textMessage.setText("User is already a Citrus Member. Please Sign In the user.");
                 } else {
                     btnSignUp.setVisibility(View.VISIBLE);
                     btnSignIn.setVisibility(View.GONE);
                     textMessage.setText("User is not a Citrus Member. Please Sign Up the user.");
+                    mListener.showSnackBar("User is not a Citrus Member. Please Sign Up the user.");
                 }
 
                 btnLinkUser.setVisibility(View.GONE);
