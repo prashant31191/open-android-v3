@@ -167,7 +167,7 @@ public abstract class CardOption extends PaymentOption {
         return PGHealth.GOOD;
     }
 
-    private String normalizeCardNumber(String number) {
+    private static String normalizeCardNumber(String number) {
         if (number == null) {
             return null;
         }
@@ -499,7 +499,8 @@ public abstract class CardOption extends PaymentOption {
         }
 
         public static CardScheme getCardSchemeUsingNumber(String cardNumber) {
-            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(cardNumber);
+
+            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(normalizeCardNumber(cardNumber));
             CardScheme cardScheme = null;
             if (cardType != null) {
                 switch (cardType) {
