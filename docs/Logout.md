@@ -1,6 +1,6 @@
 <h3><i>How to implement Logout feature</h2></i>
 
-<li><b>signOut<b> method is used to Logout the user</li>
+<li><b>signOut</b> method is used to Logout the user</li>
 
 ```java
  citrusClient.signOut(new Callback<CitrusResponse>() {
