@@ -35,6 +35,7 @@ import com.citrus.sdk.payment.PaymentType;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
+import com.orhanobut.logger.Logger;
 
 
 public class UIActivity extends ActionBarActivity implements UserManagementFragment.UserManagementInteractionListener, WalletFragmentListener {
@@ -146,22 +147,10 @@ public class UIActivity extends ActionBarActivity implements UserManagementFragm
 
     @Override
     public void onCashoutSelected(CashoutInfo cashoutInfo) {
-        citrusClient.saveCashoutInfo(cashoutInfo, new Callback<CitrusResponse>() {
-            @Override
-            public void success(CitrusResponse citrusResponse) {
-                showSnackBar(citrusResponse.getMessage());
-            }
-
-            @Override
-            public void error(CitrusError error) {
-                showSnackBar(error.getMessage());
-            }
-        });
-
-        citrusClient.cashout(cashoutInfo, new Callback<PaymentResponse>() {
+       citrusClient.cashout(cashoutInfo, new Callback<PaymentResponse>() {
             @Override
             public void success(PaymentResponse paymentResponse) {
-                showSnackBar(paymentResponse.toString());
+                showSnackBar((paymentResponse.getStatus() == CitrusResponse.Status.SUCCESSFUL) ? "Withdraw Successful" : "Error While Withdrawing" );
             }
 
             @Override
