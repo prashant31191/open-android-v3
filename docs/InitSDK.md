@@ -4,7 +4,7 @@
 
     CitrusClient citrusClient = CitrusClient.getInstance(Context);
 
-<p><b>Pass Merchant parameters in init. e.g</b>
+<p><b>Pass merchant parameters in init;e.g:</b>
 
     citrusClient.init(
               "test-signup", "c78ec84e389814a05d3ae46546d16d2e", 
