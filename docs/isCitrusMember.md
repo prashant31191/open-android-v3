@@ -1,6 +1,6 @@
 <h2><i>How to check Citrus member (isCitrusMember)</i></h2>
 
-To check whether the user is Citrus member or not, you can use <b><i>isCitrusMember</i></b> method. <li>If it returns True the user is already a Citrus member (display a <b>SignIn</b> screen)</li><li>If it returns False (display a <b>SignUp</b> Screen)</li>
+To check whether the user is Citrus member or not, you can use <b><i>isCitrusMember</i></b> method. <li>If it returns <i>True</i> the user is already a Citrus member (display a <b>SignIn</b> screen)</li><li>If it returns <i>False</i> (display a <b>SignUp</b> Screen)</li>
 
 
  ```
