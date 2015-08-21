@@ -1,6 +1,4 @@
-<i><h2><b>Is User Signed In</b></h2>  </i>  
-
-<li><b>isUserSignedIn</b> helps you know if the user is signed in or not.</li>
+<i><h2><b>How to check if the user is signed in or not?</b></h2></i>  
 
 ```
 citrusClient.isUserSignedIn(new com.citrus.sdk.Callback<Boolean>() {
@@ -11,3 +9,4 @@ citrusClient.isUserSignedIn(new com.citrus.sdk.Callback<Boolean>() {
      public void error(CitrusError error) {}
   });
 ```
+You would receive a status inside callback.
