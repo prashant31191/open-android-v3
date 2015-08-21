@@ -1,4 +1,4 @@
-<h2><b>How to initiate Citrus SDK?</b></h2>
+<h2><b><i>How to initiate Citrus SDK?</i></b></h2>
 
 <b>Create a object of CitrusClient</b>
 
