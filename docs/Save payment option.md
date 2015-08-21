@@ -28,7 +28,7 @@
 <li><h5>How to save Net Banking option?</h5></li>
 
 ```java
- citrusClient.savePaymentOption(new NetbankingOption("Vijaya Bank", "CID042"), new Callback<CitrusResponse>() {
+ citrusClient.savePaymentOption(new NetbankingOption("ICICI Bank", "CID001"), new Callback<CitrusResponse>() {
             @Override
             public void success(CitrusResponse citrusResponse) { }
 
