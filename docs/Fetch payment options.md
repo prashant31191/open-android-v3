@@ -7,7 +7,7 @@ There are <b>two</b> types of Payment Options
 <b>1. Payment Options for PG Payment</b>
 
 Following method should be used to fetch <b>PG Payment Options</b>
-
+```java
      CitrusClient.getInstance(getActivity()).getMerchantPaymentOptions(new Callback<MerchantPaymentOption>() {
             @Override
             public void success(MerchantPaymentOption merchantPaymentOption) {
@@ -21,14 +21,14 @@ Following method should be used to fetch <b>PG Payment Options</b>
 
             }
         });
-
+```
 <b>2. Payment Options for Load Money</b>
 
 <b>Note:</b><li>This method is only required when you are implementing <b>Load Money into Wallet</b> feature.</li>
 <li>Load Money payment options <b>differes</b> from normal PG Payment.</li>
 
 Following method should be used to fetch <b>Load Money Payment Options</b>
-
+```java
     citrusClient.getInstance(getActivity()).getLoadMoneyPaymentOptions(new Callback<MerchantPaymentOption>() {
             @Override
             public void success(MerchantPaymentOption loadMoneyPaymentOptions) {
@@ -40,4 +40,4 @@ Following method should be used to fetch <b>Load Money Payment Options</b>
 
             }
         });
-
+```
