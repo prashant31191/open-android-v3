@@ -48,7 +48,7 @@
   CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
   // No need to call init on CitrusClient if already done.
 
-  NetbankingOption netbankingOption = new NetbankingOption(“ICICI Bank” ,”CID001”);
+  NetbankingOption netbankingOption = new NetbankingOption("ICICI Bank","CID001");
 
   // Init Net Banking PaymentType     
   PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
