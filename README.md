@@ -79,6 +79,7 @@ ___
 * [SignUp User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20Up%20User.md)
 * [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
+* [Logout the user](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
 
 <b>Wallet</b>
 
@@ -91,20 +92,6 @@ ___
 	* Load Money using Dedit Card Token
 	* Load Money using Credit Card Token
 	* Load Money using Net Banking option Token
-
-------------------------------------------------------------------------------------------------
-
-
-     
-
-
-
-
-
-
-
-
-
 
 
 <b> PG Payment </b>
@@ -238,18 +225,6 @@ ___
          public void error(CitrusError error) { }
       });
 
-<b> Logout </b>
-
-      citrusClient.signOut(new Callback<CitrusResponse>() {
-      
-         @Override
-         public void success(CitrusResponse citrusResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
-	  
-	  
 <b> How to get Payment Options? </b>
 
 
