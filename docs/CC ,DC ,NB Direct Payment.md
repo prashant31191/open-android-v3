@@ -1,5 +1,5 @@
 
-<h4><i>Pay using Debit Card</i></h4>
+<h4>Pay using Debit Card</h4>
 
 ```java
   CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
@@ -20,7 +20,7 @@
      public void error(CitrusError error) { }
   });
   ```
-<h4><i>Pay using Credit Card</i></h4>
+<h4>Pay using Credit Card</h4>
 
 ```java
   CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
@@ -42,7 +42,7 @@
   });
   ```
   
-  <h4><i>Pay using Net Banking Option</i></h4>
+  <h4>Pay using Net Banking Option</h4>
   
   ```java
   CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
