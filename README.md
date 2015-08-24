@@ -2,8 +2,6 @@
 
 Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
 
-***
-
 <h5>Introduction</h5>
 ___
 This document details merchant Android App integration with Citrus Payment gateway.
@@ -17,7 +15,6 @@ open-android-v3 is enhanced version of SDK V2 wherein you can implement your App
 * Logout your user from App
 * Withdraw your Money
 
- 
 <h5>Enhance features of SDK V3</h5>
 ___
    * SDK response time optimization-  over 5x faster response compared to V2
@@ -29,9 +26,9 @@ ___
    * Less Integration Time Required.
    * Zero click payment using Citrus Cash.
 
-<b> Prerequisite </b>
+<b> Prerequisites </b>
 ___
-  <b>SDK Installation prerequisite</b>
+  <b>SDK Installation prerequisite</b><br>
    You must already have installed and configured:
    * Java JDK version 1.6 or greater.
    * Android SDK Platform 22 (Android 5.1.1)
@@ -39,8 +36,7 @@ ___
    * Android Studio (Currently this project is compatible with Android Studio Only. Do get in touch with us
      if you are using Eclipse IDE).
    * All Citrus PG Prerequisites.
-
-Note: Please DO NOT PROCEED if the above mentioned requirements have not been met.
+   * Note: Please DO NOT PROCEED if the above mentioned requirements have not been met.
 
 <b>Citrus PG Prerequisites</b>
 
@@ -52,13 +48,13 @@ Note: Please DO NOT PROCEED if the above mentioned requirements have not been me
    3. SignIn Key 
    4. SignIn Secret 
    5. SignUp Key 
-   6. SignUp Secret 
+   6. SignUp Secret
    7. Bill Generator Hosted on your server. 
    8. Redirect URL page hosted on your server. (After the transaction is complete, Citrus posts a response to this URL.) 
  
-<b> What is difference between Normal Payment and Prepaid Payment? </b>
-
-      Normal payment requires only email and mobile. Citrus User account will be created by only using email and mobile combination. We call it as Bind. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account, and user can see his Citrus Cash balance.
+<h5>OVERVIEW: Difference between Normal Payment and Prepaid Payment? </h5>
+___	
+	Normal payment requires only email and mobile. Citrus User account will be created by only using email and mobile combination. We call it as Bind. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account, and user can see his Citrus Cash balance.
       Prepaid Payment requires email and password. Citrus User account will be created by using email and password combination. We call it prepaid account. Once user has prepaid account, following things can be done 
 
    1. Save cards to user account
