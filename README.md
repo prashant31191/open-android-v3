@@ -45,7 +45,7 @@ ___
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
 * [How to enable logs and progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
 
-<b> User Creation- API Endpoints: </b>
+<b> User Management- API Endpoints: </b>
 
 * [See if the user is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
 * [To check if the user is a Citrus member or not?](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
@@ -61,7 +61,7 @@ ___
 
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
-* [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
+* [Add Money/Load Money into Citrus Account using Saved cards](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
 
 <b>Payment</b>
 
@@ -72,7 +72,7 @@ ___
 <b>How to save Cards option and Banks</b>
 * [Save Debit/Credit Card and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Save%20payment%20option.md)
 
-<b>Others</b>
+<b>Others...</b>
 
 * [Send Money To Your Friend](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Send%20Money.md)
 * [Withdraw Money to Your Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Withdraw.md)
