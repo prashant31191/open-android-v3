@@ -119,9 +119,7 @@ Pass Merchant parameters in init. e.g
    -keepattributes *Annotation*
 </pre>
 
-<b> How to import CitrusLibrary in your Project? </b>
 
-      git clone https://github.com/citruspay/open-android-v3.git
 
 <h1> Android Integration - API Endpoints: </h1>
 
