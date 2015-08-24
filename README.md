@@ -1,9 +1,8 @@
 # open-android-v3
 
-<b>Last updated :<i> 24/08/2015</i></b>
-***
+Welcome to the open-source Android SDK Documentation of Citrus Payments Solution!
 
-| Versions / Release of Citrus SDK |  Feature Update|
+| Version History<br>Last updated : : 24/08/2015 |  Feature's Update|
 | :-------------: | :------------- |
 | v3.0.3| * Added Additional check for card validation |
 |	| * Removing unnecessary permission |
@@ -16,18 +15,30 @@
 
 ***
 
+<h5>Introduction</h5>
+___
+This document details merchant Android App integration with Citrus Payment gateway.
+open-android-v3 is enhanced version of SDK V2 wherein you can implement your App with features such as:
 
-What's new?
-open-android-v3 is enhanced version of SDK V2. 
+* Pay using Credit Card/Debit Card & Netbanking 
+* Pay using Citrus Cash
+* Load Money into Citrus Wallet(Citrus Cash account)
+* Save your Cards and Bank options for faster Checkout
+* Delete Cards
+* Logout your user from App
+* Withdraw your Money
 
-   1.	SDK response time optimization-  over 5x faster response compared to V2
-   2.	Everything is Object now. No more JSON parsing required.
-   3.	Improved WebView. WebView is handled by SDK.  
-   4.	Uniform responses from SDK across different API’s
-   5.	Support for Citrus Cash.
-   6.	Added support to gradle/Android Studio
-   7. Less Integration Time Required.
-   8. Zero click payment using Citrus Cash.
+ 
+<h5>Enhance features of SDK V3<h/5>
+___
+   * SDK response time optimization-  over 5x faster response compared to V2
+   * Everything is Object now. No more JSON parsing required.
+   * Improved WebView. WebView is handled by SDK.  
+   * Uniform responses from SDK across different API’s
+   * Support for Citrus Cash.
+   * Added support to gradle/Android Studio
+   * Less Integration Time Required.
+   * Zero click payment using Citrus Cash.
 
 <b> Prerequisite </>
    You must already have installed and configured:
