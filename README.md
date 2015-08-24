@@ -57,35 +57,15 @@ ___
    6. SignUp Secret
    7. Bill Generator Hosted on your server.
    8. Redirect URL page hosted on your server.(After the transaction is complete, Citrus posts a response to this URL.)
- 
+
+ <b> How to import CitrusLibrary in your Project? </b>
+
+      git clone https://github.com/citruspay/open-android-v3.git
+
 <h2>Getting Started</h2>
 ___
-<b> How to Init SDK? </b>
 
-   Create a object of CitrusClient.
-      
-      CitrusClient citrusClient = CitrusClient.getInstance(Context);
 
-Pass Merchant parameters in init. e.g
-
-      citrusClient.init(
-            "test-signup", "c78ec84e389814a05d3ae46546d16d2e", 
-            "test-signin", "52f7e15efd4208cf5345dd554443fd99", 
-            "testing", Environment.SANDBOX); // Make sure change the environment to PRODUCTION while going live.
-
-      //First Parameter –   SignUp Key
-      //Second Parameter –  SignUp Secret
-      //Third Parameter –   SignIn Key
-      //Fourth Parameter -  SignIn Secret
-      //Fifth Parameter -   Vanity
-      //Sixth Parameter -   Environment.
-
-<b> What are different Environments? When I can use those? </b>
-
-1. SDK supports two different environments. Sandbox and Production. Testing should be done on Sandbox. Once your app is working fine with Sandbox environment, you can switch environment to Production. Make sure you have set environment to Production before releasing your app to Play-Store. 
-2. Pass your environment as sixth parameter to citrusClient.init method as mentioned above.
-3. User created on Sandbox environment will not be available on production environment.  You have to explicitly create account for both environments.
-4. SignUp Key, SignUp Secret, SignIn Key, SignIn Secret and vanity will be same for both environments. (Secret Key and Access Key will be different for both the environments).
 
 
 <b> How to enable Logs? </b>
