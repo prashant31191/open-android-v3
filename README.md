@@ -75,15 +75,18 @@ ___
 <b> User Creation- API Endpoints: </b>
 
 * [See if the user is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
-* [To Check if the user is a Citrus member or not? (isCitrusMember)](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
+* [To check if the user is a Citrus member or not? (isCitrusMember)](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
 * [SignUp User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20Up%20User.md)
 * [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 
 <b>Wallet<b/>
 
-* [Get Citrus Cash Balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
-
+* [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
+* [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
+	* [Load Money using Debit Card](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md#Load Money using Debit Card)
+	* [Load Money using Debit Card]()
+	* [Load Money using Debit Card]()
 
 ------------------------------------------------------------------------------------------------
 
