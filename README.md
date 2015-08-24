@@ -80,18 +80,11 @@ ___
 * [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 
+<b>Wallet<b/>
 
-<b> Get Citrus Cash Balance </b>
+* [Get Citrus Cash Balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 
-You can get user’s Citrus Cash balance after you have Signed In the user. 
 
-      citrusClient.getBalance(new com.citrus.sdk.Callback<Amount>() {
-         @Override
-         public void success(Amount amount) {}
-         
-         @Override
-         public void error(CitrusError error) {}
-      });
 ------------------------------------------------------------------------------------------------
 
 <b> Add Money/ Load Money </b>
