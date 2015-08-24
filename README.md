@@ -4,10 +4,9 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 
 <h5>Introduction</h5>
 ___
-This document details merchant Android App integration with Citrus Payment gateway.There is diffrence between Normal payment and Prepaid Payment!
-Normal payment requires only email and mobile. Citrus User account will be created by only using email and mobile combination. We call it as Bind. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account, and user can see his Citrus Cash balance.
- Prepaid Payment requires email and password. Citrus User account will be created by using email and password combination. We call it prepaid account. Once user has prepaid account, following things can be done 
-
+* This document details merchant Android App integration with Citrus Payment gateway.There is a diffrence between Normal Payment and Prepaid Payment!
+* Normal payment requires only email and mobile. Citrus User account will be created by only using email and mobile combination. We call it as Bind. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account, and user can see his Citrus Cash balance.
+* Prepaid Payment requires email and password. Citrus User account will be created by using email and password combination. We call it prepaid account.
 
 open-android-v3 is enhanced version of SDK V2 wherein you can implement your App with features such as:
 
@@ -22,7 +21,7 @@ open-android-v3 is enhanced version of SDK V2 wherein you can implement your App
 * Logout your user from App
 * Withdraw your Money
 
-<h5>Enhance features of SDK V3</h5>
+<h5>Few more points on SDK V3</h5>
 ___
    * SDK response time optimization-  over 5x faster response compared to V2
    * Everything is Object now. No more JSON parsing required.
