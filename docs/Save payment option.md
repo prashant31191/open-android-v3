@@ -1,4 +1,4 @@
-<h3><i>How to Save your Card and Bank options</i></h3>
+<h3>How to Save your Card and Bank options</h3>
 
 <li>This method are used to save payment options wherein it can be used to show <b>Saved Cards</b> and <b>Banks</b> on your UI</li>
 
