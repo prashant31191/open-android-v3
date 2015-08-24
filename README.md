@@ -66,10 +66,10 @@ ___
       git clone https://github.com/citruspay/open-android-v3.git
 
 <h2>Getting Started</h2>
-___
+
 <b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
-* [How to enable Logs and Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
+* [How to enable logs and progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
 
 
 <b> User Creation- API Endpoints: </b>
