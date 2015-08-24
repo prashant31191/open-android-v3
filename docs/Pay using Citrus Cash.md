@@ -1,4 +1,4 @@
-<h2><i>Pay using Citrus Cash</i></h2>
+<h2>Pay using Citrus Cash</h2>
 
 <li>You can perform a transaction using Citrus cash.</li>  
 
