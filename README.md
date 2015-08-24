@@ -70,35 +70,12 @@ ___
 <b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
 * [How to enable Logs and Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
-*[]()
 
 
+<b> User Creation- API Endpoints: </b>
 
-
-
-
-
-<h1> Android Integration - API Endpoints: </h1>
-
-Fetch the code from
-      
-      git clone https://github.com/citruspay/open-android-v3.git
-
-<b> Is User Signed In    </b>
-
-Lets you know if the user is signed in.
-
-      citrusClient.isUserSignedIn(new com.citrus.sdk.Callback<Boolean>() {
-         @Override
-         public void success(Boolean loggedIn) {}
-         
-         @Override
-         public void error(CitrusError error) {}
-      });
-
-You would receive a status inside callback.
-
-<b> Check Citrus Member (isCitrusMember) </b>
+* [See if the user is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
+* <b>[To Check Citrus Member or not? (isCitrusMember)</b>](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
 
 To check whether the user is Citrus member or not, you can use the following method.
 If it returns true the user is already a Citrus Member (display a SignIn screen) and if it returns false (display a SignUp Screen).
