@@ -75,50 +75,11 @@ ___
 <b> User Creation- API Endpoints: </b>
 
 * [See if the user is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
-* <b>[To Check Citrus Member or not? (isCitrusMember)</b>](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
+* [To Check if the user is a Citrus member or not? (isCitrusMember)](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
+* [SignUp User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20Up%20User.md)
+* [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
+* [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 
-To check whether the user is Citrus member or not, you can use the following method.
-If it returns true the user is already a Citrus Member (display a SignIn screen) and if it returns false (display a SignUp Screen).
-
-      citrusClient.isCitrusMember(emailId, mobileNo, new com.citrus.sdk.Callback<Boolean>() {
-         @Override
-         public void success(Boolean citrusMember) {}
-         
-         @Override
-         public void error(CitrusError error) {}
-      });
-      
-<b> SignUp User. </b>
-
-      citrusClient.signUp(emailId, mobileNo, password, new com.citrus.sdk.Callback <CitrusResponse > () {
-         @Override
-      	public void success(CitrusResponse citrusResponse) {}
-      
-      	@Override
-      	public void error(CitrusError error) {}
-      });
-
-<b> SignIn User </b>
-
-      citrusClient.signIn(emailId, password, new com.citrus.sdk.Callback<CitrusResponse>() {
-        @Override
-         public void success(CitrusResponse citrusResponse) {}
-        
-        @Override
-        public void error(CitrusError error) {}
-     });
-     
-<b> Reset Password </b>
-
-Forgot password if the user forgets password.
-
-      citrusClient.resetPassword(emailId, new com.citrus.sdk.Callback<CitrusResponse>() {
-         @Override
-         public void success(CitrusResponse citrusResponse) {}
-         
-         @Override
-         public void error(CitrusError error) {}
-      });
 
 <b> Get Citrus Cash Balance </b>
 
