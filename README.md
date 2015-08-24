@@ -55,6 +55,9 @@ ___
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 * [Logout the user](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
 
+<b> Get Payment Options</b>
+* [Fetch payment options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md)
+
 <b>Wallet</b>
 
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
@@ -69,9 +72,6 @@ ___
 
 <b>How to save Cards option and Banks</b>
 * [Save Debit/Credit Card and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Save%20payment%20option.md)
-
-<b> Get Payment Options</b>
-* [Fetch payment options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md)
 
 <b>Others</b>
 
