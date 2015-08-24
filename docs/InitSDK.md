@@ -4,8 +4,11 @@
 ```java
     CitrusClient citrusClient = CitrusClient.getInstance(Context);
 ```
-SDK supports two different environments.<b>Sandbox</b> and<b>Production</b>.Testing should be done on Sandbox.User created on Sandbox environment will not be available on production environment. You have to explicitly create account for both environments. Once your app is working fine with Sandbox environment, you can switch environment to Production.so please make sure you are using correct set of keys and have set environment to Production before releasing your app to Play-Store. 
-Pass your environment as sixth parameter to citrusClient.init method as mentioned below.
+* SDK supports two different environments.<b>Sandbox</b> and <b>Production</b>.
+* Testing should be done on Sandbox.User created on Sandbox environment will not be available on production environment. You have to explicitly create account for both environments.
+* Once your app is working fine with Sandbox environment, you can switch environment to Production.so please make sure you are using correct set of keys and have set environment to Production before releasing your app to Play-Store. 
+
+* Pass your environment as sixth parameter to citrusClient.init method as mentioned below.
 
 <b>Pass merchant parameters in init</b>
 ```java
