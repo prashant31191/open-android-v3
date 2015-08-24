@@ -1,4 +1,4 @@
-<h4><i>Load Money using Debit Card</i></h4>
+<h4>Load Money using Debit Card</h4>
 ```java
   // If you have already initiated the CitrusClient, no need to initialize again.
   // Just get the reference to theCitrusClient object
@@ -22,7 +22,7 @@
      public void error(CitrusError error) {}
   });
   ```
-  <h4><i>Load Money using Credit Card</i></h4>
+  <h4>Load Money using Credit Card</h4>
   ```java
    CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
   // No need to call init on CitrusClient if already done.
@@ -41,7 +41,7 @@
      public void error(CitrusError error) {}
   });
   ```
-  <h4><i>Load Money using Net Banking option</i></h4>
+  <h4>Load Money using Net Banking option</h4>
   ```java
    CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
   // No need to call init on CitrusClient if already done.
