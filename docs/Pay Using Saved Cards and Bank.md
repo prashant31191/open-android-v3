@@ -1,4 +1,4 @@
-<h4><i>Payment using Debit Card Token</i></h4>
+<h4>Payment using Debit Card Token</h4>
 ```java
   CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
   // No need to call init on CitrusClient if already done.
@@ -18,7 +18,7 @@
   });
   ```
   
- <h4><i>Payment using Credit Card Token</i></h4>
+ <h4>Payment using Credit Card Token</h4>
 ```java
   CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
   // No need to call init on CitrusClient if already done.
@@ -38,7 +38,7 @@
   });
   ```
   
-<h4><i>Payment using Bank Token</i></h4>
+<h4>Payment using Bank Token</h4>
 ```java
    CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
   // No need to call init on CitrusClient if already done.
