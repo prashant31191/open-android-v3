@@ -6,7 +6,7 @@
    2. Logs are disabled by default.
    3. Make sure you are turning off the logs when you are using Production Environment. 
    
-   <b> Pro-Guard Changes </b>
+<b> Pro-Guard Changes </b>
 
    If you are using Proguard in your project add the following lines to your configuration:
 
