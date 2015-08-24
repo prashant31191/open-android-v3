@@ -1,4 +1,4 @@
-<h3><i>Use Cashout/withdraw money feature !</i></h3>
+<h3>Use Cashout/withdraw money feature !</h3>
 
 <li>You can withdraw/cashout money to your <b>card</b> account/<b>bank</b> account.</li><li>Make sure the user is <b>signed in with password</b> to be able to withdraw the money.</li>
 ```java
