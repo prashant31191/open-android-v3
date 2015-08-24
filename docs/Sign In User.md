@@ -1,4 +1,4 @@
-<h2><i>How to Sign In an User?</i></h2>
+<h2>How to Sign In an User?</h2>
 ```java
   citrusClient.signIn(emailId, password, new com.citrus.sdk.Callback<CitrusResponse>() {
       @Override
