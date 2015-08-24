@@ -98,6 +98,11 @@ public final class NetbankingOption extends PaymentOption implements Parcelable 
     }
 
     @Override
+    public String getPaymentMode() {
+        return "NET_BANKING";
+    }
+
+    @Override
     public Drawable getOptionIcon(Context context) {
         // Return the icon depending upon the scheme of the card.
         Drawable drawable = null;

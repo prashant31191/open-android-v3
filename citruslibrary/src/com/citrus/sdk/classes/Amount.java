@@ -81,6 +81,15 @@ public class Amount implements Parcelable {
         return amount;
     }
 
+    public static String toJSON(Amount amount) {
+        JSONObject billObject = toJSONObject(amount);
+        if (billObject != null) {
+            return billObject.toString();
+        } else {
+            return null;
+        }
+    }
+
     public static JSONObject toJSONObject(Amount amount) {
         JSONObject billObject = null;
 

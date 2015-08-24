@@ -40,9 +40,13 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CashoutInfo;
+import com.citrus.sdk.classes.CitrusException;
 import com.citrus.sdk.classes.MemberInfo;
 import com.citrus.sdk.classes.PGHealth;
 import com.citrus.sdk.classes.PGHealthResponse;
+import com.citrus.sdk.dynamicPricing.DynamicPricingOperation;
+import com.citrus.sdk.dynamicPricing.DynamicPricingRequest;
+import com.citrus.sdk.dynamicPricing.DynamicPricingResponse;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.payment.DebitCardOption;
@@ -1144,6 +1148,93 @@ public class CitrusClient {
 
     }
 
+    // Dynamic Pricing.
+
+    /**
+     * Perform Dynamic Pricing. You can specify one the operation to perform Dynamic Pricing.
+     *
+     * @param operation     - One of the operation from {@link DynamicPricingOperation}
+     * @param billUrl       - billUrl from where we will fetch the bill.
+     * @param paymentOption - PaymentOption selected by the user.
+     * @param citrusUser    - user information. Can be null.
+     * @param callback      - callback
+     */
+    public synchronized void performDynamicPricing(@NonNull final DynamicPricingOperation operation, @NonNull final String billUrl, @NonNull Amount originalAmount, @NonNull final PaymentOption paymentOption,
+                                                   final CitrusUser citrusUser, @NonNull final Callback<DynamicPricingResponse> callback) {
+
+        if (validate()) {
+            if (operation != null && !TextUtils.isEmpty(billUrl) && originalAmount != null && paymentOption != null) {
+                String url;
+                if (billUrl.contains("?")) {
+                    url = billUrl + "&amount=" + originalAmount.getValue();
+                } else {
+                    url = billUrl + "?amount=" + originalAmount.getValue();
+                }
+
+                getBill(url, originalAmount, new Callback<PaymentBill>() {
+                    @Override
+                    public void success(PaymentBill paymentBill) {
+                        performDynamicPricing(operation, paymentBill, paymentOption, citrusUser, new Callback<DynamicPricingResponse>() {
+                            @Override
+                            public void success(DynamicPricingResponse dynamicPricingResponse) {
+                                sendResponse(callback, dynamicPricingResponse);
+                            }
+
+                            @Override
+                            public void error(CitrusError error) {
+                                sendError(callback, error);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        sendError(callback, error);
+                    }
+                });
+            }
+        } else {
+            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_BLANK_NULL_DP_PARAMS, Status.FAILED));
+        }
+    }
+
+    /**
+     * Perform Dynamic Pricing. You can specify one the operation to perform Dynamic Pricing.
+     *
+     * @param operation     - One of the operation from {@link DynamicPricingOperation}
+     * @param paymentBill   - PaymentBill in case you are fetching bill response from your server.
+     * @param paymentOption - PaymentOption selected by the user.
+     * @param citrusUser    - user information. Can be null.
+     * @param callback      - callback
+     */
+    public synchronized void performDynamicPricing(@NonNull final DynamicPricingOperation operation, @NonNull final PaymentBill paymentBill, @NonNull final PaymentOption paymentOption,
+                                                   final CitrusUser citrusUser, @NonNull final Callback<DynamicPricingResponse> callback) {
+
+        if (validate()) {
+            if (operation != null && paymentBill != null && paymentOption != null) {
+                String signature = "abcdefghijklmnopqrstuvwxyz";
+                DynamicPricingRequest request = new DynamicPricingRequest(paymentBill.getAmount(), signature, paymentBill.getMerchantAccessKey(), paymentBill.getMerchantTransactionId(), citrusUser, paymentOption, operation);
+
+                citrusBaseUrlClient.performDynamicPricing(new TypedString(DynamicPricingRequest.toJSON(request)), new retrofit.Callback<DynamicPricingResponse>() {
+                    @Override
+                    public void success(DynamicPricingResponse dynamicPricingResponse, Response response) {
+                        dynamicPricingResponse.setPaymentBill(paymentBill);
+                        dynamicPricingResponse.setPaymentOption(paymentOption);
+                        dynamicPricingResponse.setCitrusUser(citrusUser);
+                        sendResponse(callback, dynamicPricingResponse);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        sendError(callback, error);
+                    }
+                });
+
+            } else {
+                sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_BLANK_NULL_DP_PARAMS, Status.FAILED));
+            }
+        }
+    }
 
     /**
      * Send money to your friend.
@@ -1402,6 +1493,27 @@ public class CitrusClient {
         startCitrusActivity(pgPayment);
     }
 
+    public synchronized void pgPayment(final DynamicPricingResponse dynamicPricingResponse, final Callback<TransactionResponse> callback) {
+
+        if (dynamicPricingResponse != null) {
+            PaymentBill paymentBill = dynamicPricingResponse.getPaymentBill();
+
+            PaymentType.PGPayment pgPayment;
+            try {
+                pgPayment = new PaymentType.PGPayment(paymentBill, dynamicPricingResponse.getPaymentOption(), dynamicPricingResponse.getCitrusUser());
+
+                registerReceiver(callback, new IntentFilter(pgPayment.getIntentAction()));
+
+                startCitrusActivity(pgPayment, dynamicPricingResponse);
+            } catch (CitrusException e) {
+                e.printStackTrace();
+                sendError(callback, new CitrusError(e.getMessage(), Status.FAILED));
+            }
+        } else {
+            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_NULL_DYNAMIC_RESPONSE, Status.FAILED));
+        }
+    }
+
     public synchronized void payUsingCitrusCash(final PaymentType.CitrusCash citrusCash, final Callback<TransactionResponse> callback) {
 
         String cookieExpiryDate = "";
@@ -1623,12 +1735,17 @@ public class CitrusClient {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
     }
 
-    private void startCitrusActivity(PaymentType paymentType) {
+    private void startCitrusActivity(PaymentType paymentType, DynamicPricingResponse dynamicPricingResponse) {
         Intent intent = new Intent(mContext, CitrusActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constants.INTENT_EXTRA_PAYMENT_TYPE, paymentType);
+        intent.putExtra(Constants.INTENT_EXTRA_DYNAMIC_PRICING_RESPONSE, dynamicPricingResponse);
 
         mContext.startActivity(intent);
+    }
+
+    private void startCitrusActivity(PaymentType paymentType) {
+        startCitrusActivity(paymentType, null);
     }
 
     private <T> void registerReceiver(final Callback<T> callback, IntentFilter intentFilter) {
