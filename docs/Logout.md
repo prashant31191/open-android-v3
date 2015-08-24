@@ -1,4 +1,4 @@
-<h3><i>How to implement Logout feature</h2></i>
+<h3>How to implement Logout feature</h2>
 
 <li><b>signOut</b> method is used to Logout the user</li>
 
