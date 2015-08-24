@@ -54,10 +54,12 @@ ___
    3. SignIn Key 
    4. SignIn Secret 
    5. SignUp Key 
-   6. SignUp Secret<b>(</b>Click [here](http://citruspay.com/DevelopersGuide/index.html#/securitycredential) to know about these keys<b>)</b>
-   7. Bill Generator Hosted on your server.<b>(</b>Click [here](http://citruspay.com/DevelopersGuide/index.html#/billgenerator)for more details<b>)</b> 
-   8. Redirect URL page hosted on your server. <b>(</b>After the transaction is complete, Citrus posts a response to this URL.) (Click [here](http://citruspay.com/DevelopersGuide/index.html#/returnurl) for more details<b>)</b> 
+   6. SignUp Secret
+   7. Bill Generator Hosted on your server.
+   8. Redirect URL page hosted on your server.(After the transaction is complete, Citrus posts a response to this URL.)
  
+<h2>Getting Started</h2>
+___
 <b> How to Init SDK? </b>
 
    Create a object of CitrusClient.
