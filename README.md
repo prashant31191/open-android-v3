@@ -85,98 +85,17 @@ ___
 
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
-	* Load Money using Dedit Card
-	* Load Money using Credit Card
-	* Load Money using Net Banking option Card
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
-	* Load Money using Dedit Card Token
-	* Load Money using Credit Card Token
-	* Load Money using Net Banking option Token
-
-
 <b>Payment</b>
 
 * [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md)
 * [Pay using Saved Cards and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md)
 * [Pay using Citrus Cash](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20using%20Citrus%20Cash.md)
 
+<b> Get Payment Options</b>
+* [Fetch payment options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md)
 
+<b>Others</b>
 
-
-<b> How to get Payment Options? </b>
-
-
-This is useful to find the type of debit/credit card enabled for you, list of banks available for transaction. You have to use this list of banks and 
-show in the UI. When user selects the particular bank, you should use CID against that bank for payment.
-There are two types of Payment Options
-
-<b>1. Payment Options for Load Money </b>
-
-Load Money payment options differes from normal PG Payment. 
-
-Following method should be used for loadMoney Payment Options
-		
-		citrusClient.getInstance(getActivity()).getLoadMoneyPaymentOptions(new Callback<MerchantPaymentOption>() {
-                @Override
-                public void success(MerchantPaymentOption loadMoneyPaymentOptions) {
-                   ArrayList<NetbankingOption> mNetbankingOptionsList = mMerchantPaymentOption.getNetbankingOptionList();//this will give you only bank list
-                }
-
-                @Override
-                public void error(CitrusError error) {
-                 
-                }
-            });
-
-			
-<b>2. Payment Options for PG Payment </b>
-
-
-Following method should be used for PG Payment Options
-
-
-		 CitrusClient.getInstance(getActivity()).getMerchantPaymentOptions(new Callback<MerchantPaymentOption>() {
-                @Override
-                public void success(MerchantPaymentOption merchantPaymentOption) {
-                   
-					ArrayList<NetbankingOption> mNetbankingOptionsList = mMerchantPaymentOption.getNetbankingOptionList();//this will give you only bank list
-                    
-                }
-
-                @Override
-                public void error(CitrusError error) {
-                    
-                }
-            });
-
-
-<b> Send Money To Your Friend </b>
-Now you can send money to your friend using Mobile No.
-Please refer below code snippet.
-
-	citrusClient.sendMoneyToMoblieNo(new Amount("10"), "9999999999", "My contribution", new Callback<PaymentResponse>() {
-		@Override
-		public void success(PaymentResponse paymentResponse) { }
-		
-		@Override
-		public void error(CitrusError error) { }
-	});
-	
-
-<b> Withdraw Money to Your Account </b>
-You can withdraw money to your bank account.
-Make sure the user is signed in with password to be able to withdraw the money.
-
-	String amount = "10";
-        String accontNo = "12345678901";
-        String accountHolderName = "FirstName LastName;
-        String ifsc = "BANK0000123";
-
-	CashoutInfo cashoutInfo = new CashoutInfo(new Amount(amount), accontNo, accountHolderName, ifsc);
-	citrusClient.cashout(cashoutInfo, new Callback<PaymentResponse>() {
-            @Override
-            public void success(PaymentResponse paymentResponse) { }
-
-            @Override
-            public void error(CitrusError error) {}
-        });
+* [Send Money To Your Friend](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Send%20Money.md)
+* [Withdraw Money to Your Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Withdraw.md)
