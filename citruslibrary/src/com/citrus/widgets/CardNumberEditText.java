@@ -12,8 +12,6 @@
 */
 package com.citrus.widgets;
 
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -23,6 +21,8 @@ import android.widget.EditText;
 
 import com.citrus.card.CardType;
 import com.citrus.sdk.payment.CardOption;
+
+import java.util.regex.Pattern;
 
 public class CardNumberEditText extends EditText {
 
@@ -127,9 +127,15 @@ public class CardNumberEditText extends EditText {
         return tmp;
     }
 
-	public int getCVVLength() {
+    public int getCVVLength() {
         String cardNumber = keepNumbersOnly(getText());
 
         return CardOption.CardScheme.getCVVLength(cardNumber);
+    }
+
+    public CardOption.CardScheme getCardScheme() {
+        String cardNumber = keepNumbersOnly(getText());
+
+        return CardOption.CardScheme.getCardSchemeUsingNumber(cardNumber);
     }
 }

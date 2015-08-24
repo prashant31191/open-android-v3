@@ -188,6 +188,8 @@ public class CitrusClient {
 
             fetchPGHealthForAllBanks();
 
+            getMerchantPaymentOptions(null);
+
             initialized = true;
         }
     }
@@ -1098,10 +1100,10 @@ public class CitrusClient {
                             CardOption.CardScheme cardScheme = ((CardOption) paymentOption).getCardScheme();
                             String scheme = null;
                             if (cardScheme != null) {
-                                scheme = cardScheme.name();
+                                scheme = cardScheme.getName();
                             }
 
-                            retrofitClient.deleteBank(accessToken.getHeaderAccessToken(), last4Digits, scheme, deleteCallback);
+                            retrofitClient.deleteCard(accessToken.getHeaderAccessToken(), last4Digits, scheme, deleteCallback);
                         }
                     }
 
@@ -1367,32 +1369,39 @@ public class CitrusClient {
     public synchronized void getMerchantPaymentOptions(final Callback<MerchantPaymentOption> callback) {
         if (validate()) {
 
-            retrofitClient.getMerchantPaymentOptions(vanity, new retrofit.Callback<JsonElement>() {
-                @Override
-                public void success(JsonElement element, Response response) {
+            if (merchantPaymentOption == null) {
+                retrofitClient.getMerchantPaymentOptions(vanity, new retrofit.Callback<JsonElement>() {
+                    @Override
+                    public void success(JsonElement element, Response response) {
 
-                    MerchantPaymentOption merchantPaymentOption;
+                        MerchantPaymentOption merchantPaymentOption;
 
-                    if (element.isJsonObject()) {
-                        JsonObject paymentOptionObj = element.getAsJsonObject();
-                        if (paymentOptionObj != null) {
-                            merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
+                        if (element.isJsonObject()) {
+                            JsonObject paymentOptionObj = element.getAsJsonObject();
+                            if (paymentOptionObj != null) {
+                                merchantPaymentOption = MerchantPaymentOption.getMerchantPaymentOptions(paymentOptionObj);
 
-                            sendResponse(callback, merchantPaymentOption);
+                                // Store merchant payment options locally.
+                                setMerchantPaymentOption(merchantPaymentOption);
 
+                                sendResponse(callback, merchantPaymentOption);
+
+                            } else {
+                                sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_FAILED_MERCHANT_PAYMENT_OPTIONS, Status.FAILED));
+                            }
                         } else {
-                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_FAILED_MERCHANT_PAYMENT_OPTIONS, Status.FAILED));
+                            sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_JSON, Status.FAILED));
                         }
-                    } else {
-                        sendError(callback, new CitrusError(ResponseMessages.ERROR_MESSAGE_INVALID_JSON, Status.FAILED));
                     }
-                }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    sendError(callback, error);
-                }
-            });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        sendError(callback, error);
+                    }
+                });
+            } else {
+                sendResponse(callback, merchantPaymentOption);
+            }
         }
     }
 
@@ -1450,6 +1459,17 @@ public class CitrusClient {
 
     public synchronized void loadMoney(final PaymentType.LoadMoney loadMoney, final Callback<TransactionResponse> callback) {
 
+        // Validate the card details before forwarding transaction.
+        if (loadMoney != null) {
+            PaymentOption paymentOption = loadMoney.getPaymentOption();
+            // If the CardOption is invalid, check what is incorrect and respond with proper message.
+            if (paymentOption instanceof CardOption && !((CardOption) paymentOption).validateCard()) {
+
+                sendError(callback, new CitrusError(((CardOption) paymentOption).getCardValidityFailureReasons(), Status.FAILED));
+                return;
+            }
+        }
+
         registerReceiver(callback, new IntentFilter(loadMoney.getIntentAction()));
 
         startCitrusActivity(loadMoney);
@@ -1462,20 +1482,8 @@ public class CitrusClient {
             PaymentOption paymentOption = pgPayment.getPaymentOption();
             // If the CardOption is invalid, check what is incorrect and respond with proper message.
             if (paymentOption instanceof CardOption && !((CardOption) paymentOption).validateCard()) {
-                StringBuilder builder = new StringBuilder();
-                if (!((CardOption) paymentOption).validateCardNumber()) {
-                    builder.append(" Invalid Card Number. ");
-                }
 
-                if (!((CardOption) paymentOption).validateExpiryDate()) {
-                    builder.append(" Invalid Expiry Date. ");
-                }
-
-                if (!((CardOption) paymentOption).validateCVV()) {
-                    builder.append(" Invalid CVV. ");
-                }
-
-                sendError(callback, new CitrusError(builder.toString(), Status.FAILED));
+                sendError(callback, new CitrusError(((CardOption) paymentOption).getCardValidityFailureReasons(), Status.FAILED));
                 return;
             }
         }

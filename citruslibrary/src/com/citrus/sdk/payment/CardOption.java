@@ -167,7 +167,7 @@ public abstract class CardOption extends PaymentOption {
         return PGHealth.GOOD;
     }
 
-    private String normalizeCardNumber(String number) {
+    private static String normalizeCardNumber(String number) {
         if (number == null) {
             return null;
         }
@@ -257,10 +257,18 @@ public abstract class CardOption extends PaymentOption {
             return validateCVV();
         }
 
-        return validateForSaveCard() && validateCVV();
+        if (cardScheme == CardScheme.MAESTRO) {
+            return validateCardNumber();
+        }
+
+        return validateCardNumber() && validateExpiryDate() && validateCVV();
     }
 
     public boolean validateForSaveCard() {
+        if (cardScheme == CardScheme.MAESTRO) {
+            return validateCardNumber();
+        }
+
         return validateCardNumber() && validateExpiryDate();
     }
 
@@ -343,6 +351,30 @@ public abstract class CardOption extends PaymentOption {
         }
     }
 
+    public String getCardValidityFailureReasons() {
+        String reason = null;
+        if (!validateCard()) {
+            StringBuilder builder = new StringBuilder();
+            // Avoid this check in case of tokenized payment
+            if (TextUtils.isEmpty(token) && !validateCardNumber()) {
+                builder.append(" Invalid Card Number. ");
+            }
+
+            // Avoid this check in case of tokenized payment
+            if (TextUtils.isEmpty(token) && !validateExpiryDate()) {
+                builder.append(" Invalid Expiry Date. ");
+            }
+
+            if (!validateCVV()) {
+                builder.append(" Invalid CVV. ");
+            }
+
+            reason = builder.toString();
+        }
+
+        return reason;
+    }
+
     @Override
     public String getSavePaymentOptionObject() {
         JSONObject object = null;
@@ -416,7 +448,35 @@ public abstract class CardOption extends PaymentOption {
     }
 
     public enum CardScheme {
-        VISA, MASTER_CARD, MAESTRO, DINERS, JCB, AMEX, DISCOVER;
+        VISA {
+            public String getName() {
+                return "visa";
+            }
+        }, MASTER_CARD {
+            public String getName() {
+                return "mcrd";
+            }
+        }, MAESTRO {
+            public String getName() {
+                return "mtro";
+            }
+        }, DINERS {
+            public String getName() {
+                return "DINERS";
+            }
+        }, JCB {
+            public String getName() {
+                return "jcb";
+            }
+        }, AMEX {
+            public String getName() {
+                return "amex";
+            }
+        }, DISCOVER {
+            public String getName() {
+                return "DISCOVER";
+            }
+        };
 
         public static CardScheme getCardScheme(String cardScheme) {
             if ("visa".equalsIgnoreCase(cardScheme)) {
@@ -439,7 +499,8 @@ public abstract class CardOption extends PaymentOption {
         }
 
         public static CardScheme getCardSchemeUsingNumber(String cardNumber) {
-            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(cardNumber);
+
+            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(normalizeCardNumber(cardNumber));
             CardScheme cardScheme = null;
             if (cardType != null) {
                 switch (cardType) {
@@ -479,5 +540,7 @@ public abstract class CardOption extends PaymentOption {
                 return 3;
             }
         }
+
+        public abstract String getName();
     }
 }
