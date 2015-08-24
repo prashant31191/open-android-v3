@@ -1,4 +1,4 @@
-<h2><i>How to fetch Payment Options enabled/available for you?</i></h2>
+<h2>How to fetch Payment Options enabled/available for you?</h2>
 
 <p>This is useful to find the type of <b>debit/credit</b> card & list of <b>banks</b> enabled/available to you for Transactions.</p><li>You have to use this list of banks and show in the UI.</li><li> When user selects the particular bank, you should use CID against that bank for payment.</li>
 
