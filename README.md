@@ -58,7 +58,10 @@ ___
    7. Bill Generator Hosted on your server.
    8. Redirect URL page hosted on your server.(After the transaction is complete, Citrus posts a response to this URL.)
 
- <b> How to import CitrusLibrary in your Project? </b>
+
+
+
+<b> How to import CitrusLibrary in your Project? </b>
 
       git clone https://github.com/citruspay/open-android-v3.git
 
