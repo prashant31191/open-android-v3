@@ -1,5 +1,5 @@
-<i><h2><b>How to check if the user is signed in or not?</b></h2></i>  
-
+<h2>How to check if the user is signed in or not?</h2>  
+___
 ```java
 citrusClient.isUserSignedIn(new com.citrus.sdk.Callback<Boolean>() {
      @Override
