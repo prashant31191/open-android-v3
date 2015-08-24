@@ -80,141 +80,32 @@ ___
 * [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 
-<b>Wallet<b/>
+<b>Wallet</b>
 
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
 	* Load Money using Dedit Card
 	* Load Money using Credit Card
 	* Load Money using Net Banking option Card
+* [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
+	* Load Money using Dedit Card Token
+	* Load Money using Credit Card Token
+	* Load Money using Net Banking option Token
 
 ------------------------------------------------------------------------------------------------
 
-<b> Add Money/ Load Money </b>
 
-This feature is used for loading money to Citrus wallet.
-
-      Load Money using Debit Card
-      // If you have already initiated the CitrusClient, no need to initialize again.
-      // Just get the reference to the <b> CitrusClient </b> object
-      
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      DebitCardOption debitCardOption 
-            = new DebitCardOption("Card Holder Name", "4111111111111111", "123", Month.getMonth("12"), Year.getYear("18"));
-            
-      Amount amount = new Amount("5"); 
-            
-      // Init Load Money PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL,            debitCardOption);
-      
-      // Call Load Money
-      citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) {}
-         
-         @Override
-         public void error(CitrusError error) {}
-      });
+     
 
 
-<b> Load Money using Credit card </b>
 
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      CreditCardOption creditCardOption = new CreditCardOption("Card Holder Name", "4111111111111111", "123", Month.getMonth("12"), Year.getYear("18"));
-      
-      Amount amount = new Amount("5");
-      // Init Load Money PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption);
-      
-      citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) {}
-         
-         @Override
-         public void error(CitrusError error) {}
-      });
 
-<b> Load Money using Net Banking </b>
 
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      NetbankingOption netbankingOptio = new NetbankingOption(“ICICI Bank” ,”CID001”);
-      
-      // Init Net Banking PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption);
-      
-      citrusClient.loadMoney(loadMoney, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
 
-<b> Load/Add Money using Debit Card Token. </b>
 
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      DebitCardOption debitCardOption = new DebitCardOption("94a4def03fdac35749bfd2746e5cd6f9", "123");
-      //Note: The Token for sandbox and production will be different
-      
-      // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, debitCardOption);
-      
-      citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
-         
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
 
-<b> Load/Add Money using Credit Card Token. </>
 
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      CreditCardOption creditCardOption = new CreditCardOption("d7505f22bca20a97f8d8f305530e88a9", "123");
-      //Note: The Token for sandbox and production will be different
-      
-      // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, creditCardOption);
-      // Call LoadMoney
-      citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
 
-<b> Load/Add Money using Bank Token. </b>
-
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      NetbankingOption netbankingOption = new NetbankingOption("b66352b2d465699d6fa7cfb520ba27b5");
-      //Note: The Token for sandbox and production will be different
-      
-      // Init PaymentType     
-      PaymentType.LoadMoney loadMoney = new PaymentType.LoadMoney(amount, LOAD_MONEY_RETURN_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
-      // Call LoadMoney
-      citrusClient.LoadMoney(loadMoney, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
 
 <b> PG Payment </b>
 
