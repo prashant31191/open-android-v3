@@ -94,136 +94,14 @@ ___
 	* Load Money using Net Banking option Token
 
 
-<b> PG Payment </b>
+<b>Payment</b>
 
-<b>PG payment using Debit Card. </b>
-
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      DebitCardOption debitCardOption = new DebitCardOption("Card Holder Name", "4111111111111111", "123", Month.getMonth("12"), Year.getYear("18"));
-      
-      Amount amount = new Amount("5");
-      // Init PaymentType     
-      PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
-      
-      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
-
-<b> PG payment using Credit Card. </b>
-
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      CreditCardOption creditCardOption = new CreditCardOption("Card Holder Name", "4111111111111111", "123", Month.getMonth("12"), Year.getYear("18"));
-      
-      Amount amount = new Amount("5");
-      // Init PaymentType     
-      PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
-      
-      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
-
-<b> PG payment using Net Banking. </b>
-   
-
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      NetbankingOption netbankingOption = new NetbankingOption(“ICICI Bank” ,”CID001”);
-      
-      // Init Net Banking PaymentType     
-      PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, netbankingOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
-      
-      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
-
-<b> Payment using  Debit Card Token. </b>
-
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      DebitCardOption debitCardOption = new DebitCardOption("94a4def03fdac35749bfd2746e5cd6f9", "123");
-      
-      // Init Net Banking PaymentType     
-      PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, debitCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
-      
-      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
-
-<b> Payment using  Credit Card Token. </b>
-
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      CreditCardOption creditCardOption = new CreditCardOption("d7505f22bca20a97f8d8f305530e88a9", "123");
-      
-      // Init Net Banking PaymentType     
-      PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, creditCardOption, new CitrusUser("developercitrus@gmail.com","9876543210"));
-      
-      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
-
-<b> Payment using Bank Token.
-
-      CitrusClient citrusClient = CitrusClient.getInstance(context); // Activity Context
-      // No need to call init on CitrusClient if already done.
-      
-      NetbankingOption netbankingOption = new NetbankingOption("b66352b2d465699d6fa7cfb520ba27b5");
-      
-      // Init Net Banking PaymentType     
-      PaymentType.PGPayment pgPayment = new PaymentType.PGPayment(amount, BILL_URL, ne, netbankingOption CitrusUser("developercitrus@gmail.com","9876543210"));
-      
-      citrusClient.pgPayment(pgPayment, new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
+* [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md)
+* [Pay using Saved Cards and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/%20Pay%20Using%20Saved%20Cards%20and%20Bank.md)
+* [Pay using Citrus Cash](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20using%20Citrus%20Cash.md)
 
 
-<b> Pay Using Citrus Cash </b>
 
-      citrusClient.payUsingCitrusCash(new PaymentType.CitrusCash(amount, BILL_URL), new Callback<TransactionResponse>() {
-      
-         @Override
-         public void success(TransactionResponse transactionResponse) { }
-         
-         @Override
-         public void error(CitrusError error) { }
-      });
 
 <b> How to get Payment Options? </b>
 
