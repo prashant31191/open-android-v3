@@ -1,4 +1,4 @@
-<h2><i>How to fetch Citrus Cash balance?</i></h2>
+<h2>How to fetch Citrus Cash balance?</h2>
 
 <li>You can get user’s <b>Citrus Cash</b> balance after you have <b>Signed In</b> the user.</i>
 ```java
