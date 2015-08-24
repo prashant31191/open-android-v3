@@ -1,4 +1,4 @@
-<h3><i>Send Money</i></h3>
+<h3>Send Money</h3>
 
 <li>You can send money to your friend using Mobile No. Please refer below code snippet.</li>
 
