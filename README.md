@@ -45,7 +45,6 @@ ___
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
 * [How to enable logs and progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
 
-
 <b> User Creation- API Endpoints: </b>
 
 * [See if the user is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
@@ -77,3 +76,4 @@ ___
 
 * [Send Money To Your Friend](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Send%20Money.md)
 * [Withdraw Money to Your Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Withdraw.md)
+___
