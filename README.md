@@ -84,8 +84,8 @@ ___
 
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
-	* [Load Money using Debit Card](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md#Load Money using Debit Card)
-	* [Load Money using Debit Card](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md#Load Money using Credit Card)
+	* [Load Money using Credit Card](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money#Load Money using Debit Card)
+	* [Load Money using Net Banking option Card](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md#Load Money using Credit Card)
 	* [Load Money using Debit Card]()
 
 ------------------------------------------------------------------------------------------------
