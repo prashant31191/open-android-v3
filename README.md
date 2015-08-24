@@ -60,6 +60,7 @@ ___
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
+
 <b>Payment</b>
 
 * [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md)
