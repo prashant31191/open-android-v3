@@ -29,7 +29,7 @@ open-android-v3 is enhanced version of SDK V2 wherein you can implement your App
 * Withdraw your Money
 
  
-<h5>Enhance features of SDK V3<h/5>
+<h5>Enhance features of SDK V3</h5>
 ___
    * SDK response time optimization-  over 5x faster response compared to V2
    * Everything is Object now. No more JSON parsing required.
@@ -40,7 +40,9 @@ ___
    * Less Integration Time Required.
    * Zero click payment using Citrus Cash.
 
-<b> Prerequisite </>
+<b> Prerequisite </b>
+___
+  <b>SDK Installation prerequisite</b>
    You must already have installed and configured:
    * Java JDK version 1.6 or greater.
    * Android SDK Platform 22 (Android 5.1.1)
@@ -50,7 +52,8 @@ ___
    * All Citrus PG Prerequisites.
 
 Note: Please DO NOT PROCEED if the above mentioned requirements have not been met.
-Citrus PG Prerequisites
+
+<b>Citrus PG Prerequisites</b>
 
     You need to enroll with Citrus as a merchant.
     Make sure that you have the following parameters from Citrus.
