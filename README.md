@@ -67,8 +67,10 @@ ___
 
 <h2>Getting Started</h2>
 ___
-Initiation
+<b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
+*[How to enable Logs and Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
+*[]()
 
 
 
