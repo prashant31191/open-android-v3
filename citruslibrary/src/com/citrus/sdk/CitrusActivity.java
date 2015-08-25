@@ -156,7 +156,6 @@ public class CitrusActivity extends ActionBarActivity {
         mPaymentWebview.addJavascriptInterface(new JsInterface(), Constants.JS_INTERFACE_NAME);
 
         mPaymentWebview.setWebChromeClient(new WebChromeClient());
-
         mPaymentWebview.setWebViewClient(new CitrusWebClient());
 
         // Make the webview visible only in case of PGPayment or LoadMoney.
@@ -194,6 +193,13 @@ public class CitrusActivity extends ActionBarActivity {
             }
         } else { //load cash does not requires Bill Generator
             Amount amount = mPaymentType.getAmount();
+
+            String emailId = mCitrusClient.getUserEmailId();
+            String mobileNo = mCitrusClient.getUserMobileNumber();
+
+            if ((mCitrusUser = mCitrusClient.getCitrusUser()) == null) {
+                mCitrusUser = new CitrusUser(emailId, mobileNo);
+            }
 
             LoadMoney loadMoney = new LoadMoney(amount.getValue(), mPaymentType.getUrl());
             PG paymentgateway = new PG(mPaymentOption, loadMoney, new UserDetails(CitrusUser.toJSONObject(mCitrusUser)));

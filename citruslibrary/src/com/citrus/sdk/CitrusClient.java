@@ -124,6 +124,7 @@ public class CitrusClient {
     private BroadcastReceiver paymentEventReceiver = null;
     private Map<String, PGHealth> pgHealthMap = null;
     private boolean initialized = false;
+    private CitrusUser citrusUser = null;
 
     private CitrusClient(Context context) {
         mContext = context;
@@ -955,6 +956,38 @@ public class CitrusClient {
     }
 
     /**
+     * @param callback
+     */
+    public synchronized void getProfileInfo(final Callback<CitrusUser> callback) {
+        if (validate()) {
+            oauthToken.getSignInToken(new Callback<AccessToken>() {
+                @Override
+                public void success(AccessToken accessToken) {
+                    retrofitClient.getProfileInfo(accessToken.getHeaderAccessToken(), new retrofit.Callback<JsonElement>() {
+                        @Override
+                        public void success(JsonElement jsonElement, Response response) {
+                            String profileInfo = jsonElement.toString();
+                            citrusUser = CitrusUser.fromJSON(profileInfo);
+
+                            sendResponse(callback, citrusUser);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            sendError(callback, error);
+                        }
+                    });
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    sendError(callback, error);
+                }
+            });
+        }
+    }
+
+    /**
      * Get the balance of the user.
      *
      * @param callback
@@ -1615,6 +1648,10 @@ public class CitrusClient {
 
     public synchronized String getUserMobileNumber() {
         return oauthToken.getMobileNumber();
+    }
+
+    public synchronized CitrusUser getCitrusUser() {
+        return citrusUser;
     }
 
     // Public APIS end
