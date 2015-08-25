@@ -31,7 +31,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -61,8 +60,8 @@ import com.citrus.payment.UserDetails;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusConfig;
 import com.citrus.sdk.classes.Utils;
-import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.dynamicPricing.DynamicPricingResponse;
+import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
@@ -148,6 +147,7 @@ public class CitrusActivity extends ActionBarActivity {
         mActionBar = getSupportActionBar();
         mProgressDialog = new ProgressDialog(mContext);
         mPaymentWebview = (WebView) findViewById(R.id.payment_webview);
+        mPaymentWebview.getSettings().setUseWideViewPort(true);
         mPaymentWebview.getSettings().setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             /*
