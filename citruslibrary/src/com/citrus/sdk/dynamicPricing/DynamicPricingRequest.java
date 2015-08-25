@@ -83,9 +83,14 @@ public class DynamicPricingRequest {
                 jsonObject.put("merchantTransactionId", request.merchantTransactionId);
                 jsonObject.put("merchantAccessKey", request.merchantAccessKey);
                 jsonObject.put("signature", request.signature);
-                jsonObject.put("originalAmount", Amount.toJSON(request.originalAmount));
+                jsonObject.put("originalAmount", Amount.toJSONObject(request.originalAmount));
                 jsonObject.put("paymentInfo", getPaymentInformation(request.paymentOption));
-                jsonObject.put("extraParams", request.extraParameters);
+
+                JSONObject extraParams = new JSONObject();
+                for (String key : request.extraParameters.keySet()) {
+                    extraParams.put(key, request.extraParameters.get(key));
+                }
+                jsonObject.put("extraParams", extraParams);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -97,7 +102,7 @@ public class DynamicPricingRequest {
         return response;
     }
 
-    private static String getPaymentInformation(PaymentOption paymentOption) {
+    private static JSONObject getPaymentInformation(PaymentOption paymentOption) {
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -117,7 +122,7 @@ public class DynamicPricingRequest {
             e.printStackTrace();
         }
 
-        return jsonObject.toString();
+        return jsonObject;
     }
 }
 

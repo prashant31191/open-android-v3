@@ -34,6 +34,21 @@ public enum Environment {
         public String toString() {
             return "PRODUCTION";
         }
+    },OOPS {
+        @Override
+        public String getBaseUrl() {
+            return "https://oops.citruspay.com";
+        }
+
+        @Override
+        public String getBaseCitrusUrl() {
+            return "https://oops.citruspay.com";
+        }
+
+        @Override
+        public String toString() {
+            return "OOPS";
+        }
     }, NONE {
         @Override
         public String getBaseUrl() {

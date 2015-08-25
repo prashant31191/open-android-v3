@@ -175,14 +175,7 @@ public class CitrusClient {
             Config.setSigninId(signinId);
             Config.setSigninSecret(signinSecret);
             Config.setVanity(vanity);
-            switch (environment) {
-                case SANDBOX:
-                    Config.setEnv("sandbox");
-                    break;
-                case PRODUCTION:
-                    Config.setEnv("production");
-                    break;
-            }
+            Config.setEnv(environment.toString().toLowerCase());
             Logger.d("VANITY*** " + vanity);
             EventsManager.logInitSDKEvents(mContext);
 

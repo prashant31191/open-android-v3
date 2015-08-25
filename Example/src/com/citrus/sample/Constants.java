@@ -7,16 +7,16 @@ import com.citrus.sdk.Environment;
  */
 public interface Constants {
 
-    String BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.sandbox.php";
+    String BILL_URL = "https://salty-plateau-1529.herokuapp.com/billGenerator.oops.php";
     String RETURN_URL_LOAD_MONEY = "https://salty-plateau-1529.herokuapp.com/redirectUrlLoadCash.php";
 
-    String SIGNUP_ID = "test-signup";
-    String SIGNUP_SECRET = "c78ec84e389814a05d3ae46546d16d2e";
-    String SIGNIN_ID = "test-signin";
-    String SIGNIN_SECRET = "52f7e15efd4208cf5345dd554443fd99";
-    String VANITY = "testing";
-    Environment environment = Environment.SANDBOX;
-    boolean enableLogging = false;
+    String SIGNUP_ID = "vlrf7z6ojt-signup";
+    String SIGNUP_SECRET = "4dfbd300d43402a55cacae7a2be57c8b";
+    String SIGNIN_ID = "vlrf7z6ojt-signin";
+    String SIGNIN_SECRET = "d1f99c7c57d6836ae8d37065f35a95a4";
+    String VANITY = "nativesdk";
+    Environment environment = Environment.OOPS;
+    boolean enableLogging = true;
 
     String colorPrimaryDark = "#E7961D";
     String colorPrimary = "#F9A323";
