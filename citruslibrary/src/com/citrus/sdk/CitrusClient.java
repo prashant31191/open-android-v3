@@ -615,6 +615,9 @@ public class CitrusClient {
                     retrofitClient.getSignInWithPasswordResponse(signinId, signinSecret, mobileNo, password, OAuth2GrantType.password.toString(), new retrofit.Callback<AccessToken>() {
                         @Override
                         public void success(AccessToken accessToken, Response response) {
+                            // Fetch the profileInfo
+                            getProfileInfo(null);
+
                             Logger.d("SIGN IN RESPONSE " + accessToken.getJSON().toString());
                             if (accessToken.getHeaderAccessToken() != null) {
                                 final OauthToken token = new OauthToken(mContext, PREPAID_TOKEN);

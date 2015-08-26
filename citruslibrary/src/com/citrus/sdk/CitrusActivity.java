@@ -197,7 +197,9 @@ public class CitrusActivity extends ActionBarActivity {
             String emailId = mCitrusClient.getUserEmailId();
             String mobileNo = mCitrusClient.getUserMobileNumber();
 
-            if ((mCitrusUser = mCitrusClient.getCitrusUser()) == null) {
+            if (mCitrusClient.getCitrusUser() != null) {
+                mCitrusUser = mCitrusClient.getCitrusUser();
+            } else if (mCitrusUser == null) {
                 mCitrusUser = new CitrusUser(emailId, mobileNo);
             }
 
