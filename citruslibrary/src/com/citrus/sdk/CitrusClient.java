@@ -1205,8 +1205,7 @@ public class CitrusClient {
 
         if (validate()) {
             if (operation != null && paymentBill != null && paymentOption != null) {
-                String signature = "abcdefghijklmnopqrstuvwxyz";
-                DynamicPricingRequest request = new DynamicPricingRequest(paymentBill.getAmount(), signature, paymentBill.getMerchantAccessKey(), paymentBill.getMerchantTransactionId(), citrusUser, paymentOption, operation);
+                DynamicPricingRequest request = new DynamicPricingRequest(paymentBill.getAmount(), paymentBill.getDpSignature(), paymentBill.getMerchantAccessKey(), paymentBill.getMerchantTransactionId(), citrusUser, paymentOption, operation);
 
                 citrusBaseUrlClient.performDynamicPricing(new TypedString(DynamicPricingRequest.toJSON(request)), new retrofit.Callback<DynamicPricingResponse>() {
                     @Override

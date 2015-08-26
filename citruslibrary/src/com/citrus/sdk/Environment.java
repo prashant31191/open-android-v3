@@ -49,7 +49,23 @@ public enum Environment {
         public String toString() {
             return "OOPS";
         }
-    }, NONE {
+    },
+    STG4 {
+        @Override
+        public String getBaseUrl() {
+            return "https://stg4admin.citruspay.com";
+        }
+
+        @Override
+        public String getBaseCitrusUrl() {
+            return "https://stg4admin.citruspay.com";
+        }
+
+        @Override
+        public String toString() {
+            return "STG4";
+        }
+    },NONE {
         @Override
         public String getBaseUrl() {
             return null;
