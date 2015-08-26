@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.citrus.sample" >
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.citrus.sdk.ui.activities.CitrusUIActivity"
+            android:label="@string/title_activity_citrus"
+            android:theme="@style/CitrusAppTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.citrus.sdk.ui.activities.LoginFlowActivity"
+            android:label="@string/title_activity_login_flow"
+            android:theme="@style/CitrusAppTheme"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".CustomDetailsActivity"
+            android:label="@string/title_activity_custom_details"
+            android:screenOrientation="portrait" >
+        </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="59e4baf0ccbf485481bba31fa480fa703e627b42" />
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
