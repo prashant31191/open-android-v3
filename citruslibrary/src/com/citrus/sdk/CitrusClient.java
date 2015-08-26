@@ -527,6 +527,9 @@ public class CitrusClient {
                         public void success(AccessToken accessToken, Response response) {
                             Logger.d("SIGN IN RESPONSE " + accessToken.getJSON().toString());
                             if (accessToken.getHeaderAccessToken() != null) {
+                                // Fetch the profileInfo
+                                getProfileInfo(null);
+
                                 OauthToken token = new OauthToken(mContext, PREPAID_TOKEN);
                                 token.createToken(accessToken.getJSON());///grant Type password token saved
                                 token.saveUserDetails(emailId, null);//save email ID of the signed in user
