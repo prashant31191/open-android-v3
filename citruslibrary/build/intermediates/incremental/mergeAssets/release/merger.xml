@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/akshaykoul/open-android-v3/citruslibrary/assets"/></dataSet><dataSet config="release"><source path="/Users/akshaykoul/open-android-v3/citruslibrary/build-types/release/assets"/></dataSet></merger>

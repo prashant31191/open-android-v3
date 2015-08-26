@@ -1,2 +1,1 @@
 include ':app', ':citruspay-sdk-ui', ':citruslibrary'
-project(':citruslibrary').projectDir = new File('open-android-v3/citruslibrary')
