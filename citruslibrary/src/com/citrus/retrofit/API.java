@@ -19,8 +19,11 @@ import com.citrus.sdk.classes.AccessToken;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.BindPOJO;
 import com.citrus.sdk.classes.CitrusPrepaidBill;
+import com.citrus.sdk.classes.LinkUserResponse;
 import com.citrus.sdk.classes.PGHealthResponse;
 import com.citrus.sdk.classes.StructResponsePOJO;
+import com.citrus.sdk.classes.UpdateMobileResponse;
+import com.citrus.sdk.classes.VerifyMobileResponse;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
 import com.google.gson.JsonElement;
@@ -44,7 +47,6 @@ import retrofit.mime.TypedString;
  */
 public interface API {
 
-
     @FormUrlEncoded
     @POST("/oauth/token")
     void getSignUpToken(@Field("client_id") String client_ID, @Field("client_secret") String client_Secret, @Field("grant_type") String grantType, Callback<AccessToken> accessTokenPOJOCallback);
@@ -54,6 +56,11 @@ public interface API {
     @POST("/service/v2/identity/bind")
     void getBindResponse(@Header("Authorization") String header, @Field("email") String email, @Field("mobile") String mobile, Callback<BindPOJO> bindPOJOCallback);
 
+    // New Link User API
+    @Headers("Content-Type: application/json")
+    @POST("/service/um/link/user")
+    void linkUser(@Header("Authorization") String signUpToken, @Body TypedString body, Callback<LinkUserResponse> callback);
+
     //sign in
     @FormUrlEncoded
     @POST("/oauth/token")
@@ -62,6 +69,10 @@ public interface API {
     @FormUrlEncoded
     @POST("/oauth/token")
     void getSignInWithPasswordResponse(@Field("client_id") String client_ID, @Field("client_secret") String client_Secret, @Field("username") String username, @Field("password") String password, @Field("grant_type") String grantType, Callback<AccessToken> accessTokenPOJOCallback);
+
+    @FormUrlEncoded
+    @POST("/oauth/token")
+    void getSignInWithOTP(@Field("client_id") String client_ID, @Field("client_secret") String client_Secret, @Field("username") String username, @Field("password") String otp, @Field("grant_type") String grantType, Callback<AccessToken> callback);
 
     //getCookie
     @FormUrlEncoded
@@ -100,6 +111,14 @@ public interface API {
     @Headers("Content-Type: application/json")
     @POST("/service/moto/authorize/struct/payment")
     void getPaymentResponse(@Body TypedString body, Callback<StructResponsePOJO> structResponseCallback);
+
+    @Headers("Content-Type: application/json")
+    @POST("/service/um/mobileverification/sendCode")
+    void updateMobile(@Header("Authorization") String accessToken, @Body TypedString body, Callback<UpdateMobileResponse> callback);
+
+    @Headers("Content-Type: application/json")
+    @POST("/service/um/mobileverification/verifyCode")
+    void verifyMobile(@Header("Authorization") String accessToken, @Body TypedString body, Callback<VerifyMobileResponse> callback);
 
     //payment options of merchant
     @FormUrlEncoded

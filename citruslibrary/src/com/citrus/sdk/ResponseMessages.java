@@ -35,6 +35,8 @@ public interface ResponseMessages {
     String ERROR_MESSAGE_RESET_PASSWORD = "Error: Reset password failed";
 
     String ERROR_MESSAGE_BLANK_EMAIL_ID_MOBILE_NO = "Please enter emaild id or the mobile no of your friend to send the money";
+    String ERROR_MESSAGE_BLANK_MOBILE_NO = "Mobile No can not be blank";
+    String ERROR_MESSAGE_BLANK_VERIFICATION_CODE = "Verification Code can not be blank.";
     String ERROR_MESSAGE_BLANK_MOBILE_NO = "Please enter the mobile no of your friend to send the money";
     String ERROR_MESSAGE_BLANK_AMOUNT = "Please enter the amount to be sent.";
     String ERROR_MESSAGE_INVALID_JSON = "ERROR: Invlid json received.";
@@ -47,6 +49,8 @@ public interface ResponseMessages {
 
     String ERROR_MESSAGE_LINK_USER = "ERROR: Unable to Link User";
     String ERROR_MESSAGE_SIGNUP_TOKEN = "ERROR: Unable to fetch Signup token.";
+    String ERROR_MESSAGE_UPDATE_MOBILE = "Updating mobile failed. Please try again.";
+    String ERROR_MESSAGE_VERIFY_MOBILE = "Mobile verification failed. Please try again.";
 
     String SUCCESS_MESSAGE_SAVED_PAYMENT_OPTIONS = "Payment Option Saved Successfully.";
     String SUCCESS_MESSAGE_SAVED_CASHOUT_OPTIONS = "Cashout Information Saved Successfully.";
