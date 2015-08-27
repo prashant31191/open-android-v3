@@ -243,10 +243,12 @@ public class AddMoneyOptionsFragment extends Fragment {
                     } else {
                         bankItem.findViewById(R.id.separator).setVisibility(View.VISIBLE);
                     }
-                    if (netbankingOption.getPgHealth().equals(PGHealth.BAD)) {
-                        warnIcon.setVisibility(View.VISIBLE);
-                    } else {
-                        warnIcon.setVisibility(View.GONE);
+                    if (netbankingOption.getPgHealth()!=null) {
+                        if (netbankingOption.getPgHealth().equals(PGHealth.BAD)) {
+                            warnIcon.setVisibility(View.VISIBLE);
+                        } else {
+                            warnIcon.setVisibility(View.GONE);
+                        }
                     }
                     warnIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
