@@ -67,12 +67,24 @@ public final class CitrusUser implements Parcelable {
         this.address = in.readParcelable(Address.class.getClassLoader());
     }
 
+    public static CitrusUser fromJSON(String json) {
+        JSONObject jsonObject = null;
+
+        try {
+            jsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return fromJSONObject(jsonObject);
+    }
+
     public static CitrusUser fromJSONObject(JSONObject response) {
         CitrusUser user = null;
 
         if (response != null) {
             String email = response.optString("email");
-            String mobileNo = response.optString("mobileNo");
+            String mobileNo = response.optString("mobileNo", response.optString("mobile"));
             String firstName = response.optString("firstName");
             String lastName = response.optString("lastName");
             Address address = Address.fromJSONObject(response);
@@ -113,7 +125,7 @@ public final class CitrusUser implements Parcelable {
             }
 
             if (user == null || TextUtils.isEmpty(user.mobileNo)) {
-                customer.put("mobileNo", "9170164284");
+                customer.put("mobileNo", "9999999999");
             } else {
                 customer.put("mobileNo", user.mobileNo);
             }
