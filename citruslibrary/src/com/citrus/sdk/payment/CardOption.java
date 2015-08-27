@@ -17,8 +17,10 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
+import com.citrus.card.DateUtils;
 import com.citrus.sdk.classes.Month;
 import com.citrus.sdk.classes.PGHealth;
+import com.citrus.sdk.classes.Utils;
 import com.citrus.sdk.classes.Year;
 
 import org.json.JSONArray;
@@ -48,7 +50,7 @@ public abstract class CardOption extends PaymentOption {
      */
     CardOption(String cardHolderName, String cardNumber, String cardCVV, Month cardExpiryMonth, Year cardExpiryYear) {
         if (!android.text.TextUtils.isEmpty(cardHolderName)) {
-            this.cardHolderName = cardHolderName;
+            this.cardHolderName = Utils.removeSpecialCharacters(cardHolderName);
         } else {
             this.cardHolderName = "Card Holder Name";
         }
@@ -95,7 +97,7 @@ public abstract class CardOption extends PaymentOption {
     CardOption(String name, String token, String cardHolderName, String cardNumber, CardScheme cardScheme, String cardExpiry) {
         super(name, token);
         if (!android.text.TextUtils.isEmpty(cardHolderName)) {
-            this.cardHolderName = cardHolderName;
+            this.cardHolderName = Utils.removeSpecialCharacters(cardHolderName);
         } else {
             this.cardHolderName = "Card Holder Name";
         }
@@ -157,7 +159,7 @@ public abstract class CardOption extends PaymentOption {
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName;
+        this.nickName = Utils.removeSpecialCharacters(nickName);
     }
 
     @Override
@@ -166,7 +168,7 @@ public abstract class CardOption extends PaymentOption {
         return PGHealth.GOOD;
     }
 
-    private String normalizeCardNumber(String number) {
+    private static String normalizeCardNumber(String number) {
         if (number == null) {
             return null;
         }
@@ -250,6 +252,130 @@ public abstract class CardOption extends PaymentOption {
         return cvvLength;
     }
 
+    public boolean validateCard() {
+        // For tokenized payments, check for cvv validity.
+        if (!TextUtils.isEmpty(token)) {
+            return validateCVV();
+        }
+
+        if (cardScheme == CardScheme.MAESTRO) {
+            return validateCardNumber();
+        }
+
+        return validateCardNumber() && validateExpiryDate() && validateCVV();
+    }
+
+    public boolean validateForSaveCard() {
+        if (cardScheme == CardScheme.MAESTRO) {
+            return validateCardNumber();
+        }
+
+        return validateCardNumber() && validateExpiryDate();
+    }
+
+    public boolean validateCardNumber() {
+        if (TextUtils.isEmpty(cardNumber)) {
+            return false;
+        }
+
+        if (TextUtils.isEmpty(cardNumber) || !TextUtils.isDigitsOnly(cardNumber) || !isValidLuhnNumber(cardNumber)) {
+            return false;
+        }
+
+        // Check for length of card number.
+        if (cardScheme == CardScheme.AMEX) {
+            if (cardNumber.length() != 15) {
+                return false;
+            }
+        } else if (cardScheme == CardScheme.VISA) {
+            // VISA cards length either 13 or 16.
+            if (cardNumber.length() != 13 && cardNumber.length() != 16) {
+                return false;
+            }
+        } else if (cardScheme != CardScheme.MAESTRO) {
+            if (cardNumber.length() != 16) {
+                return false;
+            }
+        } else {
+            // MAESTRO will have length 12-19.
+            if (cardNumber.length() < 12 || cardNumber.length() > 19) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean validateExpiryDate() {
+        if (!validateExpMonth()) {
+            return false;
+        }
+        if (!validateExpYear()) {
+            return false;
+        }
+        return !DateUtils.hasMonthPassed(Integer.valueOf(cardExpiryYear), Integer.valueOf(cardExpiryMonth));
+    }
+
+    private boolean validateExpMonth() {
+        if (cardExpiryMonth == null) {
+            return false;
+        }
+        return (Integer.valueOf(cardExpiryMonth) >= 1 && Integer.valueOf(cardExpiryMonth) <= 12);
+    }
+
+    private boolean validateExpYear() {
+        if (cardExpiryYear == null) {
+            return false;
+        }
+        return !DateUtils.hasYearPassed(Integer.valueOf(cardExpiryYear));
+    }
+
+    public boolean validateCVV() {
+        if (TextUtils.isEmpty(cardCVV)) {
+            return false;
+        }
+
+        // Check the length of the CVV
+        if (cardScheme == CardScheme.AMEX) {
+            if (cardCVV.length() == 4) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // If not AMEX, the CVV length should be 3.
+            if (cardCVV.length() == 3) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public String getCardValidityFailureReasons() {
+        String reason = null;
+        if (!validateCard()) {
+            StringBuilder builder = new StringBuilder();
+            // Avoid this check in case of tokenized payment
+            if (TextUtils.isEmpty(token) && !validateCardNumber()) {
+                builder.append(" Invalid Card Number. ");
+            }
+
+            // Avoid this check in case of tokenized payment
+            if (TextUtils.isEmpty(token) && !validateExpiryDate()) {
+                builder.append(" Invalid Expiry Date. ");
+            }
+
+            if (!validateCVV()) {
+                builder.append(" Invalid CVV. ");
+            }
+
+            reason = builder.toString();
+        }
+
+        return reason;
+    }
+
     @Override
     public String getSavePaymentOptionObject() {
         JSONObject object = null;
@@ -272,6 +398,32 @@ public abstract class CardOption extends PaymentOption {
         }
 
         return object.toString();
+    }
+
+    private boolean isValidLuhnNumber(String number) {
+        boolean isOdd = true;
+        int sum = 0;
+
+        for (int index = number.length() - 1; index >= 0; index--) {
+            char c = number.charAt(index);
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+            int digitInteger = Integer.parseInt("" + c);
+            isOdd = !isOdd;
+
+            if (isOdd) {
+                digitInteger *= 2;
+            }
+
+            if (digitInteger > 9) {
+                digitInteger -= 9;
+            }
+
+            sum += digitInteger;
+        }
+
+        return sum % 10 == 0;
     }
 
     /**
@@ -297,7 +449,35 @@ public abstract class CardOption extends PaymentOption {
     }
 
     public enum CardScheme {
-        VISA, MASTER_CARD, MAESTRO, DINERS, JCB, AMEX, DISCOVER;
+        VISA {
+            public String getName() {
+                return "visa";
+            }
+        }, MASTER_CARD {
+            public String getName() {
+                return "mcrd";
+            }
+        }, MAESTRO {
+            public String getName() {
+                return "mtro";
+            }
+        }, DINERS {
+            public String getName() {
+                return "DINERS";
+            }
+        }, JCB {
+            public String getName() {
+                return "jcb";
+            }
+        }, AMEX {
+            public String getName() {
+                return "amex";
+            }
+        }, DISCOVER {
+            public String getName() {
+                return "DISCOVER";
+            }
+        };
 
         public static CardScheme getCardScheme(String cardScheme) {
             if ("visa".equalsIgnoreCase(cardScheme)) {
@@ -320,7 +500,8 @@ public abstract class CardOption extends PaymentOption {
         }
 
         public static CardScheme getCardSchemeUsingNumber(String cardNumber) {
-            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(cardNumber);
+
+            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(normalizeCardNumber(cardNumber));
             CardScheme cardScheme = null;
             if (cardType != null) {
                 switch (cardType) {
@@ -360,5 +541,7 @@ public abstract class CardOption extends PaymentOption {
                 return 3;
             }
         }
+
+        public abstract String getName();
     }
 }

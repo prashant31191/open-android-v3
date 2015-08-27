@@ -23,6 +23,8 @@ public class TextUtils {
         if (number == null) {
             return false;
         }
+        number = number.replaceAll("\\s+", "");
+
         for (String prefix : prefixes) {
             if (number.startsWith(prefix)) {
                 return true;

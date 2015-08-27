@@ -31,8 +31,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
-import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -60,6 +60,7 @@ import com.citrus.payment.UserDetails;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusConfig;
 import com.citrus.sdk.classes.Utils;
+import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.PaymentBill;
 import com.citrus.sdk.payment.PaymentOption;
 import com.citrus.sdk.payment.PaymentType;
@@ -95,6 +96,7 @@ public class CitrusActivity extends ActionBarActivity {
     private Map<String, String> customParametersOriginalMap = null;
     private CitrusClient mCitrusClient = null;
     private String mActivityTitle = null;
+    private int mRequestCode = -1;
 
     private boolean isBackKeyPressedByUser = false;
     private boolean passwordPromptShown = false;
@@ -103,6 +105,7 @@ public class CitrusActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         mPaymentType = getIntent().getParcelableExtra(Constants.INTENT_EXTRA_PAYMENT_TYPE);
+        mRequestCode = getIntent().getIntExtra(Constants.INTENT_EXTRA_REQUEST_CODE_PAYMENT, -1);
 
         if (!(mPaymentType instanceof PaymentType.CitrusCash)) {
             setTheme(R.style.Base_Theme_AppCompat_Light_DarkActionBar);
@@ -138,9 +141,27 @@ public class CitrusActivity extends ActionBarActivity {
             throw new IllegalArgumentException("Payment Type Should not be null");
         }
 
+        String emailId = mCitrusClient.getUserEmailId();
+        String mobileNo = mCitrusClient.getUserMobileNumber();
+
+        // Set the citrusUser.
+        // Use details from the token in case of load money
+        if (mPaymentType instanceof PaymentType.LoadMoney) {
+            if (mCitrusClient.getCitrusUser() != null) {
+                mCitrusUser = mCitrusClient.getCitrusUser();
+            } else if (mCitrusUser == null) {
+                mCitrusUser = new CitrusUser(emailId, mobileNo);
+            }
+        } else {
+            if (mCitrusUser == null) {
+                mCitrusUser = new CitrusUser(emailId, mobileNo);
+            }
+        }
+
         mActionBar = getSupportActionBar();
         mProgressDialog = new ProgressDialog(mContext);
         mPaymentWebview = (WebView) findViewById(R.id.payment_webview);
+        mPaymentWebview.getSettings().setUseWideViewPort(true);
         mPaymentWebview.getSettings().setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             /*
@@ -152,12 +173,30 @@ public class CitrusActivity extends ActionBarActivity {
         mPaymentWebview.addJavascriptInterface(new JsInterface(), Constants.JS_INTERFACE_NAME);
 
         mPaymentWebview.setWebChromeClient(new WebChromeClient());
-
         mPaymentWebview.setWebViewClient(new CitrusWebClient());
 
         // Make the webview visible only in case of PGPayment or LoadMoney.
         if (mPaymentType instanceof PaymentType.CitrusCash) {
             mPaymentWebview.setVisibility(View.GONE);
+        }
+
+        if (TextUtils.isEmpty(mActivityTitle)) {
+            mActivityTitle = "Processing...";
+        }
+
+        setTitle(Html.fromHtml("<font color=\"" + mTextColorPrimary + "\">" + mActivityTitle + "</font>"));
+        setActionBarBackground();
+
+        /*
+         * Validations and Process payments
+         */
+        // Check whether the request is coming directly for payment without validation. Do validation.
+        if (mRequestCode == Constants.REQUEST_CODE_PAYMENT) {
+            if (mPaymentOption instanceof CardOption && !((CardOption) mPaymentOption).validateCard()) {
+                sendResult(new TransactionResponse(TransactionResponse.TransactionStatus.FAILED, ((CardOption) mPaymentOption).getCardValidityFailureReasons(), null));
+
+                return;
+            }
         }
 
         if (mPaymentType instanceof PaymentType.PGPayment || mPaymentType instanceof PaymentType.CitrusCash) {
@@ -182,13 +221,6 @@ public class CitrusActivity extends ActionBarActivity {
                 }
             });
         }
-
-        if (TextUtils.isEmpty(mActivityTitle)) {
-            mActivityTitle = "Processing...";
-        }
-
-        setTitle(Html.fromHtml("<font color=\"" + mTextColorPrimary + "\">" + mActivityTitle + "</font>"));
-        setActionBarBackground();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -242,15 +274,6 @@ public class CitrusActivity extends ActionBarActivity {
 
         if (mPaymentType instanceof PaymentType.CitrusCash) { //pay using citrus cash
 
-            // analyticsPaymentType = com.citrus.analytics.PaymentType.CITRUS_CASH;
-            CitrusClient citrusClient = CitrusClient.getInstance(CitrusActivity.this);
-            String emailId = citrusClient.getUserEmailId();
-            String mobileNo = citrusClient.getUserMobileNumber();
-
-            if (mCitrusUser == null) {
-                mCitrusUser = new CitrusUser(emailId, mobileNo);
-            }
-
             UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mCitrusUser));
             Prepaid prepaid = new Prepaid(userDetails.getEmail());
             Bill bill = new Bill(billJSON);
@@ -267,7 +290,6 @@ public class CitrusActivity extends ActionBarActivity {
                 }
             });
         } else {
-
             showDialog("Redirecting to Citrus. Please wait...", false);
             UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mCitrusUser));
             Bill bill = new Bill(billJSON);
@@ -425,7 +447,10 @@ public class CitrusActivity extends ActionBarActivity {
 
         // According new implementation, finish the activity and post the event to citrusClient.
         intent.setAction(mPaymentType.getIntentAction());
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        // Send the broadcast for normal requets.
+        if (mRequestCode != Constants.REQUEST_CODE_PAYMENT) {
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+        }
 
         setResult(RESULT_OK, intent);
         finish();
@@ -562,12 +587,12 @@ public class CitrusActivity extends ActionBarActivity {
         alert.setMessage(message);
         // Set an EditText view to get user input
         final EditText input = new EditText(mContext);
+        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         alert.setView(input);
         alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int whichButton) {
                 String password = input.getText().toString();
-                input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
                 if (!TextUtils.isEmpty(password)) {
                     mPaymentWebview.loadUrl("javascript:(function() { " +
