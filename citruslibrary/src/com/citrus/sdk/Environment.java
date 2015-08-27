@@ -19,6 +19,11 @@ public enum Environment {
         public String toString() {
             return "SANDBOX";
         }
+
+        @Override
+        public String getConsumerPortalUrl() {
+            return "https://stgconsumer.citruspay.com/CitrusConsumerPortal/AppLanding/appLandingPage";
+        }
     }, PRODUCTION {
         @Override
         public String getBaseUrl() {
@@ -33,6 +38,11 @@ public enum Environment {
         @Override
         public String toString() {
             return "PRODUCTION";
+        }
+
+        @Override
+        public String getConsumerPortalUrl() {
+            return "https://consumer.citruspay.com/CitrusConsumerPortal/AppLanding/appLandingPage";
         }
     }, NONE {
         @Override
@@ -50,9 +60,15 @@ public enum Environment {
             return null;
         }
 
+        @Override
+        public String getConsumerPortalUrl() {
+            return null;
+        }
     };
 
     public abstract String getBaseUrl();
 
     public abstract String getBaseCitrusUrl();
+
+    public abstract String getConsumerPortalUrl();
 }

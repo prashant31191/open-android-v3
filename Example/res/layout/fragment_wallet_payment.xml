@@ -62,11 +62,18 @@
         android:layout_margin="@dimen/button_margin"
         android:text="Withdraw Money To Your Account" />
 
-    <Button
+<Button
         android:id="@+id/btn_send_money"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/button_margin"
         android:text="Send Money" />
+
+    <Button
+        android:id="@+id/btn_access_consumer_portal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:text="Open Consumer Portal" />
 
 </LinearLayout>

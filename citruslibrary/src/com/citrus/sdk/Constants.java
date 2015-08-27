@@ -24,6 +24,8 @@ public interface Constants {
     String SDK_VERSION_CODE = "3.0.3";
 
     String INTENT_EXTRA_TRANSACTION_RESPONSE = "INTENT_EXTRA_TRANSACTION_RESPONSE";
+    String INTENT_EXTRA_ACCESS_TOKEN = "INTENT_EXTRA_ACCESS_TOKEN";
+    String INTENT_EXTRA_CONSUMER_PORTAL_URL = "INTENT_EXTRA_CONSUMER_PORTAL_URL";
 
     /**
      * Use this constant to pass the payment type. {@link com.citrus.sdk.payment.PaymentType}

@@ -65,6 +65,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnGetWithdrawInfo = null;
     private Button btnWithdraw = null;
     private Button btnSendMoney = null;
+	private Button btnOpenConsumerPortal = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -105,6 +106,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPGPayment = (Button) rootView.findViewById(R.id.btn_pg_payment);
         btnWithdraw = (Button) rootView.findViewById(R.id.btn_cashout);
         btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
+        btnOpenConsumerPortal = (Button) rootView.findViewById(R.id.btn_access_consumer_portal);
         btnSendMoney = (Button) rootView.findViewById(R.id.btn_send_money);
 
         btnGetBalance.setOnClickListener(this);
@@ -113,6 +115,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnPGPayment.setOnClickListener(this);
         btnGetWithdrawInfo.setOnClickListener(this);
         btnWithdraw.setOnClickListener(this);
+        btnOpenConsumerPortal.setOnClickListener(this);
         btnSendMoney.setOnClickListener(this);
 
         return rootView;
@@ -157,6 +160,8 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
             case R.id.btn_get_cashout_info:
                 getCashoutInfo();
                 break;
+            case R.id.btn_access_consumer_portal:
+                accessConsumerPortal();
             case R.id.btn_send_money:
                 sendMoney();
                 break;
@@ -188,6 +193,20 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
 
     private void pgPayment() {
         showPrompt(PG_PAYMENT);
+    }
+
+    private void accessConsumerPortal() {
+        mCitrusClient.openConsumerPortal(new Callback<String>() {
+            @Override
+            public void error(CitrusError citrusError) {
+                Utils.showToast(getActivity(), citrusError.getMessage());
+            }
+
+            @Override
+            public void success(String s) {
+                // NOOP
+            }
+        });
     }
 
     private void cashout() {
