@@ -141,9 +141,27 @@ public class CitrusActivity extends ActionBarActivity {
             throw new IllegalArgumentException("Payment Type Should not be null");
         }
 
+        String emailId = mCitrusClient.getUserEmailId();
+        String mobileNo = mCitrusClient.getUserMobileNumber();
+
+        // Set the citrusUser.
+        // Use details from the token in case of load money
+        if (mPaymentType instanceof PaymentType.LoadMoney) {
+            if (mCitrusClient.getCitrusUser() != null) {
+                mCitrusUser = mCitrusClient.getCitrusUser();
+            } else if (mCitrusUser == null) {
+                mCitrusUser = new CitrusUser(emailId, mobileNo);
+            }
+        } else {
+            if (mCitrusUser == null) {
+                mCitrusUser = new CitrusUser(emailId, mobileNo);
+            }
+        }
+
         mActionBar = getSupportActionBar();
         mProgressDialog = new ProgressDialog(mContext);
         mPaymentWebview = (WebView) findViewById(R.id.payment_webview);
+        mPaymentWebview.getSettings().setUseWideViewPort(true);
         mPaymentWebview.getSettings().setJavaScriptEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             /*
@@ -155,7 +173,6 @@ public class CitrusActivity extends ActionBarActivity {
         mPaymentWebview.addJavascriptInterface(new JsInterface(), Constants.JS_INTERFACE_NAME);
 
         mPaymentWebview.setWebChromeClient(new WebChromeClient());
-
         mPaymentWebview.setWebViewClient(new CitrusWebClient());
 
         // Make the webview visible only in case of PGPayment or LoadMoney.
@@ -257,14 +274,6 @@ public class CitrusActivity extends ActionBarActivity {
 
         if (mPaymentType instanceof PaymentType.CitrusCash) { //pay using citrus cash
 
-            // analyticsPaymentType = com.citrus.analytics.PaymentType.CITRUS_CASH;
-            String emailId = mCitrusClient.getUserEmailId();
-            String mobileNo = mCitrusClient.getUserMobileNumber();
-
-            if (mCitrusUser == null) {
-                mCitrusUser = new CitrusUser(emailId, mobileNo);
-            }
-
             UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mCitrusUser));
             Prepaid prepaid = new Prepaid(userDetails.getEmail());
             Bill bill = new Bill(billJSON);
@@ -281,7 +290,6 @@ public class CitrusActivity extends ActionBarActivity {
                 }
             });
         } else {
-
             showDialog("Redirecting to Citrus. Please wait...", false);
             UserDetails userDetails = new UserDetails(CitrusUser.toJSONObject(mCitrusUser));
             Bill bill = new Bill(billJSON);
