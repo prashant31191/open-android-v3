@@ -84,7 +84,7 @@ public final class CitrusUser implements Parcelable {
 
         if (response != null) {
             String email = response.optString("email");
-            String mobileNo = response.optString("mobileNo");
+            String mobileNo = response.optString("mobileNo", response.optString("mobile"));
             String firstName = response.optString("firstName");
             String lastName = response.optString("lastName");
             Address address = Address.fromJSONObject(response);

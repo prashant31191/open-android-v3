@@ -187,6 +187,22 @@ public class CitrusClient {
 
             getMerchantPaymentOptions(null);
 
+            // Fetch profile info if the user is signed in.
+            // If not signed in the information will be fetched once the user signs in.
+            isUserSignedIn(new Callback<Boolean>() {
+                @Override
+                public void success(Boolean signedIn) {
+                    if (signedIn) {
+                        getProfileInfo(null);
+                    }
+                }
+
+                @Override
+                public void error(CitrusError error) {
+                    // Not required to handle the error.
+                }
+            });
+
             initialized = true;
         }
     }
@@ -966,30 +982,32 @@ public class CitrusClient {
      */
     public synchronized void getProfileInfo(final Callback<CitrusUser> callback) {
         if (validate()) {
-            oauthToken.getSignInToken(new Callback<AccessToken>() {
-                @Override
-                public void success(AccessToken accessToken) {
-                    retrofitClient.getProfileInfo(accessToken.getHeaderAccessToken(), new retrofit.Callback<JsonElement>() {
-                        @Override
-                        public void success(JsonElement jsonElement, Response response) {
-                            String profileInfo = jsonElement.toString();
-                            citrusUser = CitrusUser.fromJSON(profileInfo);
+            if (citrusUser == null) {
+                getPrepaidToken(new Callback<AccessToken>() {
+                    @Override
+                    public void success(AccessToken accessToken) {
+                        retrofitClient.getProfileInfo(accessToken.getHeaderAccessToken(), new retrofit.Callback<JsonElement>() {
+                            @Override
+                            public void success(JsonElement jsonElement, Response response) {
+                                String profileInfo = jsonElement.toString();
+                                citrusUser = CitrusUser.fromJSON(profileInfo);
 
-                            sendResponse(callback, citrusUser);
-                        }
+                                sendResponse(callback, citrusUser);
+                            }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            sendError(callback, error);
-                        }
-                    });
-                }
+                            @Override
+                            public void failure(RetrofitError error) {
+                                sendError(callback, error);
+                            }
+                        });
+                    }
 
-                @Override
-                public void error(CitrusError error) {
-                    sendError(callback, error);
-                }
-            });
+                    @Override
+                    public void error(CitrusError error) {
+                        sendError(callback, error);
+                    }
+                });
+            }
         }
     }
 
