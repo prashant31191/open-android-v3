@@ -92,6 +92,11 @@ public interface API {
     @POST("/oauth/token")
     void getRefreshTokenAsync(@Field("client_id") String client_ID, @Field("client_secret") String client_Secret, @Field("grant_type") String grantType, @Field("refresh_token") String refreshToken, Callback<AccessToken> accessTokenPOJOCallback);
 
+    // BindUser by mobile
+    @FormUrlEncoded
+    @POST("/service/um/identity/bind/mobile")
+    void bindUserByMobile(@Header("Authorization") String header, @Field("email") String email, @Field("mobile") String mobile, Callback<BindPOJO> bindPOJOCallback);
+
     // MemberInfo API
     @Headers("Content-Type: application/json")
     @POST("/service/um/profile/memberInfo")
@@ -188,8 +193,11 @@ public interface API {
 
     // The response is 204 No Content.
     @DELETE("/service/v2/profile/me/payment/{last4Digits}:{scheme}")
-    void deleteBank(@Header("Authorization") String header, @Path("last4Digits") String last4Digits, @Path("scheme") String scheme, Callback<CitrusResponse> callback);
+    void deleteCard(@Header("Authorization") String header, @Path("last4Digits") String last4Digits, @Path("scheme") String scheme, Callback<CitrusResponse> callback);
 
     @DELETE("/service/v2/profile/me/payment/{bankToken}")
     void deleteBank(@Header("Authorization") String header, @Path("bankToken") String bankToken, Callback<CitrusResponse> callback);
+
+    @GET("/service/um/profile/profileInfo")
+    void getProfileInfo(@Header("Authorization") String token, Callback<JsonElement> callback);
 }

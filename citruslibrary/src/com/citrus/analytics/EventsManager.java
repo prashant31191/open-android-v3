@@ -4,8 +4,11 @@ import android.content.Context;
 import android.os.Build;
 
 import com.citrus.mobile.Config;
+import com.citrus.retrofit.API;
 import com.citrus.retrofit.RetroFitClient;
+import com.citrus.sdk.CitrusClient;
 import com.citrus.sdk.Constants;
+import com.citrus.sdk.Environment;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.orhanobut.logger.Logger;
@@ -71,33 +74,32 @@ public class EventsManager {
 
     public static void logInitSDKEvents(final Context context) {
 
-        RetroFitClient.setEndPoint(Config.getBaseURL());
-        RetroFitClient.getCitrusRetroFitClient().getMerchantName(Config.getVanity(), new Callback<String>() {
-            @Override
-            public void success(String s, Response response) {
-                Logger.d("Merchant Name is ****" + s);
+        CitrusClient client = CitrusClient.getInstance(context);
+        Environment environment = client.getEnvironment();
+        if (environment != null) {
+            API citrusBaseURLClient = RetroFitClient.getCitrusBaseUrlClient(client.getEnvironment().getBaseCitrusUrl());
+            citrusBaseURLClient.getMerchantName(Config.getVanity(), new Callback<String>() {
+                @Override
+                public void success(String s, Response response) {
+                    Logger.d("Merchant Name is ****" + s);
 
-                Tracker t = CitrusLibraryApp.getTracker(CitrusLibraryApp.TrackerName.APP_TRACKER, context);
-                t.send(new HitBuilders.EventBuilder().setCategory(s)
-                        .setAction(INIT_EVENTS).setLabel(String.valueOf(Constants.SDK_VERSION))
-                        .setValue(Long.valueOf(Constants.SDK_VERSION)).build());
-                RetroFitClient.resetEndPoint();
-            }
+                    Tracker t = CitrusLibraryApp.getTracker(CitrusLibraryApp.TrackerName.APP_TRACKER, context);
+                    t.send(new HitBuilders.EventBuilder().setCategory(s)
+                            .setAction(INIT_EVENTS).setLabel(String.valueOf(Constants.SDK_VERSION))
+                            .setValue(Long.valueOf(Constants.SDK_VERSION)).build());
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Logger.d("Failed to get Merchant name *****");
-                Tracker t = CitrusLibraryApp.getTracker(CitrusLibraryApp.TrackerName.APP_TRACKER, context);
-                t.send(new HitBuilders.EventBuilder().setCategory(Config.getVanity())
-                        .setAction(INIT_EVENTS).setLabel(String.valueOf(Constants.SDK_VERSION))
-                        .setValue(Long.valueOf(Constants.SDK_VERSION)).build());
-                RetroFitClient.resetEndPoint();
-            }
-        });
-
-
+                @Override
+                public void failure(RetrofitError error) {
+                    Logger.d("Failed to get Merchant name *****");
+                    Tracker t = CitrusLibraryApp.getTracker(CitrusLibraryApp.TrackerName.APP_TRACKER, context);
+                    t.send(new HitBuilders.EventBuilder().setCategory(Config.getVanity())
+                            .setAction(INIT_EVENTS).setLabel(String.valueOf(Constants.SDK_VERSION))
+                            .setValue(Long.valueOf(Constants.SDK_VERSION)).build());
+                }
+            });
+        }
     }
-
 
     /**
      * This function will return value for webview events

@@ -37,6 +37,7 @@ public interface ResponseMessages {
     String ERROR_MESSAGE_BLANK_EMAIL_ID_MOBILE_NO = "Please enter emaild id or the mobile no of your friend to send the money";
     String ERROR_MESSAGE_BLANK_MOBILE_NO = "Mobile No can not be blank";
     String ERROR_MESSAGE_BLANK_VERIFICATION_CODE = "Verification Code can not be blank.";
+    String ERROR_MESSAGE_BLANK_MOBILE_NO = "Please enter the mobile no of your friend to send the money";
     String ERROR_MESSAGE_BLANK_AMOUNT = "Please enter the amount to be sent.";
     String ERROR_MESSAGE_INVALID_JSON = "ERROR: Invlid json received.";
     String ERROR_MESSAGE_FAILED_MERCHANT_PAYMENT_OPTIONS = "ERROR: Unable to fetch merchant payment options";
@@ -56,6 +57,7 @@ public interface ResponseMessages {
     String SUCCESS_MESSAGE_DELETE_PAYMENT_OPTIONS = "Payment Option Deleted Successfully.";
 
     String ERROR_NETWORK_CONNECTION = "Please check your internet connection.";
+    String ERROR_FAILED_TO_GET_BALANCE = "Failed to get the balance.";
 
     String ERROR_MESSAGE_INVALID_BILL = "Invalid bill received from server.";
     String ERROR_MESSAGE_BIND_USER = "Failed to bind User!!!";
