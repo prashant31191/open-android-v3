@@ -48,18 +48,18 @@ ___
 
 <b> User Management- API Endpoints: </b>
 
-* [See if the user is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
-* [To check if the user is a Citrus member or not?](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
+* [See if the User is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
+* [To check if the User is a Citrus member or not?](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
 * [SignUp User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20Up%20User.md)
 * [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
-* [Logout the user](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
+* [Logout the User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
 
 <b> Get Payment Options</b>
-* [Fetch payment options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md)
-
+* [Fetch Normal(PG) Payment Options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md)(Required while making a <b>Normal</b> payment)
+* [Fetch Load Money Payment Options]()(Required during <b>Adding/Loading</b> Money to Wallet)
 <b>Wallet</b>
-
+(<b>Note:</b>user should be <b>Signed In</b>)
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
 * [Add Money/Load Money into Citrus Account using Saved cards](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
