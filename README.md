@@ -39,7 +39,7 @@ ___
 
       git clone https://github.com/citruspay/open-android-v3.git
 
-<h2>Getting Started</h2>
+<h2>Lets Start...</h2>
 
 <b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
@@ -54,7 +54,6 @@ ___
 * [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 * [Logout the User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
-
 ___
 (Note: User should be <b>Signed In</b> for all below Implementation)
 
@@ -68,16 +67,14 @@ ___
 * [Add Money/Load Money into Citrus Account using Saved cards](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
 
 <b>Payment</b>
-
-* [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md)
-* [Pay using Saved Cards and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md)
+* [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md) (Normal payments)
+* [Pay using Saved Cards and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md) (Tokenized payment)
 * [Pay using Citrus Cash](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20using%20Citrus%20Cash.md)
 
 <b>How to save Cards option and Banks</b>
 * [Save Debit/Credit Card and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Save%20payment%20option.md)
 
 <b>Others...</b>
-
 * [Send Money To Your Friend](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Send%20Money.md)
 * [Withdraw Money to Your Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Withdraw.md)
 
