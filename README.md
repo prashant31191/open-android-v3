@@ -55,7 +55,7 @@ ___
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 * [Logout the User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
 
-(Note : User should be <b>Signed In</b>)
+(Note: User should be <b>Signed In</b> for all below Implementation)
 
 <b> Get Payment Options</b>
 * [Fetch Normal(PG) Payment Options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md) (Required while making a <b>Normal</b> payment)
