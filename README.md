@@ -33,7 +33,7 @@ ___
    * Zero click payment using Citrus Cash.
 
 <h2> Prerequisites </h2>
-* [Before you start...](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md)
+* [Before you Start...](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md)
 
 <b> How to import CitrusLibrary in your Project? </b>
 
@@ -46,7 +46,7 @@ ___
 * [How to enable logs](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
 * [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If any)
 
-<b> User Management Implementation</b>
+<b> Implementation for User creation and management </b>
 
 * [See if the User is logged/Signed in  ](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isUserSignedIn.md)
 * [To check if the User is a Citrus member or not?](https://github.com/citruspay/open-android-v3/blob/documentation/docs/isCitrusMember.md)
@@ -56,7 +56,7 @@ ___
 * [Logout the User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
 
 ___
-(Note: User should be <b>Signed In</b> for all below Implementation)
+(<b>Note:</b> User should be <b>Signed In</b> for all below Implementation)
 
 <b> Get Payment Options</b>
 * [Fetch Normal(PG) Payment Options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md) (Required while making a <b>Normal</b> payment)
