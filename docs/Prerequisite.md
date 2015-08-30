@@ -1,6 +1,6 @@
 <h4> Prerequisites </h4>
 
-  <b>SDK Installation prerequisite</b><br>
+  <b>SDK Installation Prerequisite</b><br>
    You must already have installed and configured:
    * Java JDK version 1.6 or greater.
    * Android SDK Platform 22 (Android 5.1.1)
