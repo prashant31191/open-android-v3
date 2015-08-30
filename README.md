@@ -44,7 +44,7 @@ ___
 <b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
 * [How to enable logs](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
-* [Progaurd changes(If any)](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md)
+* [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md)(If any)
 
 <b> User Management- API Endpoints: </b>
 
@@ -60,6 +60,7 @@ ___
 * [Fetch Load Money Payment Options]()(Required during <b>Adding/Loading</b> Money to Wallet)
 <b>Wallet</b>
 (<b>Note:</b>user should be <b>Signed In</b>)
+
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
 * [Add Money/Load Money into Citrus Account using Saved cards](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md)
