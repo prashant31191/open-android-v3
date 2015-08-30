@@ -43,7 +43,8 @@ ___
 
 <b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
-* [How to enable logs and progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
+* [How to enable logs](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
+* [Progaurd changes(If any)](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md)
 
 <b> User Management- API Endpoints: </b>
 
