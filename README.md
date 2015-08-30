@@ -54,6 +54,7 @@ ___
 * [SignIn User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Sign%20In%20User.md) 
 * [Reset Password](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Reset%20Password.md)
 * [Logout the User](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Logout.md)
+
 ___
 (Note: User should be <b>Signed In</b> for all below Implementation)
 
@@ -63,8 +64,8 @@ ___
 
 <b>Wallet</b>
 * [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)
-* [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md)
-* [Add Money/Load Money into Citrus Account using Saved (Normal payment to Load money) cards](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md) (Tokenized payment to Load money)
+* [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md) (Normal payment to Load money)
+* [Add Money/Load Money into Citrus Account using Saved cards](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md) (Tokenized payment to Load money)
 
 <b>Payment</b>
 * [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md) (Normal payments)
