@@ -57,7 +57,7 @@ ___
 
 <b> Get Payment Options</b>
 * [Fetch Normal(PG) Payment Options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Fetch%20payment%20options.md) (Required while making a <b>Normal</b> payment)
-* [Fetch Load Money Payment Options]() (Required during <b>Adding/Loading</b> Money to Wallet)
+* [Fetch Load Money Payment Options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/fetch%20load%20money%20options.md) (Required during <b>Adding/Loading</b> Money to Wallet)
 
 <b>Wallet</b>
 (Note:user should be <b>Signed In</b>)
