@@ -4,9 +4,9 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 
 <h5>Introduction</h5>
 ___
-* This document details merchant <b><i>Android App</i></b> integration with Citrus Payment gateway.There is a diffrence between <b>Normal(PG) Payment</b> and <b>Prepaid Payment</b>!
-* <b>Normal</b> payment requires only <b><i>email</i></b> and <b><i>mobile</i></b>. Citrus User account will be created by only using email and mobile combination. We call it as <b><i>Bind</i></b>. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account.
-* <b>Prepaid</b> Payment requires <b></i>email</i></b> and <b><i>password</i></b>. Citrus User account will be created by using email and password combination. We call it prepaid account.
+* This document details merchant <b>Android App</b> integration with Citrus Payment gateway.There is a diffrence between <b>Normal(PG) Payment</b> and <b>Prepaid Payment</b>!
+* <b>Normal</b> payment requires only <b>email</b> and <b>mobile</b>. Citrus User account will be created by only using email and mobile combination. We call it as <b><i>Bind</i></b>. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account.
+* <b>Prepaid</b> Payment requires <b>email</b> and <b>password</b>. Citrus User account will be created by using email and password combination. We call it prepaid account.
 
 open-android-v3 is enhanced version of SDK V2 wherein you can implement your App with features such as:
 
