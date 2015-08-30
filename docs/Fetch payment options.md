@@ -4,7 +4,7 @@
 
 There are <b>two</b> types of Payment Options
 
-<b>1. Payment Options for PG Payment</b>
+<b>Payment Options for PG Payment</b>
 
 Following method should be used to fetch <b>PG Payment Options</b>
 ```java
