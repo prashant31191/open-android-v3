@@ -4,7 +4,7 @@ Welcome to the open-source Android SDK Documentation of Citrus Payments Solution
 
 <h5>Introduction</h5>
 ___
-* This document details merchant <b>Android App</b> integration with Citrus Payment gateway.There is a difference between <b>Normal(PG) Payment</b> and <b>Prepaid Payment</b>!
+* This document details the merchant <b>Android App</b> integration with Citrus Payment gateway.There is a difference between <b>Normal(PG) Payment</b> and <b>Prepaid Payment</b>!
 * <b>Normal</b> payment requires only <b>email</b> and <b>mobile</b>. Citrus User account will be created by only using email and mobile combination. We call it as <b><i>Bind</i></b>. Once user is Bind, card can be saved against his account, saved cards can be fetched against his account.
 * <b>Prepaid</b> Payment requires <b>email</b> and <b>password</b>. Citrus User account will be created by using email and password combination. We call it prepaid account.
 
@@ -44,7 +44,7 @@ ___
 <b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
 * [How to enable logs](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
-* [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If any)
+* [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If required)
 
 <b> Implementation for User creation and management </b>
 
