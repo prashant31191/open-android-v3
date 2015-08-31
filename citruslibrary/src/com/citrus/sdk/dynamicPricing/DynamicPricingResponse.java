@@ -15,8 +15,30 @@ import java.util.Map;
  */
 public class DynamicPricingResponse implements Parcelable {
 
+    public enum Status {
+        SUCCESS, NO_ELIGIBLE_RULE_FOUND, CALCULATE_PRICING_FAILED, RULE_DOES_NOT_EXIST, OPERATION_NOT_PERMITTED, FAILED;
+
+        public static Status getStatus(int responseCode) {
+            switch (responseCode) {
+                case 0:
+                    return SUCCESS;
+                case 3:
+                    return RULE_DOES_NOT_EXIST;
+                case 5:
+                    return CALCULATE_PRICING_FAILED;
+                case 6:
+                    return OPERATION_NOT_PERMITTED;
+                case 7:
+                    return NO_ELIGIBLE_RULE_FOUND;
+                case -1:
+                default:
+                    return FAILED;
+
+            }
+        }
+    }
+
     private final int resultCode;
-    private final String resultMessage;
     private final Amount originalAmount;
     private final Amount alteredAmount;
     private final String offerToken;
@@ -25,21 +47,34 @@ public class DynamicPricingResponse implements Parcelable {
     private PaymentOption paymentOption = null;
     private CitrusUser citrusUser = null;
 
-    public DynamicPricingResponse(int resultCode, String resultMessage, Amount originalAmount, Amount alteredAmount, String offerToken, Map<String, String> extraParameters) {
+    public DynamicPricingResponse(int resultCode, Amount originalAmount, Amount alteredAmount, String offerToken, Map<String, String> extraParameters) {
         this.resultCode = resultCode;
-        this.resultMessage = resultMessage;
         this.originalAmount = originalAmount;
         this.alteredAmount = alteredAmount;
         this.offerToken = offerToken;
         this.extraParameters = extraParameters;
     }
 
-    public int getResultCode() {
-        return resultCode;
+    public Status getStatus() {
+        return Status.getStatus(resultCode);
     }
 
-    public String getResultMessage() {
-        return resultMessage;
+    public String getMessage() {
+        switch (getStatus()) {
+            case SUCCESS:
+                return "Success";
+            case NO_ELIGIBLE_RULE_FOUND:
+                return "No Eligible Rule Found.";
+            case CALCULATE_PRICING_FAILED:
+                return "Failed To Calculate Price";
+            case RULE_DOES_NOT_EXIST:
+                return "Rule Does Not Exist.";
+            case OPERATION_NOT_PERMITTED:
+                return "Operation Not Permitted.";
+            case FAILED:
+            default:
+                return "Failed Apply Dynamic Pricing.";
+        }
     }
 
     public Amount getOriginalAmount() {
@@ -90,7 +125,6 @@ public class DynamicPricingResponse implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.resultCode);
-        dest.writeString(this.resultMessage);
         dest.writeParcelable(this.originalAmount, 0);
         dest.writeParcelable(this.alteredAmount, 0);
         dest.writeString(this.offerToken);
@@ -102,7 +136,6 @@ public class DynamicPricingResponse implements Parcelable {
 
     protected DynamicPricingResponse(Parcel in) {
         this.resultCode = in.readInt();
-        this.resultMessage = in.readString();
         this.originalAmount = in.readParcelable(Amount.class.getClassLoader());
         this.alteredAmount = in.readParcelable(Amount.class.getClassLoader());
         this.offerToken = in.readString();

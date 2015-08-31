@@ -1214,11 +1214,14 @@ public class CitrusClient {
 
         if (validate()) {
             if (operation != null && !TextUtils.isEmpty(billUrl) && originalAmount != null && paymentOption != null) {
+
+                String format = "#.00";
+
                 String url;
                 if (billUrl.contains("?")) {
-                    url = billUrl + "&amount=" + originalAmount.getValue();
+                    url = billUrl + "&amount=" + originalAmount.getValueAsFormattedDouble(format);
                 } else {
-                    url = billUrl + "?amount=" + originalAmount.getValue();
+                    url = billUrl + "?amount=" + originalAmount.getValueAsFormattedDouble(format);
                 }
 
                 getBill(url, originalAmount, new Callback<PaymentBill>() {

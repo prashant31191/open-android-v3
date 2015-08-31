@@ -28,6 +28,6 @@ public class Utils {
     }
 
     public static enum PaymentType {
-        LOAD_MONEY, CITRUS_CASH, PG_PAYMENT;
+        LOAD_MONEY, CITRUS_CASH, PG_PAYMENT, DYNAMIC_PRICING;
     }
 }

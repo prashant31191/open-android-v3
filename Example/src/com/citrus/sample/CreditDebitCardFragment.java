@@ -1,11 +1,14 @@
 package com.citrus.sample;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.citrus.card.Card;
@@ -18,6 +21,8 @@ import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CitrusException;
 import com.citrus.sdk.classes.Month;
 import com.citrus.sdk.classes.Year;
+import com.citrus.sdk.dynamicPricing.DynamicPricingOperation;
+import com.citrus.sdk.dynamicPricing.DynamicPricingResponse;
 import com.citrus.sdk.payment.CardOption;
 import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.payment.DebitCardOption;
@@ -83,6 +88,7 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
                 break;
             case CITRUS_CASH:
             case PG_PAYMENT:
+            case DYNAMIC_PRICING:
                 submitButton.setText("Pay");
                 break;
         }
@@ -130,11 +136,75 @@ public class CreditDebitCardFragment extends Fragment implements View.OnClickLis
             } else if (this.paymentType == Utils.PaymentType.PG_PAYMENT) {
                 paymentType = new PaymentType.PGPayment(amount, Constants.BILL_URL, cardOption, new CitrusUser(client.getUserEmailId(), client.getUserMobileNumber()));
                 client.pgPayment((PaymentType.PGPayment) paymentType, callback);
+            } else if (this.paymentType == Utils.PaymentType.DYNAMIC_PRICING) {
+                client.performDynamicPricing(DynamicPricingOperation.SEARCH_AND_APPLY_RULE, Constants.BILL_URL, amount, cardOption, null, new Callback<DynamicPricingResponse>() {
+                    @Override
+                    public void success(DynamicPricingResponse dynamicPricingResponse) {
+                        showPrompt(dynamicPricingResponse);
+                    }
+
+                    @Override
+                    public void error(CitrusError error) {
+                        Utils.showToast(getActivity(), error.getMessage());
+                    }
+                });
             }
         } catch (CitrusException e) {
             e.printStackTrace();
 
             Utils.showToast(getActivity(), e.getMessage());
         }
+    }
+
+    private void showPrompt(final DynamicPricingResponse dynamicPricingResponse) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        String message = dynamicPricingResponse.getMessage();
+        String positiveButtonText = "Pay";
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        final TextView originalAmount = new TextView(getActivity());
+        final TextView alteredAmount = new TextView(getActivity());
+        final TextView txtMessage = new TextView(getActivity());
+
+        linearLayout.addView(originalAmount);
+        linearLayout.addView(alteredAmount);
+        linearLayout.addView(txtMessage);
+
+        originalAmount.setText("Original Amount : " + (dynamicPricingResponse.getOriginalAmount() != null ? dynamicPricingResponse.getOriginalAmount().getValue() : ""));
+        alteredAmount.setText("Altered Amount : " + (dynamicPricingResponse.getAlteredAmount() != null ? dynamicPricingResponse.getAlteredAmount().getValue() : ""));
+        txtMessage.setText("Message : " + dynamicPricingResponse.getMessage());
+
+        alert.setTitle("Dynamic Pricing Response");
+        alert.setMessage(message);
+        alert.setView(linearLayout);
+        if (dynamicPricingResponse.getStatus() == DynamicPricingResponse.Status.SUCCESS) {
+            alert.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    CitrusClient.getInstance(getActivity()).pgPayment(dynamicPricingResponse, new Callback<TransactionResponse>() {
+                        @Override
+                        public void success(TransactionResponse transactionResponse) {
+                            Utils.showToast(getActivity(), transactionResponse.getMessage());
+                        }
+
+                        @Override
+                        public void error(CitrusError error) {
+                            Utils.showToast(getActivity(), error.getMessage());
+                        }
+                    });
+
+                    dialog.dismiss();
+                }
+            });
+        }
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        alert.show();
     }
 }

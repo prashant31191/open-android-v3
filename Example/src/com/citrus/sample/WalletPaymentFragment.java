@@ -33,19 +33,14 @@ import android.widget.TextView;
 
 import com.citrus.sdk.Callback;
 import com.citrus.sdk.CitrusClient;
-import com.citrus.sdk.TransactionResponse;
 import com.citrus.sdk.classes.Amount;
 import com.citrus.sdk.classes.CashoutInfo;
-import com.citrus.sdk.classes.Month;
-import com.citrus.sdk.classes.Year;
-import com.citrus.sdk.dynamicPricing.DynamicPricingOperation;
-import com.citrus.sdk.dynamicPricing.DynamicPricingResponse;
-import com.citrus.sdk.payment.CreditCardOption;
 import com.citrus.sdk.response.CitrusError;
 import com.citrus.sdk.response.CitrusResponse;
 import com.citrus.sdk.response.PaymentResponse;
 
 import static com.citrus.sample.Utils.PaymentType.CITRUS_CASH;
+import static com.citrus.sample.Utils.PaymentType.DYNAMIC_PRICING;
 import static com.citrus.sample.Utils.PaymentType.LOAD_MONEY;
 import static com.citrus.sample.Utils.PaymentType.PG_PAYMENT;
 
@@ -72,8 +67,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     private Button btnWithdraw = null;
     private Button btnSendMoney = null;
     private Button btnPerformDP = null;
-    private Button btnPayUsingDP = null;
-    private DynamicPricingResponse dpResponse = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -116,7 +109,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnGetWithdrawInfo = (Button) rootView.findViewById(R.id.btn_get_cashout_info);
         btnSendMoney = (Button) rootView.findViewById(R.id.btn_send_money);
         btnPerformDP = (Button) rootView.findViewById(R.id.btn_perform_dp);
-        btnPayUsingDP = (Button) rootView.findViewById(R.id.btn_pay_using_dp);
 
         btnGetBalance.setOnClickListener(this);
         btnLoadMoney.setOnClickListener(this);
@@ -126,7 +118,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
         btnWithdraw.setOnClickListener(this);
         btnSendMoney.setOnClickListener(this);
         btnPerformDP.setOnClickListener(this);
-        btnPayUsingDP.setOnClickListener(this);
 
         return rootView;
     }
@@ -175,9 +166,6 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.btn_perform_dp:
                 performDP();
-                break;
-            case R.id.btn_pay_using_dp:
-                payUsingDP();
                 break;
         }
     }
@@ -232,35 +220,7 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
     }
 
     private void performDP() {
-
-        CreditCardOption creditCardOption = new CreditCardOption("Salil Godbole", "4111111111111111", "123", Month.JAN, Year._2017);
-
-        mCitrusClient.performDynamicPricing(DynamicPricingOperation.SEARCH_AND_APPLY_RULE, Constants.BILL_URL, new Amount("10"), creditCardOption, null, new Callback<DynamicPricingResponse>() {
-            @Override
-            public void success(DynamicPricingResponse dynamicPricingResponse) {
-                dpResponse = dynamicPricingResponse;
-            }
-
-            @Override
-            public void error(CitrusError error) {
-                Utils.showToast(getActivity(), error.getMessage());
-            }
-        });
-    }
-
-    private void payUsingDP() {
-        mCitrusClient.pgPayment(dpResponse, new Callback<TransactionResponse>() {
-            @Override
-            public void success(TransactionResponse transactionResponse) {
-                Utils.showToast(getActivity(), transactionResponse.getMessage());
-            }
-
-            @Override
-            public void error(CitrusError error) {
-                Utils.showToast(getActivity(), error.getMessage());
-            }
-        });
-
+        showPrompt(DYNAMIC_PRICING);
     }
 
     private void showPrompt(final Utils.PaymentType paymentType) {
@@ -281,15 +241,14 @@ public class WalletPaymentFragment extends Fragment implements View.OnClickListe
                 message = "Please enter the transaction amount.";
                 positiveButtonText = "Make Payment";
                 break;
+            case DYNAMIC_PRICING:
+                message = "Please enter the transaction amount.";
+                positiveButtonText = "Make Payment";
+                break;
         }
 
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        final EditText amount = new EditText(getActivity());
-        final EditText accountNo = new EditText(getActivity());
-        final EditText accountHolderName = new EditText(getActivity());
-        final EditText ifscCode = new EditText(getActivity());
-
 
         alert.setTitle("Transaction Amount?");
         alert.setMessage(message);
