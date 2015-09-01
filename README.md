@@ -71,7 +71,7 @@ ___
 * [Pay using Citrus Cash](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20using%20Citrus%20Cash.md) (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
 
 <b>How to save Cards option and Banks</b>
-* [Save Debit/Credit Card and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Save%20payment%20option.md)
+* <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Save%20payment%20option.md" target="_blank">Save Debit/Credit Card and Net banking</a>
 
 <b>Others...</b>
 * [Send Money To Your Friend](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Send%20Money.md)
