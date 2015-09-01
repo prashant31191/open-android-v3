@@ -44,7 +44,6 @@ ___
 <b>Initiation</b>
 * [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
 * [How to enable logs](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
-* [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If required)
 
 <b> Implementation for User creation and management </b>
 
@@ -60,14 +59,14 @@ ___
 * [Fetch Load Money Payment Options](https://github.com/citruspay/open-android-v3/blob/documentation/docs/fetch%20load%20money%20options.md) (Required during <b>Adding/Loading</b> Money to Wallet)
 
 <b>Wallet</b>
-* [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md)(<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
+* [Get Citrus Cash balance](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Get%20Balance.md) (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
 * [Add Money/Load Money into Citrus Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20Money.md) (Normal payment to Load money)
 * [Add Money/Load Money into Citrus Account using Saved cards](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Load%20using%20Saved%20Card%20&%20Net%20bank.md) (Tokenized payment to Load money)
 
 <b>Payment</b>
 * [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md) (Normal payments)
 * [Pay using Saved Cards and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md) (Tokenized payment)
-* [Pay using Citrus Cash](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20using%20Citrus%20Cash.md)(<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
+* [Pay using Citrus Cash](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20using%20Citrus%20Cash.md) (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
 
 <b>How to save Cards option and Banks</b>
 * [Save Debit/Credit Card and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Save%20payment%20option.md)
@@ -77,7 +76,10 @@ ___
 * [Withdraw Money to Your Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Withdraw.md)
 * Delete Card
 
-<h5>How to Go Live...</h5>
+<h4>How to Go Live...</h4>
+
+* [Keys and Environment inside citrusClient.init]()
+* [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If required)
 
 
 ___
