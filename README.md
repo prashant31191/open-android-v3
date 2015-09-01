@@ -44,7 +44,7 @@ ___
 
 <b>Initiation</b>
 * <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md" target="_blank">Initiate Citrus SDK</a>
-*<a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md" target=""_blank">How to enable logs</a>
+* <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md" target=""_blank">How to enable logs</a>
 
 <b> Implementation for User creation and management </b>
 
