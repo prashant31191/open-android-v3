@@ -65,6 +65,7 @@ ___
 
 <b>Payment</b>
 * [Pay using Credit/Debit Card & Net Banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/CC%20%2CDC%20%2CNB%20Direct%20Payment.md) (Normal payments)
+* Get Wallet
 * [Pay using Saved Cards and Net banking](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20Using%20Saved%20Cards%20and%20Bank.md) (Tokenized payment)
 * [Pay using Citrus Cash](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Pay%20using%20Citrus%20Cash.md) (<b>Note:</b> User should be <b>Signed In</b> for this Implementation)
 
