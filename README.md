@@ -34,7 +34,7 @@ ___
 
 <h2> Prerequisites </h2>
 * [Before you Start...](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md)
-
+* <a>href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md")Before you Start</a>
 
 <a href="http://example.com/" target="_blank">example</a>
 <b> How to import CitrusLibrary in your Project? </b>
