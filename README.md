@@ -33,10 +33,9 @@ ___
    * Zero click payment using Citrus Cash.
 
 <h2> Prerequisites </h2>
-* [Before you Start...](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md)
 * <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md" target="_blank">Before you Start</a>
 
-<a href="http://example.com/" target="_blank">Before you Start</a>
+
 <b> How to import CitrusLibrary in your Project? </b>
 
       git clone https://github.com/citruspay/open-android-v3.git
@@ -44,8 +43,8 @@ ___
 <h2>Lets Start...</h2>
 
 <b>Initiation</b>
-* [Initiate Citrus SDK](https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md)
-* [How to enable logs](https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md)
+* <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/InitSDK.md" target="_blank">Initiate Citrus SDK</a>
+*<a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/enable%20logs%20.md" target=""_blank">How to enable logs</a>
 
 <b> Implementation for User creation and management </b>
 
