@@ -33,10 +33,10 @@ ___
    * Zero click payment using Citrus Cash.
 
 <h2> Prerequisites </h2>
-* [Before you Start...]("https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md")
+* [Before you Start...](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md)
 
 
-
+<a href="http://example.com/" target="_blank">example</a>
 <b> How to import CitrusLibrary in your Project? </b>
 
       git clone https://github.com/citruspay/open-android-v3.git
