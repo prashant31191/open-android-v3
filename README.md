@@ -75,8 +75,8 @@ ___
 * [Send Money To Your Friend](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Send%20Money.md)
 * [Withdraw Money to Your Account](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Withdraw.md)
 * Delete Card
-
-<h4>How to Go Live...</h4>
+___
+<h5>How to Go Live...</h5>
 
 * [Keys and Environment inside citrusClient.init](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Go%20Live.md)
 * [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If required)
