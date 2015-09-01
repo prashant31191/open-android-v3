@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import com.citrus.card.DateUtils;
 import com.citrus.sdk.classes.Month;
 import com.citrus.sdk.classes.PGHealth;
+import com.citrus.sdk.classes.Utils;
 import com.citrus.sdk.classes.Year;
 
 import org.json.JSONArray;
@@ -49,7 +50,7 @@ public abstract class CardOption extends PaymentOption {
      */
     CardOption(String cardHolderName, String cardNumber, String cardCVV, Month cardExpiryMonth, Year cardExpiryYear) {
         if (!android.text.TextUtils.isEmpty(cardHolderName)) {
-            this.cardHolderName = cardHolderName;
+            this.cardHolderName = Utils.removeSpecialCharacters(cardHolderName);
         } else {
             this.cardHolderName = "Card Holder Name";
         }
@@ -96,7 +97,7 @@ public abstract class CardOption extends PaymentOption {
     CardOption(String name, String token, String cardHolderName, String cardNumber, CardScheme cardScheme, String cardExpiry) {
         super(name, token);
         if (!android.text.TextUtils.isEmpty(cardHolderName)) {
-            this.cardHolderName = cardHolderName;
+            this.cardHolderName = Utils.removeSpecialCharacters(cardHolderName);
         } else {
             this.cardHolderName = "Card Holder Name";
         }
@@ -158,7 +159,7 @@ public abstract class CardOption extends PaymentOption {
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName;
+        this.nickName = Utils.removeSpecialCharacters(nickName);
     }
 
     @Override
@@ -167,7 +168,7 @@ public abstract class CardOption extends PaymentOption {
         return PGHealth.GOOD;
     }
 
-    private String normalizeCardNumber(String number) {
+    private static String normalizeCardNumber(String number) {
         if (number == null) {
             return null;
         }
@@ -499,7 +500,8 @@ public abstract class CardOption extends PaymentOption {
         }
 
         public static CardScheme getCardSchemeUsingNumber(String cardNumber) {
-            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(cardNumber);
+
+            com.citrus.card.CardType cardType = com.citrus.card.CardType.typeOf(normalizeCardNumber(cardNumber));
             CardScheme cardScheme = null;
             if (cardType != null) {
                 switch (cardType) {

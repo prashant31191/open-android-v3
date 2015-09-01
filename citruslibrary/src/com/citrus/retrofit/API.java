@@ -188,4 +188,7 @@ public interface API {
 
     @DELETE("/service/v2/profile/me/payment/{bankToken}")
     void deleteBank(@Header("Authorization") String header, @Path("bankToken") String bankToken, Callback<CitrusResponse> callback);
+
+    @GET("/service/um/profile/profileInfo")
+    void getProfileInfo(@Header("Authorization") String token, Callback<JsonElement> callback);
 }

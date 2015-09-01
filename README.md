@@ -2,13 +2,24 @@
 Enhanced Payment SDK 
 
 Release Notes:
+v3.0.4
+* Fixed issue for some of the bank pages.
+* Bug Fixes.
+* Added member profile for payment.
+
+v3.0.3
+* Added Additional check for card validation.
+* Removing unnecessary permission.
+* Added password field in case of Pay Using Citrus Cash.
+* Added convenience method to get the cardScheme in CardNumberEditText widget.
+
 v3.0.2 
 * BindByMobileNo API integrated.
 * Fix for SSL error.
 * Avoided multiple initialization of the CitrusClient
 * Bug fixes.
 
-Last updated : 29/07/2015
+Last updated : 26/08/2015
 
 What's new?
 open-android-v3 is enhanced version of SDK V2. 
