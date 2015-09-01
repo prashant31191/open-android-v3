@@ -78,7 +78,7 @@ ___
 
 <h4>How to Go Live...</h4>
 
-* [Keys and Environment inside citrusClient.init]()
+* [Keys and Environment inside citrusClient.init](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Go%20Live.md)
 * [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If required)
 
 
