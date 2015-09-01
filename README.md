@@ -80,10 +80,9 @@ ___
 ___
 <h5>How to Go Live...</h5>
 
-* [Changes inside Bill Generator and Returl Url Files](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Backend%20Files%20Changes.md) 
-* [Keys and Environment inside citrusClient.init](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Go%20Live.md)
-* [Progaurd changes](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md) (If required)
-
+* <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Backend%20Files%20Changes.md" target="_blank">Changes inside Bill Generator and Returl Url Files</a>
+* <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Go%20Live.md" target="_blank">Keys and Environment inside citrusClient.init</a>
+* <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Progaurd%20changes.md" target="_blank">Progaurd changes</a>(If required)
 
 ___
 
