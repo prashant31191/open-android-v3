@@ -33,9 +33,8 @@ ___
    * Zero click payment using Citrus Cash.
 
 <h2> Prerequisites </h2>
-[Your link here](http://yourlink.here){:target="_blank"}
-* [Before you Start...](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md)
-* 
+* [Before you Start...](https://github.com/citruspay/open-android-v3/blob/documentation/docs/Prerequisite.md   target="_blank")
+
 
 
 <b> How to import CitrusLibrary in your Project? </b>
