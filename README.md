@@ -74,9 +74,9 @@ ___
 * <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Save%20payment%20option.md" target="_blank">Save Debit/Credit Card and Net banking</a>
 
 <b>Others...</b>
-
 * <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Send%20Money.md" target="_blank">Send Money To Your Friend</a>
 * <a href="https://github.com/citruspay/open-android-v3/blob/documentation/docs/Withdraw.md" target="_blank">Withdraw Money to Your Account</a>
+
 ___
 <h5>How to Go Live...</h5>
 
